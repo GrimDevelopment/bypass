@@ -1,0 +1,10 @@
+{
+  "captcha": {
+    "active": false,
+    "service": "2captcha",
+    "key": ""
+  },
+  "db": {
+    "url": "mongodb://127.0.0.1:27017/bifm"
+  }
+}

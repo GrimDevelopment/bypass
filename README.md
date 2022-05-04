@@ -1,3 +1,3 @@
-# bifm-v2
+# bifm 
 
 Bypasses link protectors server-side. 
