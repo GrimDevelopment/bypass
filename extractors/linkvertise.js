@@ -13,6 +13,9 @@ module.exports = {
     "link-target.net"
   ],
   get: async function (url) {
+
+    // might just do this in puppeteer tbh, too much validation stuff that i don't care enough to do
+
     let u = new URL(url);
     let i;
     if (u.hostname == "linkvertise.download") {

@@ -11,5 +11,5 @@ Bypasses link protectors server-side. Now with more sites and easier to develop 
 - social-unlock.com
 - lnk2.cc
  
-### tba 
+## sites being worked on 
 - linkvertise & aliases
