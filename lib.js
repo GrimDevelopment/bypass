@@ -16,6 +16,7 @@ module.exports = {
     let ex = await ext.fromUrl(url);
     let extractor = require(`${__dirname}/extractors/${ex}`);
     console.log(url, opt)
+
     if (opt.ignoreCache !== true) {
       let f = await links.findOne({url: url});
       if (f !== null) {
@@ -25,6 +26,10 @@ module.exports = {
     }
 
     f = await extractor.get(url, opt);
+
+    if (!this.isUrl(f)) {
+      throw "Invalid URL from backend.";
+    } 
 
     if (opt.allowCache == true) {
       await links.insertOne(f);
@@ -55,5 +60,6 @@ module.exports = {
     return s.substring(1);
   },
   byteCount: function(string) {return encodeURI(string).split(/%..|./).length - 1;},
-  config: function() {return config;}
+  config: function() {return config;},
+  isUrl: function(url) {return /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/.test(url);}
 }

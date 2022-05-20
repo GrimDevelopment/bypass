@@ -12,16 +12,12 @@ module.exports = {
     
     // setting up plugins
 
-    if (lib.config().captcha.active == false) {
-      throw "Captcha service is required for this link, but this instance doesn't support it."
-    }
-
     pup.use(adb());
     pup.use(stl());
 
     // opening browser
 
-    let b = await pup.launch({headless: true});
+    let b = await pup.launch({headless: false});
     let p = await b.newPage();
     await p.goto(u.href);
     await p.waitForSelector(".btn-main:not(.btn-disabled)");
@@ -44,11 +40,7 @@ module.exports = {
     let a = await p.url();
     await b.close();
 
-    return {
-      destination: a,
-      time: (new Date() * 1),
-      
-    };
+    return a;
   }
 }
 
