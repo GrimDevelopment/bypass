@@ -55,7 +55,5 @@ module.exports = {
     return s.substring(1);
   },
   byteCount: function(string) {return encodeURI(string).split(/%..|./).length - 1;},
-  config: function() {
-    return config;
-  }
+  config: function() {return config;}
 }

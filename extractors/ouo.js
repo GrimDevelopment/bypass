@@ -19,10 +19,15 @@ module.exports = {
     pup.use(adb());
     pup.use(stl());
 
+    // opening browser
+
     let b = await pup.launch({headless: true});
     let p = await b.newPage();
     await p.goto(u.href);
     await p.waitForSelector(".btn-main:not(.btn-disabled)");
+
+    // eval code sourced from https://github.com/FastForwardTeam/FastForward/blob/main/src/js/injection_script.js#L1095
+
     await p.evaluate(function() {
       if (location.pathname.includes("/go") || location.pathname.includes("/fbc")) {
         document.querySelector("form").submit();
@@ -39,7 +44,11 @@ module.exports = {
     let a = await p.url();
     await b.close();
 
-    return a;
+    return {
+      destination: a,
+      time: (new Date() * 1),
+      
+    };
   }
 }
 
