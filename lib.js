@@ -33,7 +33,7 @@ module.exports = {
     return f;
   }, 
   solve: async function(sitekey, type, opt) {
-    if (config["captcha"]["enabled"] == false) return null;
+    if (config["captcha"]["active"] == false) return null;
     const tc = new two.Solver(config["captcha"]["key"]);
     let ref = opt.referer;
     switch(type) {
@@ -54,5 +54,8 @@ module.exports = {
     s = s.substring(0, s.length - 1);
     return s.substring(1);
   },
-  byteCount: function(string) {return encodeURI(string).split(/%..|./).length - 1;}
+  byteCount: function(string) {return encodeURI(string).split(/%..|./).length - 1;},
+  config: function() {
+    return config;
+  }
 }

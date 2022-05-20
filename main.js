@@ -8,7 +8,6 @@ const lib = require("./lib");
     });
     console.log(l);
   } catch(e) {
-    console.log(e.message);
+    console.log(e);
   }
-  
 })();
