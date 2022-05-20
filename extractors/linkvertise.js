@@ -1,4 +1,8 @@
-const axios = require("axios");
+const pup = require("puppeteer-extra");
+const adb = require("puppeteer-extra-plugin-adblocker");
+const stl = require("puppeteer-extra-plugin-stealth");
+const lib = require("../lib");
+const cap = require("puppeteer-extra-plugin-recaptcha");
 
 module.exports = {
   hostnames: [
@@ -14,45 +18,36 @@ module.exports = {
   ],
   get: async function (url) {
 
-    // might just do this in puppeteer tbh, too much validation stuff that i don't care enough to do
-
-    let u = new URL(url);
-    let i;
-    if (u.hostname == "linkvertise.download") {
-      i = `/${u.pathname.split("/").slice(2, 4).join("/")}`;
-    } else {
-      i = `${u.pathname.split("/").slice(0, 3).join("/")}`;
-    }
+    // setup plugins
+    pup.use(adb());
+    pup.use(stl());
     
-    let resp = await axios({
-      method: "GET",
-      url: `https://publisher.linkvertise.com/api/v1/redirect/link/static${i}?origin=&resolution=1920x1080`,
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.5",           
-        "Accept-Encoding": "gzip, deflate",
-        "DNT": "1",
-        "Connection": "keep-alive",
-        "Upgrade-Insecure-Requests": "1",
-        "Sec-GPC": "1",
-        "Cache-Control": "max-age=0",
-        "TE": "Trailers"
+    if (lib.config().captcha.active == false) {
+      throw "Captcha service is required for this link, but this instance doesn't support it."
+    }
+
+    pup.use(cap({
+      provider: {
+        id: lib.config().captcha.service,
+        token: lib.config().captcha.key
       }
-    });
-
-    if (resp.headers["content-type"] == "text/html; charset=UTF-8") throw "Invalid type of link.";
-
-    console.log(resp.data)
-
-    let serial = Buffer.from(JSON.stringify({
-      timestamp: new Date() * 1,
-      random: "6548307",
-      link_id: resp.data.data.link.id
-    })).toString("base64");
+    }));
     
-    switch (resp.data.data.link.target_type.toLowerCase()) {
-      //tba
-    }
+    let b = await pup.launch({headless: false});
+    let p = await b.newPage();
+
+    await p.setUserAgent("Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36");
+    await p.goto(url);
+    await p.waitForTimeout(3000);
+    if (p.$(".captcha-content")) await p.solveRecaptchas();
+    await p.waitForSelector(".lv-dark-btn");
+    await p.click(".lv-dark-btn");
+    await p.waitForTimeout(1000);
+    let tab = (await b.pages());
+    tab = tab[tab.length - 1];
+    await tab.waitForNavigation();
+    let u = await tab.url();
+    console.log(u);
+    return u;
   }
 }

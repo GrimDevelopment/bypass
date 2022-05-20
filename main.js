@@ -2,7 +2,7 @@ const lib = require("./lib");
 
 (async function() {
   try {
-    let l = await lib.get("https://linkvertise.com/233160/austin/11", {
+    let l = await lib.get("", {
       ignoreCache: false,
       allowCache: false
     });
