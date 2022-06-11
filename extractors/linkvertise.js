@@ -16,7 +16,10 @@ module.exports = {
     "link-center.net",
     "link-target.net"
   ],
+  "requires-captcha": true,
   get: async function (url) {
+
+    // this may not work for pastes, will add support for them once i come across one
 
     // setup plugins
     pup.use(adb());
@@ -33,21 +36,24 @@ module.exports = {
       }
     }));
     
-    let b = await pup.launch({headless: false});
+    let b = await pup.launch({headless: true});
     let p = await b.newPage();
 
     await p.setUserAgent("Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36");
     await p.goto(url);
-    await p.waitForTimeout(3000);
+
+    await p.waitForTimeout(3000); // this is just for waiting to see if a captcha shows up
     if (p.$(".captcha-content")) await p.solveRecaptchas();
+
     await p.waitForSelector(".lv-dark-btn");
     await p.click(".lv-dark-btn");
     await p.waitForTimeout(1000);
+
     let tab = (await b.pages());
     tab = tab[tab.length - 1];
     await tab.waitForNavigation();
     let u = await tab.url();
-    console.log(u);
+
     return u;
   }
 }

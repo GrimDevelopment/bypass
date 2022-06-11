@@ -1,0 +1,16 @@
+body {
+  background:#bdbdbd;
+  color: black;
+  text-align: center;
+  margin: 0;
+} 
+
+.main {
+  text-align: left;
+  padding: 1vw 1vh;
+  background: white;
+}
+
+.desc p {
+  margin: 0;
+}

@@ -3,6 +3,7 @@ const cheerio = require("cheerio");
 
 module.exports = {
   hostnames: ["bst.gg", "bst.wtf", "booo.st", "boost.ink"],
+  "requires-captcha": false,
   get: async function(url) {
     let resp = await axios({
       method: "GET",

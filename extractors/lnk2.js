@@ -6,6 +6,7 @@ const lib = require("../lib");
 
 module.exports = {
   hostnames: ["lnk2.cc"],
+  "requires-captcha": true,
   get: async function(url) {
 
     // setting up plugins
@@ -25,7 +26,6 @@ module.exports = {
         token: lib.config().captcha.key
       }
     }));
-
 
     // opening browser
 

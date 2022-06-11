@@ -2,6 +2,7 @@ const axios = require("axios");
 
 module.exports = {
   hostnames: ["sh.st", "clkmein.com", "viid.me", "xiw34.com", "corneey.com", "gestyy.com", "cllkme.com", "festyy.com", "destyy.com", "cestyy.com", "ceesty.com"],
+  "requires-captcha": false,
   get: async function (url) {
     let resp = await axios({
       method: "GET",

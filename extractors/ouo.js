@@ -1,23 +1,20 @@
-const pup = require("puppeteer-extra");
-const adb = require("puppeteer-extra-plugin-adblocker");
-const two = require("puppeteer-extra-plugin-recaptcha");
+const pup = require("puppeteer-extra");;
 const stl = require("puppeteer-extra-plugin-stealth");
-const lib = require("../lib");
 
 module.exports = {
   hostnames: ["ouo.press", "ouo.io"],
+  "requires-captcha": false,
   get: async function(url) {
     let u = new URL(url);
     if (u.searchParams.get("s")) return decodeURIComponent(u.searchParams.get("s"));
     
     // setting up plugins
 
-    pup.use(adb());
     pup.use(stl());
 
     // opening browser
 
-    let b = await pup.launch({headless: false});
+    let b = await pup.launch();
     let p = await b.newPage();
     await p.goto(u.href);
     await p.waitForSelector(".btn-main:not(.btn-disabled)");

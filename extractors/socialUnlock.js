@@ -3,6 +3,7 @@ const cheerio = require("cheerio");
 
 module.exports = {
   hostnames: ["social-unlock.com"],
+  "requires-captcha": false,
   get: async function(url) {
     url = url.split("/").slice(0, 3).join("/") + "/redirect/" + url.split("/").slice(3).join("/");
     let resp = await axios({
