@@ -14,48 +14,54 @@ const links = db.collection("links");
 
 module.exports = {
   get: async function(url, opt) {
-    let ex = await ext.fromUrl(url);
-    let extractor = require(`${__dirname}/extractors/${ex}`);
+    try {
+      let ex = await ext.fromUrl(url);
+      let extractor = require(`${__dirname}/extractors/${ex}`);
 
-    console.log(url, opt)
-
-    if (opt.ignoreCache !== "true") {
-      let f = await links.findOne({"original-url": url});
-      if (f !== null) {
-        f._id = undefined;
-        f["from-cache"] = true;
-        f["from-fastforward"] = false;
-        return f; 
-      } 
-    }
-
-    f = await extractor.get(url, opt);
-
-    if (typeof f == "string") {
-      if (!this.isUrl(f)) {
-        throw "Invalid URL from backend.";
-      } 
-  
-
-      let d = {
-        "destination": f,
-        "original-url": url,
-        "date-solved": (new Date() * 1)
+      if (opt.ignoreCache !== "true") {
+        let f = await links.findOne({"original-url": url});
+        if (f !== null) {
+          f._id = undefined;
+          f["from-cache"] = true;
+          f["from-fastforward"] = false;
+          return f; 
+        } 
       }
 
-      if (opt.allowCache !== "false") {
-        await links.insertOne(d);
+      f = await extractor.get(url, opt);
+
+      if (typeof f == "string") {
+        if (!this.isUrl(f)) {
+          throw "Invalid URL from backend.";
+        } 
+    
+
+        let d = {
+          "destination": f,
+          "original-url": url,
+          "date-solved": (new Date() * 1)
+        }
+
+        if (opt.allowCache !== "false") {
+          if (opt.ignoreCache == "false") {
+            await links.findOneAndReplace({"original-url": url}, d);
+          } else {
+            await links.insertOne(d);
+          }
+        }
+
+        d["_id"] = undefined;
+        d["from-cache"] = false;
+        d["from-fastforward"] = false;
+
+        return d;
+      } else if (typeof f == "object") {
+        // meant for sites like carrd when i add them
+      } else {
+        throw "Invalid response from backend.";
       }
-
-      d["_id"] = undefined;
-      d["from-cache"] = false;
-      d["from-fastforward"] = false;
-
-      return d;
-    } else if (typeof f == "object") {
-      // meant for sites like carrd when i add them
-    } else {
-      throw "Invalid response from backend.";
+    } catch(err) {
+      throw err;
     }
   }, 
   solve: async function(sitekey, type, opt) {

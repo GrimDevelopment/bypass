@@ -8,46 +8,49 @@ module.exports = {
   hostnames: ["lnk2.cc"],
   "requires-captcha": true,
   get: async function(url) {
+    try {
+      // setting up plugins
 
-    // setting up plugins
+      pup.use(adb({
+        blockTrackers: true
+      }));
+      pup.use(stl());
 
-    pup.use(adb({
-      blockTrackers: true
-    }));
-    pup.use(stl());
-
-    if (lib.config().captcha.active == false) {
-      throw "Captcha service is required for this link, but this instance doesn't support it."
-    }
-
-    pup.use(cap({
-      provider: {
-        id: lib.config().captcha.service,
-        token: lib.config().captcha.key
+      if (lib.config().captcha.active == false) {
+        throw "Captcha service is required for this link, but this instance doesn't support it."
       }
-    }));
 
-    // opening browser
+      pup.use(cap({
+        provider: {
+          id: lib.config().captcha.service,
+          token: lib.config().captcha.key
+        }
+      }));
 
-    let b = await pup.launch({headless: true});
-    let p = await b.newPage();
-    await p.goto(url);
+      // opening browser
 
-    // solving captchas and navigating
+      let b = await pup.launch({headless: true});
+      let p = await b.newPage();
+      await p.goto(url);
 
-    await p.solveRecaptchas();
-    await p.evaluate(function() {
-      document.querySelector("form").submit();
-    });
-    await p.waitForNavigation();
-    await p.evaluate(function() {
-      document.querySelector("form").submit();
-    });
-    await p.waitForNavigation();
+      // solving captchas and navigating
 
-    let f = await p.url();
-    await b.close();
+      await p.solveRecaptchas();
+      await p.evaluate(function() {
+        document.querySelector("form").submit();
+      });
+      await p.waitForNavigation();
+      await p.evaluate(function() {
+        document.querySelector("form").submit();
+      });
+      await p.waitForNavigation();
 
-    return f;
+      let f = await p.url();
+      await b.close();
+
+      return f;
+    } catch(err) {
+      throw err;
+    }
   }
 }

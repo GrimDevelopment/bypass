@@ -18,42 +18,45 @@ module.exports = {
   ],
   "requires-captcha": true,
   get: async function (url) {
+    try {
+      // this may not work for pastes, will add support for them once i come across one
 
-    // this may not work for pastes, will add support for them once i come across one
-
-    // setup plugins
-    pup.use(adb());
-    pup.use(stl());
-    
-    if (lib.config().captcha.active == false) {
-      throw "Captcha service is required for this link, but this instance doesn't support it."
-    }
-
-    pup.use(cap({
-      provider: {
-        id: lib.config().captcha.service,
-        token: lib.config().captcha.key
+      // setup plugins
+      pup.use(adb());
+      pup.use(stl());
+      
+      if (lib.config().captcha.active == false) {
+        throw "Captcha service is required for this link, but this instance doesn't support it."
       }
-    }));
-    
-    let b = await pup.launch({headless: true});
-    let p = await b.newPage();
 
-    await p.setUserAgent("Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36");
-    await p.goto(url);
+      pup.use(cap({
+        provider: {
+          id: lib.config().captcha.service,
+          token: lib.config().captcha.key
+        }
+      }));
+      
+      let b = await pup.launch({headless: true});
+      let p = await b.newPage();
 
-    await p.waitForTimeout(3000); // this is just for waiting to see if a captcha shows up
-    if (p.$(".captcha-content")) await p.solveRecaptchas();
+      await p.setUserAgent("Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36");
+      await p.goto(url);
 
-    await p.waitForSelector(".lv-dark-btn");
-    await p.click(".lv-dark-btn");
-    await p.waitForTimeout(1000);
+      await p.waitForTimeout(3000); // this is just for waiting to see if a captcha shows up
+      if (p.$(".captcha-content")) await p.solveRecaptchas();
 
-    let tab = (await b.pages());
-    tab = tab[tab.length - 1];
-    await tab.waitForNavigation();
-    let u = await tab.url();
+      await p.waitForSelector(".lv-dark-btn");
+      await p.click(".lv-dark-btn");
+      await p.waitForTimeout(1000);
 
-    return u;
+      let tab = (await b.pages());
+      tab = tab[tab.length - 1];
+      await tab.waitForNavigation();
+      let u = await tab.url();
+
+      return u;
+    } catch(err) {
+      throw err;
+    }
   }
 }

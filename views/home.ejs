@@ -13,10 +13,30 @@
       <div class="desc">
         <p>Open sourced server-side link bypasser.</p>
         <p><i>Or FastForward but without an extension, for non-nerds.</i></p>
+      </div><br>
+      <div class="require-script">
+        <div class="form">
+          <input placeholder="Insert adlink here." id="url">
+          <button onclick="bypass();">Bypass</button>
+          <div class="options"><br>
+            <input type="checkbox" id="allowCache" name="allowCache"> 
+            <label for="allowCache">Disallow caching of your result?</label><br>
+            <input type="checkbox" id="ignoreCache" name="ignoreCache">
+            <label for="ignoreCache">Ignore cached result?</label>
+          </div>
+        </div>
+        <div class="loader">
+          <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+        </div>
+        <div class="result"></div>
       </div>
+      <noscript>
+        <p style="margin-bottom:0;color:red;"><i>This webapp requires Javascript to run, you can use the API via the docs below if you need to.</i></p>
+      </noscript>
     </div>
     <p>
       <a href="https://git.gay/a/bifm">Source code</a> - <a href="/temp">API Docs</a>
     </p>
+    <script src="/app.js"></script>
   </body>
 </html>

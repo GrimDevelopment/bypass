@@ -1,8 +1,12 @@
+@import url("/load.css");
+
 body {
   background:#bdbdbd;
   color: black;
   text-align: center;
   margin: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  text-rendering: optimizeLegibility;
 } 
 
 .main {
@@ -13,4 +17,47 @@ body {
 
 .desc p {
   margin: 0;
+}
+
+#app {
+  display: none; /* Hidden for NoScript users. */
+}
+
+#url {
+  width: 100%;
+  max-width: 300px;
+}
+
+.form {
+  margin-bottom:5px;
+}
+
+.loader {
+  display: none;
+}
+
+.success {
+  background:rgb(43, 255, 43);
+  color: black;
+}
+
+.error {
+  background: red;
+  color: white;
+}
+
+.success, 
+.error {
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.success p, 
+.error p {
+  margin: 0;
+}
+
+.extra {
+  font-size: smaller;
+  font-weight: bold;
 }

@@ -31,11 +31,15 @@ app.get("/api/bypass", async function(req, res) {
     if (typeof err == "string") {
       res.send({
         success: false,
-        err: err,
+        error: err,
         "from-backend": true
       });
     } else {
-      console.log(err);
+      res.send({
+        success: false,
+        error: (err.message || err.stack || err.code),
+        "from-backend": true 
+      })
     }
   }
 });
