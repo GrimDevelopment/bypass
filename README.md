@@ -8,8 +8,8 @@ Fetching the pages from the client requires sending some information about your 
 
 ## licensing notice
 
-Since [this commit](/temp), this rewrite is using the APGL license, meaning that BIFM now requires attribution if you are using BIFM as an API, docs of which are coming shortly.
-If you would rather use the Unlicense version, use [this commit and behind](/temp).
+Since [this commit](https://git.gay/a/bifm/commit/adec8de080c4f18545ba3d7cfb4e7edffa7edf80), this rewrite is using the APGL license, meaning that BIFM now requires attribution if you are using BIFM as an API, docs of which are coming shortly.
+If you would rather use the Unlicense version, use [this commit and behind](https://git.gay/a/bifm/commit/5db9b17f7796bac35170e00acfe9da043cbc4b29).
 
 ## supported sites
 
