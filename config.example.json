@@ -8,10 +8,6 @@
     "url": "mongodb://127.0.0.1:27017/bifm"
   },
   "http": {
-    "port": 32333,
-    "origin": ""
-  },
-  "general": {
-    "api-only": false
+    "port": 32333
   }
 }

@@ -20,8 +20,8 @@ If you would rather use the Unlicense version, use [this commit and behind](http
 - social-unlock.com
 - lnk2.cc
 - linkvertise & aliases
+- mylink.vc & myl.li
 - cshort.org
  
 ## sites being worked on 
-- mylink aliases
-- aylink
+*Suggest some.*
