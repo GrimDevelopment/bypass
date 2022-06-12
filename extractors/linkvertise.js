@@ -18,6 +18,7 @@ module.exports = {
   ],
   "requires-captcha": true,
   get: async function (url) {
+    let b;
     try {
       // this may not work for pastes, will add support for them once i come across one
 
@@ -36,7 +37,7 @@ module.exports = {
         }
       }));
       
-      let b = await pup.launch({headless: true});
+      b = await pup.launch({headless: false});
       let p = await b.newPage();
 
       await p.setUserAgent("Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36");
@@ -51,11 +52,12 @@ module.exports = {
 
       let tab = (await b.pages());
       tab = tab[tab.length - 1];
-      await tab.waitForNavigation();
+      //await tab.waitForNavigation();
       let u = await tab.url();
 
       return u;
     } catch(err) {
+      if (b !== undefined) await b.close();
       throw err;
     }
   }

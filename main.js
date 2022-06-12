@@ -37,7 +37,7 @@ app.get("/api/bypass", async function(req, res) {
     } else {
       res.send({
         success: false,
-        error: (err.message || err.stack || err.code),
+        error: (err.stack || err.code),
         "from-backend": true 
       })
     }

@@ -1,7 +1,22 @@
 const axios = require("axios");
 
 module.exports = {
-  hostnames: ["sh.st", "clkmein.com", "viid.me", "xiw34.com", "corneey.com", "gestyy.com", "cllkme.com", "festyy.com", "destyy.com", "cestyy.com", "ceesty.com"],
+  hostnames: [
+    "sh.st", 
+    "clkmein.com", 
+    "viid.me", 
+    "xiw34.com", 
+    "corneey.com", 
+    "gestyy.com", 
+    "cllkme.com", 
+    "festyy.com", 
+    "destyy.com", 
+    "cestyy.com", 
+    "ceesty.com",
+    "clkme.me",
+    "jnw0.me",
+    "wiid.me"
+  ],
   "requires-captcha": false,
   get: async function (url) {
     try {

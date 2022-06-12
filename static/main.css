@@ -15,6 +15,14 @@ body {
   background: white;
 }
 
+@media (min-width: 999px) {
+  .main {
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 50%;
+  }
+}
+
 .desc p {
   margin: 0;
 }

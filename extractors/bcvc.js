@@ -1,22 +1,26 @@
 const pup = require("puppeteer-extra");
 const adb = require("puppeteer-extra-plugin-adblocker");
-const cap = require("puppeteer-extra-plugin-recaptcha");
 const stl = require("puppeteer-extra-plugin-stealth");
 const lib = require("../lib");
+const cap = require("puppeteer-extra-plugin-recaptcha");
 
 module.exports = {
-  hostnames: ["lnk2.cc"],
+  hostnames: [
+    "bc.vc",
+    "bcvc.live",
+    "ouo.today"
+  ],
   "requires-captcha": true,
-  get: async function(url) {
+  get: async function (url) {
     let b;
     try {
-      // setting up plugins
+      // this may not work for pastes, will add support for them once i come across one
 
-      pup.use(adb({
-        blockTrackers: true
-      }));
-      pup.use(stl());
-
+      // setup plugins
+      pup.use(adb());
+      let st = stl();
+      pup.use(st);
+      
       if (lib.config().captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."
       }
@@ -28,29 +32,19 @@ module.exports = {
         }
       }));
 
-      // opening browser
-
       b = await pup.launch({headless: true});
       let p = await b.newPage();
       await p.goto(url);
-
-      // solving captchas and navigating
-
-      await p.solveRecaptchas();
-      await p.evaluate(function() {
-        document.querySelector("form").submit();
-      });
+      await p.waitForSelector("#getLink", {visible: true});
+      await p.click("#getLink");
       await p.waitForNavigation();
-      await p.evaluate(function() {
-        document.querySelector("form").submit();
-      });
-      await p.waitForNavigation();
-
-      let f = await p.url();
+      let u = await p.url();
+      u = new URL(u);
+      u = u.searchParams.get("cr");
+      u = Buffer.from(u, "base64").toString("ascii");
       await b.close();
-
-      return f;
-    } catch(err) {
+      return u;
+    } catch (err) {
       if (b !== undefined) await b.close();
       throw err;
     }

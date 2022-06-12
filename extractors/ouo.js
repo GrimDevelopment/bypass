@@ -5,6 +5,7 @@ module.exports = {
   hostnames: ["ouo.press", "ouo.io"],
   "requires-captcha": false,
   get: async function(url) {
+    let b;
     try {
       let u = new URL(url);
       if (u.searchParams.get("s")) return decodeURIComponent(u.searchParams.get("s"));
@@ -15,7 +16,7 @@ module.exports = {
 
       // opening browser
 
-      let b = await pup.launch();
+      b = await pup.launch();
       let p = await b.newPage();
       await p.goto(u.href);
       await p.waitForSelector(".btn-main:not(.btn-disabled)");
@@ -40,6 +41,7 @@ module.exports = {
 
       return a;
     } catch(err) {
+      if (b !== undefined) await b.close();
       throw err;
     }
   }
