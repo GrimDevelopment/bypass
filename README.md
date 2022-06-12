@@ -22,6 +22,8 @@ If you would rather use the Unlicense version, use [this commit and behind](http
 - linkvertise & aliases
 - mylink.vc & myl.li
 - cshort.org
+- bc.vc
+- cpmlink.net
  
 ## sites being worked on 
 *Suggest some.*
