@@ -18,8 +18,7 @@ module.exports = {
 
       // setup plugins
       pup.use(adb());
-      let st = stl();
-      pup.use(st);
+      pup.use(stl());
       
       if (lib.config().captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."
