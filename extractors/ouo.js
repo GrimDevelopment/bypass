@@ -1,4 +1,4 @@
-const pup = require("puppeteer-extra");;
+const pup = require("puppeteer-extra");
 const stl = require("puppeteer-extra-plugin-stealth");
 
 module.exports = {

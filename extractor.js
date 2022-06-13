@@ -3,6 +3,7 @@ const fs = require("fs/promises");
 module.exports = {
   fromUrl: async function(url) {
     let h = new URL(url).hostname;
+    if (h.startsWith("www.")) h = h.substring(4);
     let d = await fs.readdir(`${__dirname}/extractors`);
     for (let i = 0; i < d.length; i++) {
       if (!(await require(`./extractors/${d[i]}`)).hostnames) console.log(d[i])

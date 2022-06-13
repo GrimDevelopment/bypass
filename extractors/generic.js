@@ -114,6 +114,7 @@ module.exports = {
         return resp.request.socket._httpMessage._redirectable._currentUrl;
       } 
     
+      throw "Redirect not found.";
     } catch(err) {
       throw err;
     }

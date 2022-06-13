@@ -6,22 +6,21 @@ const cap = require("puppeteer-extra-plugin-recaptcha");
 
 module.exports = {
   hostnames: [
-    "bc.vc",
-    "bcvc.live",
-    "ouo.today"
+    "123link.biz",
+    "123link.pw",
+    "123link.vip",
   ],
-  "requires-captcha": true,
-  get: async function (url) {
+  "requires-captcha": false,
+  get: async function(url) {
     let b;
     try {
-      // setup plugins
       pup.use(adb());
       pup.use(stl());
-      
+       
       if (lib.config().captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."
       }
-
+ 
       pup.use(cap({
         provider: {
           id: lib.config().captcha.service,
@@ -32,16 +31,23 @@ module.exports = {
       b = await pup.launch({headless: true});
       let p = await b.newPage();
       await p.goto(url);
-      await p.waitForSelector("#getLink", {visible: true});
-      await p.click("#getLink");
+
+      await p.solveRecaptchas();
+      
+      await p.evaluate(function() {
+        if (typeof document.querySelector("form").submit == "function") document.querySelector("form").submit();
+        if (typeof document.querySelector("form").submit == "object") document.querySelector("form").submit.click();
+      })
+
       await p.waitForNavigation();
-      let u = await p.url();
-      u = new URL(u);
-      u = u.searchParams.get("cr");
-      u = Buffer.from(u, "base64").toString("ascii");
+      
+      let u;
+      await p.waitForSelector(".btn-success:not([disabled]):not([href='javascript: void(0)'])");
+      u = await p.evaluate(function() {return document.querySelector(".btn-success:not([disabled]):not([href='javascript: void(0)'])").href;});
+      
       await b.close();
       return u;
-    } catch (err) {
+    } catch(err) {
       if (b !== undefined) await b.close();
       throw err;
     }

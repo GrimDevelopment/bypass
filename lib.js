@@ -31,7 +31,7 @@ module.exports = {
       f = await extractor.get(url, opt);
 
       if (typeof f == "string") {
-        if (!this.isUrl(f)) {
+        if (!this.isUrl(f) || f == url) {
           throw "Invalid URL from backend.";
         } 
     
