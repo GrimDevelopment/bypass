@@ -9,6 +9,7 @@ module.exports = {
     "123link.biz",
     "123link.pw",
     "123link.vip",
+    "123link.co"
   ],
   "requires-captcha": false,
   get: async function(url) {

@@ -16,7 +16,7 @@ module.exports = {
 
       // opening browser
 
-      b = await pup.launch();
+      b = await pup.launch({headless: true});
       let p = await b.newPage();
       await p.goto(u.href);
       await p.waitForSelector(".btn-main:not(.btn-disabled)");

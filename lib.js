@@ -34,7 +34,6 @@ module.exports = {
         if (!this.isUrl(f) || f == url) {
           throw "Invalid URL from backend.";
         } 
-    
 
         let d = {
           "destination": f,
@@ -43,7 +42,7 @@ module.exports = {
         }
 
         if (opt.allowCache !== "false") {
-          if (opt.ignoreCache == "false") {
+          if (opt.ignoreCache == "true") {
             await links.findOneAndReplace({"original-url": url}, d);
           } else {
             await links.insertOne(d);
