@@ -33,7 +33,7 @@ module.exports = {
 
       // opening browser
 
-      let b = await pup.launch({headless: false});
+      let b = await pup.launch({headless: true});
       let p = await b.newPage();
       await p.goto(url);
 
@@ -41,7 +41,7 @@ module.exports = {
         await p.waitForNavigation();
       }
 
-      if (p.$("g-recaptcha")) await p.solveRecaptchas();
+      await p.solveRecaptchas();
       await p.click("#pub6 input[type=submit]");
       await p.waitForNavigation();
       
@@ -61,12 +61,13 @@ async function cont(p) {
   await p.evaluate('document.querySelectorAll(`br`).forEach(function(ele) {ele.remove()});');
 
   if (p.$("form")) {
-    await p.evaluate('document.querySelector("form").submit();');
+    await p.evaluate(`if (!document.querySelector("form h3") || document.querySelector("form h3").innerHTML !== "This page verifies browser integrity, we just need 5 seconds!") document.querySelector("form").submit();`);
   } else if (p.$("#continue")) {
     await p.click("#continue");
   } else if (p.$("input[type=submit]")) {
     await p.click("input[type=submit]");
   } 
+  
   await p.waitForNavigation();
 
   if (new URL(await p.url()).host.includes("myl.") || new URL(await p.url()).host.includes("mylink.")) {
