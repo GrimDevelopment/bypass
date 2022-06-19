@@ -14,6 +14,7 @@ Sites supported by BIFM currently.
 |**`cshort.org`**|Axios|No||
 |**`ity.im`**|Axios|No||
 |**`linkvertise.net`**|Puppeteer + Adblocker + Stealth|Yes|`linkvertise.com`, `up-to-down.net`, `link-to.net`, `direct-link.net`, `linkvertise.download`, `file-link.net`, `link-center.net`, `link-target.net`|Not 100% compatible yet, need paste Linkvertise links as well.|
+|**`lnk.parts`**|Puppeteer + Stealth|Yes|`link.tl`, `lnkload.com`||
 |**`lnk2.cc`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|||
 |**`myl.li`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|`mylink.vc`|||
 |**`ouo.io`**|Puppeteer + Stealth|No|||
