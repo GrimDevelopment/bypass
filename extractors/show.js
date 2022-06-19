@@ -19,7 +19,7 @@ module.exports = {
       let $ = cheerio.load(resp.data);
 
       if ($("#show-campaign-data")) {
-        let d = $("#show-campaign-data")[0].children[0].data;
+        let d = $("#show-campaign-data")[0]?.children[0]?.data;
         d = JSON.parse(d);
         if (lib.isUrl(d.unlockable?.redirect?.url)) {
           return d.unlockable.redirect.url;
