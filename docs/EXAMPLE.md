@@ -20,4 +20,5 @@ All example links lead to ``https://git.gay/a/bifm``. Passwords for all password
 ## Unofficial Links
 - **1bit.space** - [https://1bit.space/FVJcWHr](https://1bit.space/FVJcWHr) redirects to ``https://universal-bypass.org/``.
 - **bc.vc** - [https://bc.vc/vQesLIh](https://bc.vc/vQesLIh) redirects to ``https://universal-bypass.org/``.
+- **show.co** - [https://show.co/HQrPtta](https://show.co/HQrPtta) redirects to ``https://universal-bypass.org/``.
 - **`wpsafelink` sites** - [https://demo-safelink.themeson.com/template1/?f7fbb8af](https://demo-safelink.themeson.com/template1/?f7fbb8af) redirects to `https://themeson.com/safelink/`.

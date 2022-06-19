@@ -17,7 +17,8 @@ Sites supported by BIFM currently.
 |**`myl.li`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|`mylink.vc`|||
 |**`ouo.io`**|Puppeteer + Stealth|No|||
 |**`sh.st`**|Axios|No|`ceesty.com`, `cestyy.com`, `clkme.me`, `clkmein.com`, `cllkme.com`, `corneey.com`, `destyy.com`, `festyy.com`, `gestyy.com`, `jnw0.me`, `xiw34.com`, `wiid.me`|The list to the right may not be 100% correct or complete.|
-|**`social-unlock.com`**|Axios||||
+|**`show.co`**|Axios|No|||
+|**`social-unlock.com`**|Axios|No|||
 
 ## Generic Sites
 |Generic Type|Method|Needs CAPTCHA solver?|Example domains|
