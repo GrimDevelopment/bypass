@@ -12,24 +12,22 @@ Since [this commit](https://git.gay/a/bifm/commit/adec8de080c4f18545ba3d7cfb4e7e
 If you would rather use the Unlicense version, use [this commit and behind](https://git.gay/a/bifm/commit/5db9b17f7796bac35170e00acfe9da043cbc4b29).
 
 ## roadmap
-- Add proper documentation.
-- Improve frontend site
-
-## supported sites
-
-- ouo.io/.press
-- boost.ink & aliases
-- bc.vc
-- ity.im
-- sh.st & aliases
-- social-unlock.com
-- lnk2.cc
-- linkvertise & aliases
-- mylink.vc & myl.li
-- cshort.org
-- bc.vc
-- cpmlink.net
-- 123link.biz/.pw/.vip
+- Add proper documentation (40% done).
+  - Merge `./docs/EXAMPLE.md` and `./docs/SITES.md`.
+  - Write more contributing information.
+  - Add API docs and instance list.
+- Improve frontend site.
+  - Get rid of EJS entirely, make frontend entirely static.
+  - Detect when the site itself is down, like previous version.
+- Support all active sites the previous edition supported.
+- Add general link list sites. Examples like:
+  - carrd.co
+  - linktr.ee
+  - mirrorace.org
+- Support the following:
+  - oke.io ([sample link](https://oke.io/D3wL))
+  - karung.in ([sample link](http://karung.in/Gyucc))
+  - adlinkfly template ([sample link](https://adlinkfly.mightyscripts.xyz/cdlSsrpD))
  
 ## sites being worked on 
 *Suggest some.*

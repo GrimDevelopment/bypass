@@ -16,25 +16,37 @@ module.exports = {
         if (lib.isUrl(u.searchParams.get("url"))) {
           return u.searchParams.get("url");
         } else if (lib.isUrl(Buffer.from(u.searchParams.get("url"), "base64").toString("ascii"))) {
-          return lib.isUrl(Buffer.from(u.searchParams.get("url"), "base64").toString("ascii")); 
+          return Buffer.from(u.searchParams.get("url"), "base64").toString("ascii"); 
         }
       } else if (u.hash) {
         if (lib.isUrl(u.hash.substring(1))) {
           return u.hash.substring(1);
         } else if (lib.isUrl(Buffer.from(u.hash.substring(1), "base64").toString("ascii"))) {
-          return (lib.isUrl(Buffer.from(u.hash.substring(1), "base64").toString("ascii")));
+          return (Buffer.from(u.hash.substring(1), "base64").toString("ascii"));
         }
       } else if (u.searchParams.get("target")) {
         if (lib.isUrl(u.searchParams.get("target"))) {
           return u.searchParams.get("target");
         } else if (lib.isUrl(Buffer.from(u.searchParams.get("target"), "base64").toString("ascii"))) {
-          return (lib.isUrl(Buffer.from(u.searchParams.get("target"), "base64").toString("ascii")));
+          return (Buffer.from(u.searchParams.get("target"), "base64").toString("ascii"));
         }
       } else if (u.searchParams.get("href")) {
         if (lib.isUrl(u.searchParams.get("href"))) {
           return u.searchParams.get("href");
         } else if (lib.isUrl(Buffer.from(u.searchParams.get("href"), "base64").toString("ascii"))) {
-          return (lib.isUrl(Buffer.from(u.searchParams.get("href"), "base64").toString("ascii")));
+          return (Buffer.from(u.searchParams.get("href"), "base64").toString("ascii"));
+        }
+      } else if (u.searchParams.get("site")) {
+        if (lib.isUrl(u.searchParams.get("site"))) {
+          return u.searchParams.get("site");
+        } else if (lib.isUrl(Buffer.from(u.searchParams.get("site"), "base64").toString("ascii"))) {
+          return (Buffer.from(u.searchParams.get("site"), "base64").toString("ascii"));
+        }
+      } else if (u.searchParams.get("r")) {
+        if (lib.isUrl(u.searchParams.get("r"))) {
+          return u.searchParams.get("r");
+        } else if (lib.isUrl(Buffer.from(u.searchParams.get("r"), "base64").toString("ascii"))) {
+          return (Buffer.from(u.searchParams.get("r"), "base64").toString("ascii"));
         }
       }
 
