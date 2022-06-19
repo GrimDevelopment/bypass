@@ -5,6 +5,7 @@ Sites supported by BIFM currently.
 |Domain|Method|Needs CAPTCHA solver?|Additional Domains|Additional Notes|
 |---|---|---|---|---|
 |**`1bit.space`**|Puppeteer + Adblocker + Stealth|Yes|||
+|**`1link.club`**|Axios|No|||
 |**`123link.pw`**|Puppeteer + Adblocker + Stealth|Yes|`123link.biz`, `123link.co`, `123link.vip`||
 |**`bc.vc`**|Puppeteer + Stealth|No|||
 |**`boost.ink`**|Axios|No|`bst.gg`, `bst.wtf`, `booo.st`||
