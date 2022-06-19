@@ -15,9 +15,7 @@ module.exports = {
 
       // setting up plugins
 
-      pup.use(adb({
-        blockTrackers: true
-      }));
+      pup.use(adb({blockTrackers: true}));
       pup.use(stl());
 
       if (lib.config().captcha.active == false) {

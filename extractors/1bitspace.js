@@ -5,20 +5,20 @@ const stl = require("puppeteer-extra-plugin-stealth");
 const lib = require("../lib");
 
 module.exports = {
-  hostnames: ["lnk2.cc"],
+  hostnames: [
+    "1bit.space"
+  ],
   "requires-captcha": true,
   get: async function(url) {
     let b;
     try {
-      // setting up plugins
-
-      pup.use(adb({blockTrackers: true}));
+      pup.use(adb());
       pup.use(stl());
-
+       
       if (lib.config().captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."
       }
-
+ 
       pup.use(cap({
         provider: {
           id: lib.config().captcha.service,
@@ -26,28 +26,30 @@ module.exports = {
         }
       }));
 
-      // opening browser
-
-      b = await pup.launch({headless: true});
+      b = await pup.launch({headless: false});
       let p = await b.newPage();
+
       await p.goto(url);
 
-      // solving captchas and navigating
-
+      // first page
       await p.solveRecaptchas();
-      await p.evaluate(function() {
-        document.querySelector("form").submit();
-      });
-      await p.waitForNavigation();
-      await p.evaluate(function() {
-        document.querySelector("form").submit();
-      });
+      await p.click(".button-element-verification");
+
+      // second page
+      await p.waitForSelector(".button-element-redirect:not([disabled])");
+      await p.click(".button-element-redirect:not([disabled])");
       await p.waitForNavigation();
 
-      let f = await p.url();
+      // third page
+      await p.waitForSelector("#continue-button:not([disabled])");
+      await p.click("#continue-button:not([disabled])");
+      await p.waitForNavigation();
+
+      let u = await p.url();
+
       await b.close();
 
-      return f;
+      return u;
     } catch(err) {
       if (b !== undefined) await b.close();
       throw err;

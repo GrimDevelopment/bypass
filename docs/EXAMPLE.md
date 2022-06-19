@@ -6,6 +6,7 @@ Links used to demonstrate
 
 All example links lead to ``https://git.gay/a/bifm``. Passwords for all passworded links are `bifm`.
 
+- **adf.ly** - [http://usheethe.com/T3F5](http://usheethe.com/T3F5)
 - **ouo.io** - [https://ouo.io/2dktqo](https://ouo.io/2dktqo) 
 - **ity.im** - [http://ity.im/1QZh2](http://ity.im/1QZh2)
 - **boost.ink** - [https://boost.ink/c5bba](https://boost.ink/c5bba)
@@ -17,4 +18,6 @@ All example links lead to ``https://git.gay/a/bifm``. Passwords for all password
 - **myl.li**/**mylink.vc** - [https://myl.li/NOEgI6aOp3bF](https://myl.li/NOEgI6aOp3bF)
 
 ## Unofficial Links
-- **bc.vc** - [https://bc.vc/vQesLIh](https://bc.vc/vQesLIh) redirects to ``https://universal-bypass.org/``
+- **1bit.space** - [https://1bit.space/FVJcWHr](https://1bit.space/FVJcWHr) redirects to ``https://universal-bypass.org/``.
+- **bc.vc** - [https://bc.vc/vQesLIh](https://bc.vc/vQesLIh) redirects to ``https://universal-bypass.org/``.
+- **`wpsafelink` sites** - [https://demo-safelink.themeson.com/template1/?f7fbb8af](https://demo-safelink.themeson.com/template1/?f7fbb8af) redirects to `https://themeson.com/safelink/`.

@@ -8,6 +8,10 @@ module.exports = {
   "requires-captcha": false,
   get: async function (url) {
     try {
+      if (lib.config().captcha.active == false) {
+        throw "Captcha service is required for this link, but this instance doesn't support it."
+      }
+
       let resp = await axios({
         method: "GET",
         url: url,
@@ -19,7 +23,6 @@ module.exports = {
           "Connection": "keep-alive"
         }
       });
-
 
       let $ = cheerio.load(resp.data);
       let k = $("#skip [name=key]").val();

@@ -37,7 +37,7 @@ module.exports = {
         }
       }));
       
-      b = await pup.launch({headless: false});
+      b = await pup.launch({headless: true});
       let p = await b.newPage();
 
       await p.setUserAgent("Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36");
@@ -52,8 +52,9 @@ module.exports = {
 
       let tab = (await b.pages());
       tab = tab[tab.length - 1];
-      //await tab.waitForNavigation();
+
       let u = await tab.url();
+      await b.close();
 
       return u;
     } catch(err) {
