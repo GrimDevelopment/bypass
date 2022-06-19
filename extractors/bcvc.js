@@ -1,8 +1,5 @@
 const pup = require("puppeteer-extra");
-const adb = require("puppeteer-extra-plugin-adblocker");
 const stl = require("puppeteer-extra-plugin-stealth");
-const lib = require("../lib");
-const cap = require("puppeteer-extra-plugin-recaptcha");
 
 module.exports = {
   hostnames: [
@@ -15,19 +12,7 @@ module.exports = {
     let b;
     try {
       // setup plugins
-      pup.use(adb());
       pup.use(stl());
-      
-      if (lib.config().captcha.active == false) {
-        throw "Captcha service is required for this link, but this instance doesn't support it."
-      }
-
-      pup.use(cap({
-        provider: {
-          id: lib.config().captcha.service,
-          token: lib.config().captcha.key
-        }
-      }));
 
       b = await pup.launch({headless: true});
       let p = await b.newPage();

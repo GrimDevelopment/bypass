@@ -9,6 +9,8 @@ app.listen(lib.config().http.port, function() {
   console.log(`[http] Listening on HTTP port ${lib.config().http.port}`);
 });
 
+const config = require("./config.json");
+
 app.get("/api/bypass", async function(req, res) {
   let url = req.query.url;
 
@@ -44,7 +46,7 @@ app.get("/api/bypass", async function(req, res) {
         success: false,
         error: e,
         "from-backend": true 
-      })
+      });
     }
   }
 });

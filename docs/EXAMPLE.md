@@ -1,5 +1,9 @@
 # Example Links
 
+Links used to demonstrate 
+
+## Official Links
+
 All example links lead to ``https://git.gay/a/bifm``. Passwords for all passworded links are `bifm`.
 
 - **ouo.io** - [https://ouo.io/2dktqo](https://ouo.io/2dktqo) 
@@ -10,4 +14,7 @@ All example links lead to ``https://git.gay/a/bifm``. Passwords for all password
 - **sh.st** - [http://ceesty.com/es47QR](http://ceesty.com/es47QR)
 - **lnk2.cc** - [https://lnk2.cc/wd1J1](https://lnk2.cc/wd1J1)
 - **cshort.org** - [https://cshort.org/8i8dwPx0](https://cshort.org/8i8dwPx0)
--
+- **myl.li**/**mylink.vc** - [https://myl.li/NOEgI6aOp3bF](https://myl.li/NOEgI6aOp3bF)
+
+## Unofficial Links
+- **bc.vc** - [https://bc.vc/vQesLIh](https://bc.vc/vQesLIh) redirects to ``https://universal-bypass.org/``

@@ -19,6 +19,7 @@ If you would rather use the Unlicense version, use [this commit and behind](http
 
 - ouo.io/.press
 - boost.ink & aliases
+- bc.vc
 - ity.im
 - sh.st & aliases
 - social-unlock.com
