@@ -60,13 +60,12 @@ module.exports = {
 async function cont(p) {
   await p.evaluate('document.querySelectorAll(`br`).forEach(function(ele) {ele.remove()});');
 
-  if (p.$("form")) {
-    await p.evaluate(`if (!document.querySelector("form h3") || document.querySelector("form h3").innerHTML !== "This page verifies browser integrity, we just need 5 seconds!") document.querySelector("form").submit();`);
-  } else if (p.$("#continue")) {
-    await p.click("#continue");
-  } else if (p.$("input[type=submit]")) {
-    await p.click("input[type=submit]");
-  } 
+  await p.evaluate(function () {
+    if (
+      !document.querySelector("form h3") || 
+      document.querySelector("form h3").innerHTML !== "This page verifies browser integrity, we just need 5 seconds!" // to avoid auto-submitting secondary captcha page
+    ) document.querySelector("form").submit();
+  });
   
   await p.waitForNavigation();
 
