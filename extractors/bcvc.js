@@ -16,14 +16,17 @@ module.exports = {
 
       b = await pup.launch({headless: true});
       let p = await b.newPage();
+
       await p.goto(url);
       await p.waitForSelector("#getLink", {visible: true});
       await p.click("#getLink");
       await p.waitForNavigation();
+
       let u = await p.url();
       u = new URL(u);
       u = u.searchParams.get("cr");
       u = Buffer.from(u, "base64").toString("ascii");
+      
       await b.close();
       return u;
     } catch (err) {

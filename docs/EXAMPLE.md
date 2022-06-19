@@ -1,6 +1,6 @@
 # Example Links
 
-Links used to demonstrate 
+Links used to demonstrate the capabilities of BIFM.
 
 ## Official Links
 
