@@ -11,7 +11,7 @@
     "url": "git@git.gay:a/bifm-v2.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "tacohitbox",
   "license": "AGPL-3.0-or-later",
   "dependencies": {
     "2captcha": "^3.0.3",
