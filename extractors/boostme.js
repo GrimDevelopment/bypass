@@ -1,11 +1,13 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
+const lib = require("../lib");
 
 module.exports = {
   hostnames: ["boostme.link"],
   "requires-captcha": false,
   get: async function(url) {
     try {
+      if (lib.config().debug == true) console.log("[boostme] Requesting page...");
       let resp = await axios({
         method: "GET",
         url: url,
@@ -16,6 +18,7 @@ module.exports = {
       });
   
       let $ = cheerio.load(resp.data);
+      if (lib.config().debug == true) console.log("[boostme] Got page. Decoding page...");
       
       return Buffer.from($(".main #home").attr("data-url"), "base64").toString("ascii");
     } catch(err) {

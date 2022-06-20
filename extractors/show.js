@@ -7,6 +7,7 @@ module.exports = {
   "requires-captcha": false,
   get: async function(url) {
     try {
+      if (lib.config().debug == true) console.log("[show] Requesting page...");
       let resp = await axios({
         method: "GET",
         url: url,
@@ -16,17 +17,21 @@ module.exports = {
         }
       });
 
+      if (lib.config().debug == true) console.log("[show] Got page. Parsing page...");
       let $ = cheerio.load(resp.data);
 
       if ($("#show-campaign-data")) {
+        if (lib.config().debug == true) console.log("[show] Parsed. Parsing JSON data...");
         let d = $("#show-campaign-data")[0]?.children[0]?.data;
         d = JSON.parse(d);
         if (lib.isUrl(d.unlockable?.redirect?.url)) {
           return d.unlockable.redirect.url;
         } else {
+          if (lib.config().debug == true) console.log("[show] JSON data does not contain needed information.");
           throw "Redirect not found."
         }
       } else {
+        if (lib.config().debug == true) console.log("[show] Page does not contain needed information.");
         throw "Redirect not found.";
       }
     } catch(err) {

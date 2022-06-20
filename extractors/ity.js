@@ -1,11 +1,13 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
+const lib = require("../lib");
 
 module.exports = {
   hostnames: ["ity.im"],
   "requires-captcha": false,
   get: async function(url) {
     try {
+      if (lib.config().debug == true) console.log("[ityim] Requesting page...");
       let resp = await axios({
         method: "GET",
         url: url,
@@ -15,6 +17,7 @@ module.exports = {
         }
       });
   
+      if (lib.config().debug == true) console.log("[ityim] Got page. Parsing page...");
       let $ = cheerio.load(resp.data);
   
       return $(".col-xs-6.col-md-4.vertical_center:not(#logo_div) a").attr("href");

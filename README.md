@@ -17,13 +17,13 @@ If you would rather use the Unlicense version, use [this commit and behind](http
 - Improve frontend site.
   - Detect when the site itself is down via the frontend, like previous version.
 - Heroku (and similar services) support (with guide, if difficult).
-- Add tests.
+- Add passworded-link support.
+- Add multi-link support.
  
 ### Sites being planned
 
 There's a general need on our part to support all sites that previously were supported, but these are also some we would like to get done.
 
-- exe.io [[sample link](https://exe.io/ZaKsUgDc)]
 - linkatii [[sample link](https://dz-linkk.com/N2xFP)]
 - url2go.in [[sample link](https://url2go.in/Exeg2)]
 - carrd.co

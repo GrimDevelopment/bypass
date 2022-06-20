@@ -1,4 +1,5 @@
 const axios = require("axios");
+const lib = require("../lib");
 
 module.exports = {
   hostnames: [
@@ -19,18 +20,21 @@ module.exports = {
   "requires-captcha": false,
   get: async function (url) {
     try {
+      if (lib.config().debug == true) console.log("[shst] Requesting page...");
       let resp = await axios({
         method: "GET",
         url: url,
         headers: {
           "user-agent": ""
-        }
+        },
+        maxRedirects: 1
       });
   
-      if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
+      if (lib.config().debug == true) console.log("[shst] Got page. Parsing Axios data...");
+      if (resp.request?.socket?._httpMessage?._redirectable?._currentUrl !== url) {
         return resp.request.socket._httpMessage._redirectable._currentUrl;
       } else {
-        throw "Normal redirect no longer works."
+        throw "Redirect not found."
       }
     } catch(err) {
       throw err;

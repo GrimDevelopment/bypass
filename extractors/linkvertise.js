@@ -1,7 +1,8 @@
 const pup = require("puppeteer-extra");
 const adb = require("puppeteer-extra-plugin-adblocker");
-const lib = require("../lib");
 const cap = require("puppeteer-extra-plugin-recaptcha");
+const stl = require("puppeteer-extra-plugin-stealth");
+const lib = require("../lib");
 
 module.exports = {
   hostnames: [
@@ -15,20 +16,28 @@ module.exports = {
     "link-center.net",
     "link-target.net"
   ],
-  "requires-captcha": true,
+  "requires-captcha": false,
   get: async function (url) {
     let b;
     try {
       // this may not work for pastes, will add support for them once i come across one
 
-      pup.use(adb());
+      pup.use(adb({
+        blockTrackers: true
+      }));
+
+      let stlh = stl();
+      stlh.enabledEvasions.delete("iframe.contentWindow");
+      pup.use(stlh);
     
+      if (lib.config().debug == true) console.log("[linkvertise] Launching browser...");
       b = await pup.launch({headless: true});
       let p = await b.newPage();
 
       await p.setUserAgent("Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36");
       await p.goto(url);
 
+      if (lib.config().debug == true) console.log("[linkvertise] Waiting to see if CAPTCHA shows up...");
       await p.waitForTimeout(3000); // this is just for waiting to see if a captcha shows up
       if ((await p.$(".captcha-content"))) {
         if (lib.config().debug == true) console.log(`[linkvertise] CAPTCHA was found, relaunching with CAPTCHA support.`);
@@ -48,14 +57,17 @@ module.exports = {
         b = await pup.launch({headless: true});
         p = await b.newPage();
 
+        if (lib.config().debug == true) console.log("[linkvertise] Reopening page...");
         await p.goto(url);
         await p.waitForTimeout(3000); 
+        if (lib.config().debug == true) console.log("[linkvertise] Solving CAPTCHA...");
         await p.solveRecaptchas();
-        if (lib.config().debug == true) console.log(`[linkvertise] Solved captcha.`);
+        if (lib.config().debug == true) console.log(`[linkvertise] Solved CAPTCHA.`);
       } else {
-        if (lib.config().debug == true) console.log(`[linkvertise] No captchas, continuing as normal.`) 
+        if (lib.config().debug == true) console.log(`[linkvertise] No CAPTCHAs, continuing as normal.`) 
       }
 
+      if (lib.config().debug == true) console.log("[linkvertise] Counting down...");
       await p.waitForSelector(".lv-dark-btn");
       return (await follow(p, b));
     } catch(err) {
@@ -67,8 +79,11 @@ module.exports = {
 
 async function follow(p, b) {
   p.click("lv-button > .lv-button-component.new-button-style.lv-dark-btn.ng-star-inserted");
+  if (lib.config().debug == true) console.log("[linkvertise] Clicking button...");
   try {
+    if (lib.config().debug == true) console.log("[linkvertise] Setting up listener for network events...");
     let a = await fireWhenFound(p);
+    if (lib.config().debug == true) console.log("[linkvertise] Closing browser...");
     await b.close();
     return a;
   } catch(err) {
@@ -82,9 +97,12 @@ async function fireWhenFound(p) {
       let a = new URL((await res.url()));
       if (a.pathname.startsWith("/api/v1/") && (await (await(res.request()).method())) == "POST" && a.pathname.includes("/target")) {
         let a = (await res.json());
+        if (lib.config().debug == true) console.log("[linkvertise] Got URL that met requirements, parsing...");
         if (a.data.target) resolve(a.data.target);
         else reject("Redirect not found.");
-      } 
+      } else {
+        if (lib.config().debug == true && a.hostname.includes("linkvertise")) console.log(`[linkvertise] Ignoring request ${((await res.method()) || "(unknown mthod)")} "${(await res.url())}" from listener.`);
+      }
     });
   });
 }

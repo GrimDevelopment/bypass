@@ -13,7 +13,10 @@ module.exports = {
     let b;
     try {
       pup.use(adb());
-      pup.use(stl());
+      
+      let stlh = stl();
+      stlh.enabledEvasions.delete("iframe.contentWindow");
+      pup.use(stlh);
        
       if (lib.config().captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."
@@ -26,27 +29,36 @@ module.exports = {
         }
       }));
 
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Launching browser...");
       b = await pup.launch({headless: true});
       let p = await b.newPage();
 
       await p.goto(url);
 
       // first page
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Solving captchas...");
       await p.solveRecaptchas();
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Solved.");
       await p.click(".button-element-verification");
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Loading second page...");
 
       // second page
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Counting down...");
       await p.waitForSelector(".button-element-redirect:not([disabled])");
       await p.click(".button-element-redirect:not([disabled])");
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Loading third page...");
       await p.waitForNavigation();
 
       // third page
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Counting down (2)...");
       await p.waitForSelector("#continue-button:not([disabled])");
       await p.click("#continue-button:not([disabled])");
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Loading last page...");
       await p.waitForNavigation();
 
       let u = await p.url();
 
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Closing browser...");
       await b.close();
 
       return u;

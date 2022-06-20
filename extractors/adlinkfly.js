@@ -9,7 +9,9 @@ module.exports = {
   get: async function(url) {
     let b;
     try {
-      pup.use(stl());
+      let stlh = stl();
+      stlh.enabledEvasions.delete("iframe.contentWindow");
+      pup.use(stlh);
 
       if (lib.config().captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."
@@ -22,6 +24,7 @@ module.exports = {
         }
       }));
 
+      if (lib.config().debug == true) console.log("[adflylink] Launching browser...");
       b = await pup.launch({headless: true});
       let p = await b.newPage();
       await p.goto(url);
@@ -40,13 +43,19 @@ async function cont(p, url) {
     else return false;
   });
 
-  if (isCaptcha) await p.solveRecaptchas();
+  if (isCaptcha) {
+    if (lib.config().debug == true) console.log("[adflylink] Solving CAPTCHA...");
+    await p.solveRecaptchas();
+    if (lib.config().debug == true) console.log("[adflylink] Solved CAPTCHA. Continuing page...");
+  }
 
   if ((await p.$("#countdown"))) {
+    if (lib.config().debug == true) console.log("[adflylink] Retreiving link...");
     await p.waitForSelector(".btn-success.btn-lg:not(.disabled)");
     let r = await p.evaluate(function() {return document.querySelector(".btn-success").href});
     return r;
   } else {  
+    if (lib.config().debug == true) console.log("[adflylink] Auto-submitting form...");
     await p.evaluate(function() {
       document.querySelector("form").submit();
     });

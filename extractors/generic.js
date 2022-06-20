@@ -12,6 +12,7 @@ module.exports = {
       if (u.host == "href.li" || u.host == "www.href.li") return u.href.split("?").slice(1).join("?");
 
       // redirect via url params
+      if (lib.config()["debug"] == true) console.log("[generic] checking url params"); 
       if (u.searchParams.get("url")) {
         if (lib.isUrl(u.searchParams.get("url"))) {
           return u.searchParams.get("url");
@@ -50,6 +51,8 @@ module.exports = {
         }
       }
 
+      if (lib.config()["debug"] == true) console.log("[generic] Requesting page...");
+
       let resp = await axios({
         method: "GET",
         url: url,
@@ -64,6 +67,7 @@ module.exports = {
 
       // adf.ly detection
       // i don't remember the origin of this script unfortunately so uh can't credit this
+      if (lib.config()["debug"] == true) console.log("[generic] Got page. Checking for indicators that this is an adf.ly link..."); 
       if (resp.data.includes(`var ysmm = `)) {
         let a, m, I = "",
           X = "",
@@ -104,6 +108,7 @@ module.exports = {
       }
 
       // generic redirect
+      if (lib.config()["debug"] == true) console.log("[generic] Checking for http redirects..."); 
       if (resp.data.includes(`content="0;URL=`)) {
         return resp.data.split(`content="0;URL=`)[1].split(`"`)[0];
       }
@@ -111,6 +116,7 @@ module.exports = {
       let $ = cheerio.load(resp.data);
 
       // wpsafe-link protectors
+      if (lib.config()["debug"] == true) console.log("[generic] Checking for wpsafelink indicators..."); 
       if ($("#wpsafe-link").length !== 0) {
         if ($("#wpsafe-link a").attr("href") && $("#wpsafe-link a").attr("href").includes("safelink_redirect")) {
           let o = new URL($("#wpsafe-link a").attr("href"));
@@ -124,11 +130,14 @@ module.exports = {
 
       // adlinkfly sites
       // if there is a better way of detecting these, let me know pls
+      if (lib.config()["debug"] == true) console.log("[generic] Checking if link is adlinkfly link...");
       if ($("title")?.text()?.includes("AdLinkFly")) {
+        if (lib.config()["debug"] == true) console.log("")
         const afl = require("./adlinkfly"); 
         return (await afl.get(url));
       }
 
+      if (lib.config()["debug"] == true) console.log("[generic] Checking for http redirects...");
       if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
         return resp.request.socket._httpMessage._redirectable._currentUrl;
       }

@@ -7,6 +7,7 @@ module.exports = {
   "requires-captcha": false,
   get: async function (url) {
     try {
+      if (lib.config().debug == true) console.log("[cshort] Requesting page...");
       let resp = await axios({
         method: "GET",
         url: url,
@@ -21,18 +22,22 @@ module.exports = {
         }
       });
   
+      if (lib.config().debug == true) console.log("[cshort] Getting next page URL (1/2)...");
       let r = resp.data.split(`function redirect() {`)[1].split(`}`)[0].split(`\n`);
       let h;
       let c = `${lib.cookieString(scp(resp.headers["set-cookie"]))}; aid=${encodeURIComponent(JSON.stringify([new URL(url).pathname.substring(1)]))}`;
   
+      if (lib.config().debug == true) console.log("[cshort] Getting next page URL (2/2)");
       for (let a in r) {
         if (!r[a].startsWith("  //") && r[a] !== "") h = r[a].split(`?u=`)[1].split(`',`)[0];
       }
   
       if (h == undefined) throw "No redirects found.";
-  
+
+      if (lib.config().debug == true) console.log("[cshort] Counting down...");
       await new Promise(resolve => setTimeout(resolve, 10000)); // can't bypass the wait, unfortunately
   
+      if (lib.config().debug == true) console.log("[cshort] Requesting next page URL...");
       resp = await axios({
         method: "GET",
         url: `${url}?u=${h}`,
@@ -56,7 +61,7 @@ module.exports = {
           "Sec-Fetch-User": "?1",
           "Upgrade-Insecure-Requests": "1"
         }
-      })
+      });
   
       if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
         return resp.request.socket._httpMessage._redirectable._currentUrl;

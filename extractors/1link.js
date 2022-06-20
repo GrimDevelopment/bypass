@@ -7,6 +7,7 @@ module.exports = {
   "requires-captcha": false,
   get: async function(url) {
     try {
+      if (lib.config()["debug"] == true) console.log("[1link] Requesting page...");
       let resp = await axios({
         method: "GET",
         url: url,
@@ -16,6 +17,7 @@ module.exports = {
         }
       });
 
+      if (lib.config().debug == true) console.log("[1link] Got page. Parsing page...");
       let $ = cheerio.load(resp.data);
 
       if (lib.isUrl($("#download")[0]?.attribs?.href)) return $("#download")[0]?.attribs?.href;

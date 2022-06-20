@@ -12,6 +12,8 @@ app.listen(lib.config().http.port, function() {
 app.get("/api/bypass", async function(req, res) {
   let url = req.query.url;
 
+  if (lib.config().debug == true) console.log(`[http] Recieved request at path /api/bypass `);
+
   try {
     if (!lib.isUrl(url) && url.startsWith("aH")) url = Buffer.from(req.query.url, "base64").toString("ascii");
 
@@ -23,10 +25,13 @@ app.get("/api/bypass", async function(req, res) {
       });
       return;
     }
-    
+
     delete req.query.url;
+    if (lib.config().debug == true) console.log(`[http] Requesting ./lib.js to get "${url}"`, req.query);
+
     let resp = await lib.get(url, req.query);
   
+    if (lib.config().debug == true) console.log(`[http] Sending response from ./lib.js`);
     res.send({success: true, ...resp});
   } catch(err) {
     if (typeof err == "string") {

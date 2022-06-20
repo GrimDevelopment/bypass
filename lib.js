@@ -25,9 +25,13 @@ module.exports = {
       let ex = await ext.fromUrl(url);
       let extractor = require(`${__dirname}/extractors/${ex}`);
 
+      if (this.config().debug == true) console.log(`[extract] Starting "${url}"`, opt)
+
       if (opt.ignoreCache !== "true" && opt.ignoreCache !== true) {
+        if (this.config().debug == true) console.log("[db] Checking DB for desination...");
         let f = await links.findOne({"original-url": url});
         if (f !== null) {
+          if (this.config().debug == true) console.log("[db] Sending DB response...");
           f._id = undefined;
           f["from-cache"] = true;
           f["from-fastforward"] = false;
@@ -35,7 +39,6 @@ module.exports = {
         } 
       }
 
-      if (this.config().debug == true) console.log(`[extract] Starting "${url}", ${JSON.stringify(opt)}`)
       f = await extractor.get(url, opt);
       if (this.config().debug == true) console.log(`[extract] Finished "${url}", ${JSON.stringify(opt)} [Solution: ${f}]`);
 

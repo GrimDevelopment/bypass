@@ -7,6 +7,7 @@ module.exports = {
   "requires-captcha": false,
   get: async function(url) {
     try {
+      if (lib.config().debug == true) console.log("[mboost] Requesting page...");
       let resp = await axios({
         method: "GET",
         url: url,
@@ -17,10 +18,13 @@ module.exports = {
       });
 
       let $ = cheerio.load(resp.data);
+      if (lib.config().debug == true) console.log("[mboost] Got page. Parsing page...");
 
       if ($("#__NEXT_DATA__")) {
+        if (lib.config().debug == true) console.log(`[mboost] Parsed page. Parsing JSON "__NEXT_DATA__" information...`);
         let d = $("#__NEXT_DATA__")[0]?.children[0]?.data;
         d = JSON.parse(d);
+        if (lib.config().debug == true) console.log("[mboost] Parsed JSON. Retrieving URL...");
         if (lib.isUrl(d.props?.initialProps?.pageProps?.data?.targeturl)) {
           return d.props?.initialProps?.pageProps?.data?.targeturl;
         }

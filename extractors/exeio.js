@@ -7,18 +7,23 @@ module.exports = {
   get: async function(url) {
     let b;
     try {
-      pup.use(stl());
+      let stlh = stl();
+      stlh.enabledEvasions.delete("iframe.contentWindow");
+      pup.use(stlh);
 
       if (lib.config().captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."
       }
 
+      if (lib.config().debug == true) console.log("[exeio] Launching browser...");
       b = await pup.launch({headless: true});
       let p = await b.newPage();
-      await p.goto(url);
 
+      await p.goto(url);
+      if (lib.config().debug == true) console.log("[exeio] Launched. Skipping first page...");
       await p.waitForNavigation();
 
+      if (lib.config().debug == true) console.log("[exeio] Skipped. Starting continous function...");
       p = await cont(p, url);
       await b.close();
       return p;
@@ -31,25 +36,31 @@ module.exports = {
 
 async function cont(p, url) {
   try {
+
     if ((await p.$(".box-main > #before-captcha"))) {
+      if (lib.config().debug == true) console.log("[exeio] Skipping non-CAPTCHA page...");
       await p.evaluate(function() {
         document.querySelector("form").submit();
       });
       await p.waitForNavigation();
       return (await cont(p, url));
     } else if ((await p.$("#invisibleCaptchaShortlink"))) {
+      if (lib.config().debug == true) console.log("[exeio] Retrieving sitekey...");
       let sk = await p.evaluate(function() {
         return document.querySelector("iframe[title='recaptcha challenge expires in two minutes']").src.split("k=")[1].split("&")[0]
       });
-      console.log(sk);
+      if (lib.config().debug == true) console.log("[exeio] Retrieved. Solving CAPTCHA...");
       let c = await lib.solve(sk, "recaptcha", {referer: (await p.url())});
+      if (lib.config().debug == true) console.log("[exeio] Solved CAPTCHA. Enterring solution and submitting form...");
       await p.evaluate(`document.querySelector("[name='g-recaptcha-response']").value = "${c}";`);
       await p.evaluate(function() {
         document.querySelector("form").submit();
       });
+      if (lib.config().debug == true) console.log("[exeio] Submitted. Waiting...");
       await p.waitForNavigation();
       return (await cont(p, url));
     } else if ((await p.$(".procced > .btn.get-link.text-white"))) {
+      if (lib.config().debug == true) console.log("[exeio] Counting down...");
       await p.waitForSelector(".procced > .btn.get-link.text-white:not(.disabled)");
       let r = await p.evaluate(function() {
         return document.querySelector(".procced > .btn.get-link.text-white").href

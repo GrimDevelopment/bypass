@@ -12,6 +12,7 @@ module.exports = {
         throw "Captcha service is required for this link, but this instance doesn't support it."
       }
 
+      if (lib.config().debug == true) console.log("[cpmlink] Requesting page...");
       let resp = await axios({
         method: "GET",
         url: url,
@@ -24,6 +25,7 @@ module.exports = {
         }
       });
 
+      if (lib.config().debug == true) console.log("[cpmlink] Got page. Parsing page...");
       let $ = cheerio.load(resp.data);
       let k = $("#skip [name=key]").val();
       let t = $("#skip [name=time]").val();
@@ -33,12 +35,15 @@ module.exports = {
       let s = $("#captcha").attr("data-sitekey");
       let c = lib.cookieString(scp(resp.headers["set-cookie"]));
 
+      if (lib.config().debug == true) console.log("[cpmlink] Parsed. Solving CAPTCHA...");
       let cap = await lib.solve(s, "recaptcha", {
         referer: url
       });
+      if (lib.config().debug == true) console.log("[cpmlink] Solved CAPTCHA.");
 
       let body = `key=${k}&time=${t}&ref=${r}&s_width=${w}&s_height=${h}&g-recaptcha-response=${cap}`;
 
+      if (lib.config().debug == true) console.log("[cpmlink] Requesting solve page...");
       resp = await axios({
         method: "POST",
         data: body,
@@ -62,6 +67,7 @@ module.exports = {
             "Upgrade-Insecure-Requests": "1"
         }
       });
+      if (lib.config().debug == true) console.log("[cpmlink] Parsing solve page...");
       $ = cheerio.load(resp.data);
       return $("#continue a").attr("href");
     } catch(err) {
