@@ -31,7 +31,7 @@ module.exports = {
 
       await p.waitForTimeout(3000); // this is just for waiting to see if a captcha shows up
       if ((await p.$(".captcha-content"))) {
-        if (lib.config().debug == true) console.log(`[linkvertise] CAPTCHA was found, relaunching with CAPTCHA support..`);
+        if (lib.config().debug == true) console.log(`[linkvertise] CAPTCHA was found, relaunching with CAPTCHA support.`);
         await b.close();
 
         if (lib.config().captcha.active == false) {
@@ -67,7 +67,6 @@ module.exports = {
 
 async function follow(p, b) {
   p.click("lv-button > .lv-button-component.new-button-style.lv-dark-btn.ng-star-inserted");
-  
   try {
     let a = await fireWhenFound(p);
     await b.close();

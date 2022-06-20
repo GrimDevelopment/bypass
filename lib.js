@@ -79,7 +79,7 @@ module.exports = {
   solve: async function(sitekey, type, opt) {
     // opt value must be like:
     // {
-    //    "referrer": "https://google.com"
+    //    "referer": "https://google.com"
     // }
     if (config["captcha"]["active"] == false) return null;
     if (this.config().captcha.service == "2captcha") {

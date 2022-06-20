@@ -15,7 +15,7 @@ Sites supported by BIFM currently. Example links redirect to `https://git.gay/a/
 |**`exe.io`**|Puppeteer + Stealth|Yes|[https://exe.io/ZaKsUgDc](https://exe.io/ZaKsUgDc)|`exey.io`||
 |**`ity.im`**|Axios|No|[http://ity.im/1QZh2](http://ity.im/1QZh2)||
 |**`karung.in`**|Axios|No|[http://karung.in/Gyucc](http://karung.in/Gyucc) redirects to a broken Google Drive link.|||
-|**`linkvertise.net`**|Puppeteer + Adblocker|Yes||`linkvertise.com`, `up-to-down.net`, `link-to.net`, `direct-link.net`, `linkvertise.download`, `file-link.net`, `link-center.net`, `link-target.net`|Not 100% compatible yet, need paste Linkvertise links as well.|
+|**`linkvertise.net`**|Puppeteer + Adblocker|Yes|[https://linkvertise.com/431184/roblox-scripts-website](https://linkvertise.com/431184/roblox-scripts-website) redirects to `https://tobirbxscripts.blogspot.com/`|`linkvertise.com`, `up-to-down.net`, `link-to.net`, `direct-link.net`, `linkvertise.download`, `file-link.net`, `link-center.net`, `link-target.net`|Not 100% compatible yet, need paste Linkvertise links as well.|
 |**`lnk.parts`**|Puppeteer + Stealth|Yes|[https://lnkload.com/2z8aF](https://lnkload.com/2z8aF)|`link.tl`, `lnkload.com`||
 |**`lnk2.cc`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|[https://lnk2.cc/wd1J1](https://lnk2.cc/wd1J1)||
 |**`myl.li`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|[https://myl.li/NOEgI6aOp3bF](https://myl.li/NOEgI6aOp3bF)|`mylink.vc`|||
