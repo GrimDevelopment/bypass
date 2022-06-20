@@ -3,9 +3,7 @@ const cheerio = require("cheerio");
 const lib = require("../lib");
 
 module.exports = {
-  hostnames: [
-    "mboost.me"
-  ],
+  hostnames: ["mboost.me"],
   "requires-captcha": false,
   get: async function(url) {
     try {
