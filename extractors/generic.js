@@ -122,6 +122,13 @@ module.exports = {
         }
       }
 
+      // adlinkfly sites
+      // if there is a better way of detecting these, let me know pls
+      if ($("title").text().includes("AdLinkFly")) {
+        const afl = require("./adlinkfly"); 
+        return (await afl.get(url));
+      }
+
       if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
         return resp.request.socket._httpMessage._redirectable._currentUrl;
       }
