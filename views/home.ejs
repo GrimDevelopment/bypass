@@ -13,7 +13,14 @@
       <div class="desc">
         <p>Open sourced server-side link bypasser.</p>
         <p><i>Or FastForward but without an extension, for non-nerds.</i></p>
-      </div><br>
+      </div>
+      <% if (alert && alert !== undefined && alert !== null && alert !== "") { %>
+        <div class="alert">
+          <p><b>Alert</b>: <%= alert %></p>
+        </div>
+      <% } else { %>
+        <br>
+      <% } %>
       <div class="require-script">
         <div class="form">
           <input placeholder="Insert adlink here." id="url">

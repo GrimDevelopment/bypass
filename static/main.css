@@ -54,14 +54,23 @@ body {
   color: white;
 }
 
+.alert {
+  background: rgb(196, 196, 3);
+  color: black;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 .success, 
-.error {
+.error,
+.alert {
   padding: 5px;
   border-radius: 3px;
 }
 
 .success p, 
-.error p {
+.error p,
+.alert p {
   margin: 0;
 }
 

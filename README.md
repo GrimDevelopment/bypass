@@ -1,6 +1,6 @@
 # BIFM
 
-Bypasses link protectors server-side. Now with more sites and easier to develop for.
+A modular, easy to use, server-side link bypasser.
 
 ## Why is server-side better?
 
@@ -12,13 +12,10 @@ Since [this commit](https://git.gay/a/bifm/commit/adec8de080c4f18545ba3d7cfb4e7e
 If you would rather use the Unlicense version, use [this commit and behind](https://git.gay/a/bifm/commit/5db9b17f7796bac35170e00acfe9da043cbc4b29).
 
 ## Roadmap
-- Add proper documentation (40% done).
-  - Merge `./docs/EXAMPLE.md` and `./docs/SITES.md`.
+- Add proper documentation (60% done).
   - Write more contributing information.
-  - Add API docs and instance list.
 - Improve frontend site.
-  - Get rid of EJS entirely, make frontend entirely static.
-  - Detect when the site itself is down, like previous version.
+  - Detect when the site itself is down via the frontend, like previous version.
   
  
 ### Sites being planned

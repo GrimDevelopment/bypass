@@ -1,29 +1,29 @@
 # Supported Sites
 
-Sites supported by BIFM currently.
+Sites supported by BIFM currently. Example links redirect to `https://git.gay/a/bifm` unless otherwise stated.
 
-|Domain|Method|Needs CAPTCHA solver?|Additional Domains|Additional Notes|
-|---|---|---|---|---|
-|**`1bit.space`**|Puppeteer + Adblocker + Stealth|Yes|||
+|Domain|Method|Needs CAPTCHA solver?|Example Links|Additional Domains|Additional Notes|
+|---|---|---|---|---|---|
+|**`1bit.space`**|Puppeteer + Adblocker + Stealth|Yes|[https://1bit.space/FVJcWHr](https://1bit.space/FVJcWHr) redirects to ``https://universal-bypass.org/``.||
 |**`1link.club`**|Axios|No|||
-|**`123link.pw`**|Puppeteer + Adblocker + Stealth|Yes|`123link.biz`, `123link.co`, `123link.vip`||
-|**`bc.vc`**|Puppeteer + Stealth|No|||
-|**`boost.ink`**|Axios|No|`bst.gg`, `bst.wtf`, `booo.st`||
-|**`boostme.link`**|Axios|No|||
+|**`123link.pw`**|Puppeteer + Adblocker + Stealth|Yes||`123link.biz`, `123link.co`, `123link.vip`||
+|**`bc.vc`**|Puppeteer + Stealth|No|[https://bc.vc/vQesLIh](https://bc.vc/vQesLIh) redirects to ``https://universal-bypass.org/``.||
+|**`boost.ink`**|Axios|No|[https://boost.ink/c5bba](https://boost.ink/c5bba)|`bst.gg`, `bst.wtf`, `booo.st`||
+|**`boostme.link`**|Axios|No|[https://boostme.link/iX9Krf](https://boostme.link/iX9Krf)||
 |**`cpmlink.net`**|Axios|Yes|||
-|**`cshort.org`**|Axios|No||
-|**`ity.im`**|Axios|No||
-|**`linkvertise.net`**|Puppeteer + Adblocker + Stealth|Yes|`linkvertise.com`, `up-to-down.net`, `link-to.net`, `direct-link.net`, `linkvertise.download`, `file-link.net`, `link-center.net`, `link-target.net`|Not 100% compatible yet, need paste Linkvertise links as well.|
-|**`lnk.parts`**|Puppeteer + Stealth|Yes|`link.tl`, `lnkload.com`||
-|**`lnk2.cc`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|||
-|**`myl.li`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|`mylink.vc`|||
-|**`ouo.io`**|Puppeteer + Stealth|No|||
-|**`sh.st`**|Axios|No|`ceesty.com`, `cestyy.com`, `clkme.me`, `clkmein.com`, `cllkme.com`, `corneey.com`, `destyy.com`, `festyy.com`, `gestyy.com`, `jnw0.me`, `xiw34.com`, `wiid.me`|The list to the right may not be 100% correct or complete.|
-|**`show.co`**|Axios|No|||
-|**`social-unlock.com`**|Axios|No|||
+|**`cshort.org`**|Axios|No|[https://cshort.org/8i8dwPx0](https://cshort.org/8i8dwPx0)|
+|**`ity.im`**|Axios|No|[http://ity.im/1QZh2](http://ity.im/1QZh2)||
+|**`linkvertise.net`**|Puppeteer + Adblocker + Stealth|Yes||`linkvertise.com`, `up-to-down.net`, `link-to.net`, `direct-link.net`, `linkvertise.download`, `file-link.net`, `link-center.net`, `link-target.net`|Not 100% compatible yet, need paste Linkvertise links as well.|
+|**`lnk.parts`**|Puppeteer + Stealth|Yes||`link.tl`, `lnkload.com`||
+|**`lnk2.cc`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|[https://lnk2.cc/wd1J1](https://lnk2.cc/wd1J1)||
+|**`myl.li`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|[https://myl.li/NOEgI6aOp3bF](https://myl.li/NOEgI6aOp3bF)|`mylink.vc`|||
+|**`ouo.io`**|Puppeteer + Stealth|No|[https://ouo.io/2dktqo](https://ouo.io/2dktqo)||
+|**`sh.st`**|Axios|No|[http://ceesty.com/es47QR](http://ceesty.com/es47QR)|`ceesty.com`, `cestyy.com`, `clkme.me`, `clkmein.com`, `cllkme.com`, `corneey.com`, `destyy.com`, `festyy.com`, `gestyy.com`, `jnw0.me`, `xiw34.com`, `wiid.me`|The list to the right may not be 100% correct or complete.|
+|**`show.co`**|Axios|No|[https://show.co/HQrPtta](https://show.co/HQrPtta) redirects to ``https://universal-bypass.org/``.||
+|**`social-unlock.com`**|Axios|No|[https://social-unlock.com/417pK](https://social-unlock.com/417pK)||
 
 ## Generic Sites
-|Generic Type|Method|Needs CAPTCHA solver?|Example domains|
-|---|---|---|---|
-|Adf.ly|Axios|No|`usheethe.com`|
-|WPSafelink|Axios|No|`demo-safelink.themeson.com`|
+|Generic Type|Method|Example Links|Needs CAPTCHA solver?|Example domains|
+|---|---|---|---|---|
+|**`adf.ly`**|Axios|[http://usheethe.com/T3F5](http://usheethe.com/T3F5)|No|`usheethe.com`|
+|**`WPSafelink`**|Axios|[https://demo-safelink.themeson.com/template1/?f7fbb8af](https://demo-safelink.themeson.com/template1/?f7fbb8af) redirects to `https://themeson.com/safelink/`.|No|`demo-safelink.themeson.com`|

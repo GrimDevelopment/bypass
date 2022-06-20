@@ -10,5 +10,6 @@
   "http": {
     "port": 32333
   },
-  "debug": false
+  "debug": false,
+  "alert": ""
 }
