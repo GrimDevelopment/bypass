@@ -20,7 +20,7 @@ Sites supported by BIFM currently. Example links redirect to `https://git.gay/a/
 |**`lnk2.cc`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|[https://lnk2.cc/wd1J1](https://lnk2.cc/wd1J1)||
 |**`myl.li`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|[https://myl.li/NOEgI6aOp3bF](https://myl.li/NOEgI6aOp3bF)|`mylink.vc`|||
 |**`oke.io`**|Puppeteer + Stealth|No|[https://oke.io/D3wL](https://oke.io/D3wL) redirects to a broken Mega.nz link.|||
-|**`ouo.io`**|Puppeteer + Stealth|No|[https://ouo.io/2dktqo](https://ouo.io/2dktqo)||
+|**`ouo.io`**|Puppeteer + Stealth|Sometimes, only to bypass Cloudflare|[https://ouo.io/2dktqo](https://ouo.io/2dktqo)||
 |**`sh.st`**|Axios|No|[http://ceesty.com/es47QR](http://ceesty.com/es47QR)|`ceesty.com`, `cestyy.com`, `clkme.me`, `clkmein.com`, `cllkme.com`, `corneey.com`, `destyy.com`, `festyy.com`, `gestyy.com`, `jnw0.me`, `xiw34.com`, `wiid.me`|The list to the right may not be 100% correct or complete.|
 |**`show.co`**|Axios|No|[https://show.co/HQrPtta](https://show.co/HQrPtta) redirects to ``https://universal-bypass.org/``.||
 |**`social-unlock.com`**|Axios|No|[https://social-unlock.com/417pK](https://social-unlock.com/417pK)||
@@ -29,4 +29,5 @@ Sites supported by BIFM currently. Example links redirect to `https://git.gay/a/
 |Generic Type|Method|Example Links|Needs CAPTCHA solver?|Example domains|
 |---|---|---|---|---|
 |**`adf.ly`**|Axios|[http://usheethe.com/T3F5](http://usheethe.com/T3F5)|No|`usheethe.com`|
+|**`adlinkfly`**|Puppeteer + Stealth||Sometimes, always required|`adlinkfly.mightyscripts.xyz`
 |**`WPSafelink`**|Axios|[https://demo-safelink.themeson.com/template1/?f7fbb8af](https://demo-safelink.themeson.com/template1/?f7fbb8af) redirects to `https://themeson.com/safelink/`.|No|`demo-safelink.themeson.com`|
