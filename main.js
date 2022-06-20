@@ -37,10 +37,11 @@ app.get("/api/bypass", async function(req, res) {
         "from-backend": true
       });
     } else {
-      let e;
+      let e = (err.message || err.code);
 
-      if (config["debug"] !== true) e = (err.message || err.code);
-      else e = (err.stack || err.message || err.code)
+      if (err.stack && lib.config().debug == true) {
+        console.log(err.stack);
+      } 
 
       res.send({
         success: false,

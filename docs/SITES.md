@@ -12,10 +12,11 @@ Sites supported by BIFM currently. Example links redirect to `https://git.gay/a/
 |**`boostme.link`**|Axios|No|[https://boostme.link/iX9Krf](https://boostme.link/iX9Krf)||
 |**`cpmlink.net`**|Axios|Yes|||
 |**`cshort.org`**|Axios|No|[https://cshort.org/8i8dwPx0](https://cshort.org/8i8dwPx0)|
+|**`exe.io`**|Puppeteer + Stealth|Yes|[https://exe.io/ZaKsUgDc](https://exe.io/ZaKsUgDc)|`exey.io`||
 |**`ity.im`**|Axios|No|[http://ity.im/1QZh2](http://ity.im/1QZh2)||
 |**`karung.in`**|Axios|No|[http://karung.in/Gyucc](http://karung.in/Gyucc) redirects to a broken Google Drive link.|||
 |**`linkvertise.net`**|Puppeteer + Adblocker + Stealth|Yes||`linkvertise.com`, `up-to-down.net`, `link-to.net`, `direct-link.net`, `linkvertise.download`, `file-link.net`, `link-center.net`, `link-target.net`|Not 100% compatible yet, need paste Linkvertise links as well.|
-|**`lnk.parts`**|Puppeteer + Stealth|Yes||`link.tl`, `lnkload.com`||
+|**`lnk.parts`**|Puppeteer + Stealth|Yes|[https://lnkload.com/2z8aF](https://lnkload.com/2z8aF)|`link.tl`, `lnkload.com`||
 |**`lnk2.cc`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|[https://lnk2.cc/wd1J1](https://lnk2.cc/wd1J1)||
 |**`myl.li`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|[https://myl.li/NOEgI6aOp3bF](https://myl.li/NOEgI6aOp3bF)|`mylink.vc`|||
 |**`oke.io`**|Puppeteer + Stealth|No|[https://oke.io/D3wL](https://oke.io/D3wL) redirects to a broken Mega.nz link.|||

@@ -9,6 +9,14 @@ body {
   text-rendering: optimizeLegibility;
 } 
 
+a > h2 {
+  color: black;
+}
+
+.top > a {
+  text-decoration: none;
+}
+
 .main {
   text-align: left;
   padding: 1vw 1vh;

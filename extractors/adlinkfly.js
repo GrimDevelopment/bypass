@@ -22,7 +22,7 @@ module.exports = {
         }
       }));
 
-      b = await pup.launch({headless: false});
+      b = await pup.launch({headless: true});
       let p = await b.newPage();
       await p.goto(url);
 

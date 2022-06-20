@@ -28,7 +28,9 @@ module.exports = {
         } 
       }
 
+      if (this.config().debug == true) console.log(`Extracting ${JSON.stringify(opt)}`)
       f = await extractor.get(url, opt);
+      if (this.config().debug == true) console.log(`- Extracted ${JSON.stringify(opt)} [Solution: ${f}]`);
 
       if (typeof f == "string") {
         if (!this.isUrl(f) || f == url) {
@@ -43,9 +45,13 @@ module.exports = {
 
         if (opt.allowCache !== "false") {
           if (opt.ignoreCache == "true") {
+            if (this.config().debug == true) console.log(`Replacing old version of "${url}" in DB.`)
             await links.findOneAndReplace({"original-url": url}, d);
+            if (this.config().debug == true) console.log(`- Replaced.`)
           } else {
+            if (this.config().debug == true) console.log(`Adding to DB.`)
             await links.insertOne(d);
+            if (this.config().debug == true) console.log(`- Added.`)
           }
         }
 
@@ -64,17 +70,32 @@ module.exports = {
     }
   }, 
   solve: async function(sitekey, type, opt) {
+    // opt value must be like:
+    // {
+    //    "referrer": "https://google.com"
+    // }
     if (config["captcha"]["active"] == false) return null;
-    const tc = new two.Solver(config["captcha"]["key"]);
-    let ref = opt.referer;
-    switch(type) {
-      case "recaptcha":
-        return (await tc.recaptcha(sitekey, ref)).data;
-      case "hcaptcha":
-        return (await tc.hcaptcha(sitekey, ref)).data;
-      default:
-        return null;
+    if (this.config().captcha.service == "2captcha") {
+      const tc = new two.Solver(config["captcha"]["key"]);
+      let ref = opt.referer;
+      
+      if (this.config().debug == true) console.log(`Requesting CAPTCHA solve for a ${type} @ ${ref}`);
+      let a;
+      
+      switch(type) {
+        case "recaptcha":
+          a = (await tc.recaptcha(sitekey, ref)).data;
+          if (this.config().debug == true) console.log(`- Solved ${type} for "${ref}"`);
+          return a; 
+        case "hcaptcha":
+          a = (await tc.hcaptcha(sitekey, ref)).data;
+          if (this.config().debug == true) console.log(`- Solved ${type} for "${ref}"`);
+          return a;
+        default:
+          throw "Parameters for CAPTCHA solver are incorrect.";
+      }
     }
+    
   },
   cookieString: function(co) {
     let s = ``;
