@@ -13,11 +13,12 @@ Sites supported by BIFM currently. Example links redirect to `https://git.gay/a/
 |**`cpmlink.net`**|Axios|Yes|||
 |**`cshort.org`**|Axios|No|[https://cshort.org/8i8dwPx0](https://cshort.org/8i8dwPx0)|
 |**`ity.im`**|Axios|No|[http://ity.im/1QZh2](http://ity.im/1QZh2)||
+|**`karung.in`**|Axios|No|[http://karung.in/Gyucc](http://karung.in/Gyucc) redirects to a broken Google Drive link.|||
 |**`linkvertise.net`**|Puppeteer + Adblocker + Stealth|Yes||`linkvertise.com`, `up-to-down.net`, `link-to.net`, `direct-link.net`, `linkvertise.download`, `file-link.net`, `link-center.net`, `link-target.net`|Not 100% compatible yet, need paste Linkvertise links as well.|
 |**`lnk.parts`**|Puppeteer + Stealth|Yes||`link.tl`, `lnkload.com`||
 |**`lnk2.cc`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|[https://lnk2.cc/wd1J1](https://lnk2.cc/wd1J1)||
 |**`myl.li`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|[https://myl.li/NOEgI6aOp3bF](https://myl.li/NOEgI6aOp3bF)|`mylink.vc`|||
-|**`oke.io`**|Puppeteer + Stealth|No|[https://oke.io/D3wL](https://oke.io/D3wL) redirects to a broken Mega.nz link||||
+|**`oke.io`**|Puppeteer + Stealth|No|[https://oke.io/D3wL](https://oke.io/D3wL) redirects to a broken Mega.nz link.|||
 |**`ouo.io`**|Puppeteer + Stealth|No|[https://ouo.io/2dktqo](https://ouo.io/2dktqo)||
 |**`sh.st`**|Axios|No|[http://ceesty.com/es47QR](http://ceesty.com/es47QR)|`ceesty.com`, `cestyy.com`, `clkme.me`, `clkmein.com`, `cllkme.com`, `corneey.com`, `destyy.com`, `festyy.com`, `gestyy.com`, `jnw0.me`, `xiw34.com`, `wiid.me`|The list to the right may not be 100% correct or complete.|
 |**`show.co`**|Axios|No|[https://show.co/HQrPtta](https://show.co/HQrPtta) redirects to ``https://universal-bypass.org/``.||
