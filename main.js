@@ -9,8 +9,6 @@ app.listen(lib.config().http.port, function() {
   console.log(`[http] Listening on HTTP port ${lib.config().http.port}`);
 });
 
-const config = require("./config.json");
-
 app.get("/api/bypass", async function(req, res) {
   let url = req.query.url;
 
@@ -26,6 +24,7 @@ app.get("/api/bypass", async function(req, res) {
       return;
     }
     
+    delete req.query.url;
     let resp = await lib.get(url, req.query);
   
     res.send({success: true, ...resp});

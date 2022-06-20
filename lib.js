@@ -1,4 +1,11 @@
 const ext = require("./extractor");
+const fs = require("fs");
+
+if (!fs.existsSync("./config.json")) {
+  if (fs.existsSync("./config.example.json")) fs.copyFileSync("./config.example.json");
+  else throw "Couldn't find proper config.";
+}
+
 const config = require("./config.json");
 const two = require("2captcha");
 const {MongoClient} = require("mongodb");
@@ -6,7 +13,7 @@ const client = new MongoClient(config["db"]["url"]);
 
 (async function() {
   await client.connect();
-  console.log(`[db] Connected to MongoDB database.`);
+  if (require("./lib").config().debug == true) console.log(`[db] Connected to MongoDB database.`);
 })();
 
 const db = client.db("bifm");
@@ -18,7 +25,7 @@ module.exports = {
       let ex = await ext.fromUrl(url);
       let extractor = require(`${__dirname}/extractors/${ex}`);
 
-      if (opt.ignoreCache !== "true") {
+      if (opt.ignoreCache !== "true" && opt.ignoreCache !== true) {
         let f = await links.findOne({"original-url": url});
         if (f !== null) {
           f._id = undefined;
@@ -28,9 +35,9 @@ module.exports = {
         } 
       }
 
-      if (this.config().debug == true) console.log(`Extracting ${JSON.stringify(opt)}`)
+      if (this.config().debug == true) console.log(`[extract] Starting "${url}", ${JSON.stringify(opt)}`)
       f = await extractor.get(url, opt);
-      if (this.config().debug == true) console.log(`- Extracted ${JSON.stringify(opt)} [Solution: ${f}]`);
+      if (this.config().debug == true) console.log(`[extract] Finished "${url}", ${JSON.stringify(opt)} [Solution: ${f}]`);
 
       if (typeof f == "string") {
         if (!this.isUrl(f) || f == url) {
@@ -43,15 +50,15 @@ module.exports = {
           "date-solved": (new Date() * 1)
         }
 
-        if (opt.allowCache !== "false") {
-          if (opt.ignoreCache == "true") {
-            if (this.config().debug == true) console.log(`Replacing old version of "${url}" in DB.`)
+        if (opt.allowCache !== "false" && opt.allowCache !== false) {
+          if (opt.ignoreCache == "true" || opt.ignoreCache == true) {
+            if (this.config().debug == true) console.log(`[db] Replacing old version of "${url}" in DB.`)
             await links.findOneAndReplace({"original-url": url}, d);
-            if (this.config().debug == true) console.log(`- Replaced.`)
+            if (this.config().debug == true) console.log(`[db] Replaced.`)
           } else {
-            if (this.config().debug == true) console.log(`Adding to DB.`)
+            if (this.config().debug == true) console.log(`[db] Adding to DB.`)
             await links.insertOne(d);
-            if (this.config().debug == true) console.log(`- Added.`)
+            if (this.config().debug == true) console.log(`[db] Added.`)
           }
         }
 
@@ -79,19 +86,20 @@ module.exports = {
       const tc = new two.Solver(config["captcha"]["key"]);
       let ref = opt.referer;
       
-      if (this.config().debug == true) console.log(`Requesting CAPTCHA solve for a ${type} @ ${ref}`);
+      if (this.config().debug == true) console.log(`[captcha] Requesting CAPTCHA solve for a ${type} @ ${ref}`);
       let a;
       
       switch(type) {
         case "recaptcha":
           a = (await tc.recaptcha(sitekey, ref)).data;
-          if (this.config().debug == true) console.log(`- Solved ${type} for "${ref}"`);
+          if (this.config().debug == true) console.log(`[captcha] Solved ${type} for "${ref}"`);
           return a; 
         case "hcaptcha":
           a = (await tc.hcaptcha(sitekey, ref)).data;
-          if (this.config().debug == true) console.log(`- Solved ${type} for "${ref}"`);
+          if (this.config().debug == true) console.log(`[captcha] Solved ${type} for "${ref}"`);
           return a;
         default:
+          console.log(`[captcha] Invalid parameters were given to CAPTCHA solver.`)
           throw "Parameters for CAPTCHA solver are incorrect.";
       }
     }
