@@ -17,6 +17,7 @@ If you would rather use the Unlicense version, use [this commit and behind](http
 - Improve frontend site.
   - Detect when the site itself is down via the frontend, like previous version.
 - Heroku (and similar services) support (with guide, if difficult).
+- Add tests.
  
 ### Sites being planned
 
