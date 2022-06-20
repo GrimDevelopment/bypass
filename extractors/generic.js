@@ -124,7 +124,7 @@ module.exports = {
 
       // adlinkfly sites
       // if there is a better way of detecting these, let me know pls
-      if ($("title").text().includes("AdLinkFly")) {
+      if ($("title")?.text()?.includes("AdLinkFly")) {
         const afl = require("./adlinkfly"); 
         return (await afl.get(url));
       }

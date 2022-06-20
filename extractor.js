@@ -6,7 +6,10 @@ module.exports = {
     if (h.startsWith("www.")) h = h.substring(4);
     let d = await fs.readdir(`${__dirname}/extractors`);
     for (let i = 0; i < d.length; i++) {
-      if (!(await require(`./extractors/${d[i]}`)).hostnames) console.log(d[i])
+      if (!(await require(`./extractors/${d[i]}`)).hostnames) {
+        console.log(`extraction/${d[i]} is broken.`)
+        continue;
+      }
       if ((await require(`./extractors/${d[i]}`)).hostnames.includes(h)) return d[i];
     }
     return "generic";
