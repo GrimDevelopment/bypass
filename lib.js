@@ -45,7 +45,7 @@ module.exports = {
           if (f == null) f = await links.findOne({"original-url": url});
           if (f !== null) {
             if (config.debug == true) console.log("[db] Sending DB response...");
-            f._id = undefined;
+            delete f._id;
             f["fromCache"] = true;
             f["fromFastforward"] = false;
             if (f["date-solved"]) {
@@ -89,7 +89,7 @@ module.exports = {
           }
         }
 
-        d["_id"] = undefined;
+        delete d["_id"];
         d["fromCache"] = false;
         d["fromFastforward"] = false;
 
