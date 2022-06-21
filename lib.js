@@ -21,6 +21,8 @@ const client = new MongoClient(config["db"]["url"]);
     }
     await client.connect();
     if (config.debug == true) console.log(`[db] Connected to MongoDB database.`);
+  } else {
+    if (config.debug == true) console.log(`[db] Not connecting to MongoDB database.`);
   }
 })();
 

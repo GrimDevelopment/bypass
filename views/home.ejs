@@ -28,7 +28,7 @@
           <input placeholder="Insert adlink here." id="url">
           <button onclick="bypass();">Bypass</button>
           <div class="options"><br>
-            <% if (config.db.enabled == false) { %>
+            <% if (config.db.active == true) { %>
               <input type="checkbox" id="allowCache" name="allowCache"> 
               <label for="allowCache">Disallow caching of your result?</label><br>
               <input type="checkbox" id="ignoreCache" name="ignoreCache">
