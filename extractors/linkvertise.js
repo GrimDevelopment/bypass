@@ -101,7 +101,7 @@ async function fireWhenFound(p) {
         if (a.data.target) resolve(a.data.target);
         else reject("Redirect not found.");
       } else {
-        if (lib.config().debug == true && a.hostname.includes("linkvertise")) console.log(`[linkvertise] Ignoring request ${((await res.method()) || "(unknown mthod)")} "${(await res.url())}" from listener.`);
+        if (lib.config().debug == true && a.hostname.includes("linkvertise")) console.log(`[linkvertise] Ignoring request ${(await (await(res.request()).method()))} "${(await res.url())}" from listener.`);
       }
     });
   });
