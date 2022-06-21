@@ -4,7 +4,7 @@ const lib = require("../lib");
 
 module.exports = {
   hostnames: ["cshort.org"],
-  "requires-captcha": false,
+  requiresCaptcha: false,
   get: async function (url) {
     try {
       if (lib.config().debug == true) console.log("[cshort] Requesting page...");

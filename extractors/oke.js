@@ -4,7 +4,7 @@ const lib = require("../lib");
 
 module.exports = {
   "hostnames": ["oke.io"],
-  "requires-captcha": false,
+  requiresCaptcha: false,
   get: async function(url) {
     let b;
     try {

@@ -3,7 +3,7 @@ const lib = require("../lib");
 
 module.exports = {
   hostnames: ["social-unlock.com"],
-  "requires-captcha": false,
+  requiresCaptcha: false,
   get: async function(url) {
     try {
       if (lib.config().debug == true) console.log("[social-unlock] Reformatting URL...");

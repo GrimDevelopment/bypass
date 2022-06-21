@@ -4,7 +4,7 @@ const lib = require("../lib");
 
 module.exports = {
   hostnames: ["1link.club"],
-  "requires-captcha": false,
+  requiresCaptcha: false,
   get: async function(url) {
     try {
       if (lib.config()["debug"] == true) console.log("[1link] Requesting page...");

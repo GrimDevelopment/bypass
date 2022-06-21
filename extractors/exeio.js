@@ -4,6 +4,7 @@ const lib = require("../lib")
 
 module.exports = {
   hostnames: ["exe.io", "exey.io"],
+  requiresCaptcha: true,
   get: async function(url) {
     let b;
     try {

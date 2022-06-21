@@ -80,12 +80,12 @@ function bypass() {
 function formatExtra(data) {
   let a = ``;
 
-  if (data["from-cache"]) a = `${a} from cache,`;
-  else if (data["from-fastforward"]) a = `${a} from fastforward,`;
+  if (data["fromCache"]) a = `${a} from cache,`;
+  else if (data["fromFastforward"]) a = `${a} from fastforward,`;
   else a = `${a} unique link,`;
 
-  if (data["date-solved"]) {
-    let d = new Date(parseInt(data["date-solved"]));
+  if (data["dateSolved"]) {
+    let d = new Date(parseInt(data["dateSolved"]));
     d = d.toTimeString();
     d = d.toLowerCase();
     a = `${a} generated on ${d}`;

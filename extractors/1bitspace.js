@@ -8,7 +8,7 @@ module.exports = {
   hostnames: [
     "1bit.space"
   ],
-  "requires-captcha": true,
+  requiresCaptcha: true,
   get: async function(url) {
     let b, p;
     try {

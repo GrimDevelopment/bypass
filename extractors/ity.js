@@ -4,7 +4,7 @@ const lib = require("../lib");
 
 module.exports = {
   hostnames: ["ity.im"],
-  "requires-captcha": false,
+  requiresCaptcha: false,
   get: async function(url) {
     try {
       if (lib.config().debug == true) console.log("[ityim] Requesting page...");

@@ -5,7 +5,7 @@ const lib = require("../lib");
 
 module.exports = {
   hostnames: [],
-  "requires-captcha": true,
+  requiresCaptcha: true,
   get: async function(url) {
     let b;
     try {

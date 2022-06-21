@@ -16,7 +16,7 @@ module.exports = {
     "link-center.net",
     "link-target.net"
   ],
-  "requires-captcha": false,
+  requiresCaptcha: false,
   get: async function (url) {
     let b;
     try {

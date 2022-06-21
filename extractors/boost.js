@@ -4,7 +4,7 @@ const lib = require("../lib");
 
 module.exports = {
   hostnames: ["bst.gg", "bst.wtf", "booo.st", "boost.ink"],
-  "requires-captcha": false,
+  requiresCaptcha: false,
   get: async function(url) {
     try {
       if (lib.config().debug == true) console.log("[boost] Requesting page...");

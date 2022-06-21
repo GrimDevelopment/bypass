@@ -17,7 +17,7 @@ module.exports = {
     "xiw34.com", 
     "wiid.me"
   ],
-  "requires-captcha": false,
+  requiresCaptcha: false,
   get: async function (url) {
     try {
       if (lib.config().debug == true) console.log("[shst] Requesting page...");

@@ -9,7 +9,7 @@ module.exports = {
     "link.parts",
     "lnkload.com"
   ],
-  "requires-captcha": true,
+  requiresCaptcha: true,
   get: async function(url) {
     let b;
     try {

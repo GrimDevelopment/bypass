@@ -8,7 +8,7 @@ module.exports = {
     "bcvc.live",
     "ouo.today"
   ],
-  "requires-captcha": false,
+  requiresCaptcha: false,
   get: async function (url) {
     let b;
     try {

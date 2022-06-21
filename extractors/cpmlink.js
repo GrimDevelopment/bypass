@@ -5,7 +5,7 @@ const lib = require("../lib");
 
 module.exports = {
   hostnames: ["cpmlink.net"],
-  "requires-captcha": false,
+  requiresCaptcha: false,
   get: async function (url) {
     try {
       if (lib.config().captcha.active == false) {

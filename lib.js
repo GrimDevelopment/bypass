@@ -29,12 +29,20 @@ module.exports = {
 
       if (opt.ignoreCache !== "true" && opt.ignoreCache !== true) {
         if (this.config().debug == true) console.log("[db] Checking DB for desination...");
-        let f = await links.findOne({"original-url": url});
+        let f = await links.findOne({"originalUrl": url});
+        if (f == null) f = await links.findOne({"original-url": url});
         if (f !== null) {
           if (this.config().debug == true) console.log("[db] Sending DB response...");
           f._id = undefined;
-          f["from-cache"] = true;
-          f["from-fastforward"] = false;
+          f["fromCache"] = true;
+          f["fromFastforward"] = false;
+          if (f["date-solved"]) {
+            await links.findOneAndReplace({"original-url": url}, {
+              "dateSolved": f["date-solved"],
+              "originalUrl": f["original-url"],
+              "destination": f["destination"]
+            });
+          }
           return f; 
         } 
       }
@@ -49,14 +57,14 @@ module.exports = {
 
         let d = {
           "destination": f,
-          "original-url": url,
-          "date-solved": (new Date() * 1)
+          "originalUrl": url,
+          "dateSolved": (new Date() * 1)
         }
 
         if (opt.allowCache !== "false" && opt.allowCache !== false) {
           if (opt.ignoreCache == "true" || opt.ignoreCache == true) {
             if (this.config().debug == true) console.log(`[db] Replacing old version of "${url}" in DB.`)
-            await links.findOneAndReplace({"original-url": url}, d);
+            await links.findOneAndReplace({"originalUrl": url}, d);
             if (this.config().debug == true) console.log(`[db] Replaced.`)
           } else {
             if (this.config().debug == true) console.log(`[db] Adding to DB.`)
@@ -66,8 +74,8 @@ module.exports = {
         }
 
         d["_id"] = undefined;
-        d["from-cache"] = false;
-        d["from-fastforward"] = false;
+        d["fromCache"] = false;
+        d["fromFastforward"] = false;
 
         return d;
       } else if (typeof f == "object") {

@@ -11,7 +11,7 @@ module.exports = {
     "123link.vip",
     "123link.co"
   ],
-  "requires-captcha": true,
+  requiresCaptcha: true,
   get: async function(url) {
     let b;
     try {

@@ -6,7 +6,7 @@ const lib = require("../lib");
 
 module.exports = {
   hostnames: ["myl.li", "mylink.vc"],
-  "requires-captcha": true,
+  requiresCaptcha: true,
   get: async function(url) {
     let b;
     try {
