@@ -27,7 +27,9 @@ const examples = [
 
 console.log("Beginning extractor tests...\n");
 if (process.argv[2]) {
-  run(parseInt(process.argv[2]));
+  let intForm = parseInt(process.argv[2])
+  if (intForm!=process.argv[2]) intForm = examples.findIndex(e => e.extractor==process.argv[2])
+  run(intForm);
 } else {
   run(0);
 }
