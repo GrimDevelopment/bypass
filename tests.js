@@ -42,24 +42,24 @@ async function run(i) {
   }
 
   let name = (examples[i].extractor || new URL(e.link).hostname);
-  console.log(`- Testing "${examples[i].extractor}" (${i}) extractor...\n`);
+  console.log(`- Testing "${name}" (${i}) extractor...\n`);
 
   try {
     let r = await lib.get(examples[i].link, {ignoreCache: true, allowCache: false});
     if (r.destination) {
       if (!examples[i].expected) examples[i].expected = "https://git.gay/a/bifm"
       if (r.destination == examples[i].expected) {
-        console.log(`\n-- Extractor "${examples[i].extractor}" (${i}) got expected solution. [${r.destination}]\n`);
+        console.log(`\n-- Extractor "${name}" (${i}) got expected solution. [${r.destination}]\n`);
         run((i + 1));
       } else {
-        console.log(`\n-- Extractor "${examples[i].extractor}" (${i}) got unexpected solution. [${r.destination} !== ${examples[i].expected}]\n`);
+        console.log(`\n-- Extractor "${name}" (${i}) got unexpected solution. [${r.destination} !== ${examples[i].expected}]\n`);
         run((i + 1));
       }
     } else {
       // for multi-destinations, when i add them
     }
   } catch(err) {
-    console.log(`\n-- Extractor "${examples[i].extractor}" (${i}) failed. Gave error that is shown below.`);
+    console.log(`\n-- Extractor "${name}" (${i}) failed. Gave error that is shown below.`);
     console.log(`${(err.stack || err.message || err.code || err)}\n`);
     run((i + 1));
   }
