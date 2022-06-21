@@ -41,7 +41,7 @@ async function run(i) {
     process.exit();
   }
 
-  let name = (examples[i].extractor || new URL(e.link).hostname);
+  let name = (examples[i].extractor || new URL(examples[i].link).hostname);
   console.log(`- Testing "${name}" (${i}) extractor...\n`);
 
   try {
