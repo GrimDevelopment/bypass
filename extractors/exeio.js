@@ -25,7 +25,7 @@ module.exports = {
       await p.waitForNavigation();
 
       if (lib.config().debug == true) console.log("[exeio] Skipped. Starting continous function...");
-      p = await cont(p, url);
+      p = await cont(p, url, b);
       await b.close();
       return p;
     } catch(err) {
@@ -35,16 +35,15 @@ module.exports = {
   }
 }
 
-async function cont(p, url) {
+async function cont(p, url, b) {
   try {
-
     if ((await p.$(".box-main > #before-captcha"))) {
       if (lib.config().debug == true) console.log("[exeio] Skipping non-CAPTCHA page...");
       await p.evaluate(function() {
         document.querySelector("form").submit();
       });
       await p.waitForNavigation();
-      return (await cont(p, url));
+      return (await cont(p, url, b));
     } else if ((await p.$("#invisibleCaptchaShortlink"))) {
       if (lib.config().debug == true) console.log("[exeio] Retrieving sitekey...");
       let sk = await p.evaluate(function() {
@@ -59,7 +58,7 @@ async function cont(p, url) {
       });
       if (lib.config().debug == true) console.log("[exeio] Submitted. Waiting...");
       await p.waitForNavigation();
-      return (await cont(p, url));
+      return (await cont(p, url, b));
     } else if ((await p.$(".procced > .btn.get-link.text-white"))) {
       if (lib.config().debug == true) console.log("[exeio] Counting down...");
       await p.waitForSelector(".procced > .btn.get-link.text-white:not(.disabled)");
@@ -69,6 +68,12 @@ async function cont(p, url) {
       return r;
     }
   } catch(err) {
+    if (b !== undefined) {
+      if (lib.config().debug == true) {
+        console.log("[exeio] There was an error in the continous function. There is a screenshot at the root of this directory with what the screen looks like.");
+        await p.screenshot({path: "./error.png"});
+      }
+    }
     throw err;
   }
 }
