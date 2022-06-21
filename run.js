@@ -11,10 +11,15 @@ if (process.argv[2]) {
   if (lib.config().debug == true) console.log("[runner] Sending solve request to './lib.js'");
 
   (async function() {
-    let solution = await lib.get(process.argv[2], o);
-    if (lib.config().debug == true) console.log("[runner] Got result, sending into console below:");
-    console.log((solution.destination || solution.destinations));
-    process.exit();
+    try {
+      let solution = await lib.get(process.argv[2], o);
+      if (lib.config().debug == true) console.log("[runner] Got result, sending into console below:");
+      console.log((solution.destination || solution.destinations));
+      process.exit();
+    } catch(err) {
+      console.log((err.stack || err.message || err.code || err));
+      process.exit(1);
+    }
   })();
 } else {
   console.log(`bifm - console runner\nUsage: node ./run.js "<url>" [ignoreCache: y/(n)] [allowCache: (y)/n]`);

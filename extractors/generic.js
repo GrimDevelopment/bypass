@@ -5,14 +5,14 @@ const lib = require("../lib");
 module.exports = {
   hostnames: [],
   requiresCaptcha: false,
-  get: async function(url) {
+  get: async function(url, opt) {
     try {
       let u = new URL(url);
 
       if (u.host == "href.li" || u.host == "www.href.li") return u.href.split("?").slice(1).join("?");
 
       // redirect via url params
-      if (lib.config()["debug"] == true) console.log("[generic] checking url params"); 
+      if (lib.config()["debug"] == true) console.log("[generic] Checking url params..."); 
       if (u.searchParams.get("url")) {
         if (lib.isUrl(u.searchParams.get("url"))) {
           return u.searchParams.get("url");
@@ -133,7 +133,7 @@ module.exports = {
       if ($("body .container form > div[style='display:none;'] > *[name='_method']").length > 0) {
         if (lib.config()["debug"] == true) console.log("[generic] Link is an adlinkfly link, switching to adflylink extractor...");
         const afl = require("./adlinkfly"); 
-        return (await afl.get(url));
+        return (await afl.get(url, opt));
       }
 
       if (lib.config()["debug"] == true) console.log("[generic] Done. Checking for HTTP redirects...");

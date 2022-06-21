@@ -18,8 +18,11 @@ When using our API, no matter the instance, you must follow our [license terms](
 |Name|Type|Required|Description|
 |---|---|---|---|
 |`url`|A URL encoded string.|Yes|The URL of the adlink you want to bypass.|
-|`ignoreCache`|`boolean`: `true` or `false`|No|Determines if you want to avoid using the cache for your solution.|
-|`allowCache`|`boolean`: `true` or `false`|No|Determines if you don't want to have your link's solution be in the cache.|
+|`ignoreCache`|`boolean`: `true`/`false`|No|Determines if you want to avoid using the cache for your solution.|
+|`allowCache`|`boolean`: `true`/`false`|No|Determines if you don't want to have your link's solution be in the cache.|
+|`ignoreFF`|`boolean`: `true`/`false`|No|Determines if you don't want to avoid checking FastForward's Crowd Bypass for a destination.|
+|`allowFF`|`boolean`: `true`/`false`|No|Determines if you don't want to sync certain types of links to FastForward's Crowd Bypass.|
+
 
 ### Responses
 
@@ -29,10 +32,10 @@ A successful response would look like this.
 {
   "success": true, // Detemines success of request.
   "destination": "https://git.gay/a/bifm", // Destination of URL.
-  "original-url": "https://ouo.io/2dktqo", // The original URL.
-  "date-solved": 1655685246159, // JS Date() output
-  "from-cache": true, // Determines if the solution came from the BIFM instance's cache or not.
-  "from-fastforward": false // Determines if the solution came from FastForward's Crowd Bypass feature or not.
+  "originalUrl": "https://ouo.io/2dktqo", // The original URL.
+  "dateSolved": 1655685246159, // JS Date() output
+  "fromCache": true, // Determines if the solution came from the BIFM instance's cache or not.
+  "fromFastforward": false // Determines if the solution came from FastForward's Crowd Bypass feature or not.
 }
 ```
 

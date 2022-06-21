@@ -27,24 +27,42 @@
         <div class="form">
           <input placeholder="Insert adlink here." id="url">
           <button onclick="bypass();">Bypass</button>
-          <div class="options"><br>
-            <% if (config.db.active == true) { %>
-              <input type="checkbox" id="allowCache" name="allowCache"> 
-              <label for="allowCache">Disallow caching of your result?</label><br>
-              <input type="checkbox" id="ignoreCache" name="ignoreCache">
-              <label for="ignoreCache">Ignore cached result?</label>
-            <% } %>
+          <div class="options">
+            <details>
+              <summary>Options</summary>
+              <p class="extra nm"><i class="nm">hover on each option for more information.</i></p>
+              <% if (config.db.active == true) { %>
+                <div class="option" title="Checking this box means your result will not be cached to this instance.">
+                  <input type="checkbox" id="allowCache" name="allowCache"> 
+                  <label for="allowCache">Disallow caching of your result?</label>
+                </div>
+                <div class="option" title="Checking this box means the server will not check our cache for previous entries of the same URL.">
+                  <input type="checkbox" id="ignoreCache" name="ignoreCache">
+                  <label for="ignoreCache">Ignore cached result?</label>
+                </div>
+              <% } %>
+              <% if (config.fastforward == true) { %>
+                <div class="option" title="Checking this box means that, even if your URL is compatible, it will not be sent to FastForward's Crowd Bypass server.">
+                  <input type="checkbox" id="allowFF" name="allowFF"> 
+                  <label for="allowFF">Disallow sending FastForward's Crowd Bypass server of your result?</label>
+                </div>
+                <div class="option" title="Checking this box means that the server will not check FastForward's Crowd Bypass server for previous entries of the same URL.">
+                  <input type="checkbox" id="ignoreFF" name="ignoreFF">
+                  <label for="ignoreFF">Ignore FastForward Crowd Bypass result?</label>
+                </div>
+              <% } %>
+            </details>
           </div>
-          
         </div>
         <div class="loader">
           <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
         </div>
         <div class="result"></div>
-      </div>
+      </div><br>
       <div class="info">
         <p>This instance <i><% if (config.captcha.active) { %> does <% } else { %> does not <% } %></i>support CAPTCHAs.</p>
         <p>This instance <i><% if (config.db.active) { %> does <% } else { %> does not <% } %> have</i> a cache.</i></p>
+        <p>This instance <i><% if (config.fastforward) { %> does <% } else { %> does not <% } %> support interacting with FastForward</i>.</i></p>
       </div>
       <noscript>
         <p style="margin-bottom:0;color:red;"><i>This webapp requires Javascript to run, you can use the API via the docs below if you need to.</i></p>

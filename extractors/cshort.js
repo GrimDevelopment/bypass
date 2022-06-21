@@ -27,7 +27,7 @@ module.exports = {
       let h;
       let c = `${lib.cookieString(scp(resp.headers["set-cookie"]))}; aid=${encodeURIComponent(JSON.stringify([new URL(url).pathname.substring(1)]))}`;
   
-      if (lib.config().debug == true) console.log("[cshort] Getting next page URL (2/2)");
+      if (lib.config().debug == true) console.log("[cshort] Getting next page URL (2/2)...");
       for (let a in r) {
         if (!r[a].startsWith("  //") && r[a] !== "") h = r[a].split(`?u=`)[1].split(`',`)[0];
       }

@@ -65,7 +65,7 @@ async function run(i, end) {
   console.log(`- Testing "${name}" (${i}) extractor...\n`);
 
   try {
-    let r = await lib.get(examples[i].link, {ignoreCache: true, allowCache: false});
+    let r = await lib.get(examples[i].link, {ignoreCache: true, allowCache: false, allowFF: false, ignoreFF: true});
     if (r.destination) {
       if (!examples[i].expected) examples[i].expected = "https://git.gay/a/bifm"
       if (r.destination == examples[i].expected) {

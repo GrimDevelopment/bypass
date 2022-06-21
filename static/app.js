@@ -12,6 +12,8 @@ function bypass() {
 
   if (document.getElementById("allowCache")?.checked) opt = opt + "allowCache=false&";
   if (document.getElementById("ignoreCache")?.checked) opt = opt + "ignoreCache=true";
+  if (document.getElementById("allowFF")?.checked) opt = opt + "allowFF=false&";
+  if (document.getElementById("ignoreFF")?.checked) opt = opt + "ignoreFF=false&";
 
   let xhr = new XMLHttpRequest();
   xhr.open("GET", `/api/bypass?url=${decodeURIComponent(url)}${opt}`);
@@ -84,11 +86,13 @@ function formatExtra(data) {
   else if (data["fromFastforward"]) a = `${a} from fastforward,`;
   else a = `${a} unique link,`;
 
-  if (data["dateSolved"]) {
+  if (data["dateSolved"] && data["dateSolved"] !== "unknown") {
     let d = new Date(parseInt(data["dateSolved"]));
     d = d.toTimeString();
     d = d.toLowerCase();
     a = `${a} generated on ${d}`;
+  } else {
+    a = `${a} generated on an unknown date`
   }
 
   return a.substring(1);

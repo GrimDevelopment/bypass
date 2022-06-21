@@ -18,7 +18,9 @@ This is a quick start guide on configuring your BIFM server.
   "http": {
     "port": 32333 // accepted values: any valid http ports
   }, 
-  "debug": false // accepted values: true, false
+  "debug": false, // accepted values: true, false
+  "fastforward": true, // accepted values: true, false
+  "alert": "" // any string that isn't ""
 }
 ```
 
@@ -34,6 +36,8 @@ This is a quick start guide on configuring your BIFM server.
 - `http` contains the HTTP settings for the server.
   - `port` is the port used for BIFM.
 - `debug` determines the status of the server, whether or not it's in debug mode. 
+- `fastforward` deteremines if FastForward's Crowd Bypass server queries are allowed from your server.
+- `alert` is text that is displayed on your server's homepage.
 
 ### Debug mode
 

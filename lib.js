@@ -8,6 +8,7 @@ if (!fs.existsSync("./config.json")) {
 
 const config = require("./config.json");
 const two = require("2captcha");
+const axios = require("axios");
 const {MongoClient} = require("mongodb");
 let client, db, links;
 
@@ -46,23 +47,37 @@ module.exports = {
           if (f !== null) {
             if (config.debug == true) console.log("[db] Sending DB response...");
             delete f._id;
-            f["fromCache"] = true;
-            f["fromFastforward"] = false;
             if (f["date-solved"]) {
               f = {
-                "dateSolved": f["date-solved"],
-                "originalUrl": f["original-url"],
-                "destination": f["destination"]
+                dateSolved: f["date-solved"],
+                originalUrl: f["original-url"],
+                destination: f["destination"],
               }
               await links.findOneAndReplace({"original-url": url}, f);
             }
+            f["fromCache"] = true;
+            f["fromFastforward"] = false;
             return f; 
           } 
         }
       }
+
+      if (config.fastforward == true && opt.ignoreFF !== "true" && opt.ignoreFF !== true) {
+        let r = await this.fastforward.get(url);
+        if (r !== null) {
+          f = {
+            dateSolved: "unknown",
+            originalUrl: url,
+            destination: r,
+            fromCache: false,
+            fromFastforward: true
+          };
+          return f;
+        }
+      } 
       
       f = await extractor.get(url, opt);
-      if (config.debug == true) console.log(`[extract] Finished "${url}", ${JSON.stringify(opt)} [Solution: ${f}]`);
+      if (config.debug == true) console.log(`[extract] Finished "${url}", ${JSON.stringify(opt)} [Solution: ${(f.destination || f.destinations || f)}]`);
 
       if (typeof f == "string") {
         if (!this.isUrl(f) || f == url) {
@@ -73,6 +88,10 @@ module.exports = {
           "destination": f,
           "originalUrl": url,
           "dateSolved": (new Date() * 1)
+        }
+
+        if (config.fastforward == true && opt?.allowFF !== "false" && opt.allowFF !== false) {
+          await this.fastforward.send(url, f);
         }
 
         if (config.db.active == true) {
@@ -113,17 +132,17 @@ module.exports = {
       const tc = new two.Solver(config["captcha"]["key"]);
       let ref = opt.referer;
       
-      if (config.debug == true) console.log(`[captcha] Requesting CAPTCHA solve for a ${type} @ ${ref}`);
+      if (config.debug == true) console.log(`[captcha] Requesting CAPTCHA solve for a ${type} @ "${ref}"...`);
       let a;
       
       switch(type) {
         case "recaptcha":
           a = (await tc.recaptcha(sitekey, ref)).data;
-          if (config.debug == true) console.log(`[captcha] Solved ${type} for "${ref}"`);
+          if (config.debug == true) console.log(`[captcha] Solved ${type} for "${ref}".`);
           return a; 
         case "hcaptcha":
           a = (await tc.hcaptcha(sitekey, ref)).data;
-          if (config.debug == true) console.log(`[captcha] Solved ${type} for "${ref}"`);
+          if (config.debug == true) console.log(`[captcha] Solved ${type} for "${ref}".`);
           return a;
         default:
           console.log(`[captcha] Invalid parameters were given to CAPTCHA solver.`)
@@ -141,7 +160,82 @@ module.exports = {
     s = s.substring(0, s.length - 1);
     return s.substring(1);
   },
+  fastforward: {
+    get: async function(url, igcb) {
+      try {
+        if ((isCrowdBypass(new URL(url).hostname) || igcb == true)) {
+          let b = `domain=${new URL(url).hostname}&path=${new URL(url).pathname.substring(1)}${new URL(url).search}`;
+          if (config.debug == true) console.log(`[fastforward] Made body content: `, b);
+          if (config.debug == true) console.log("[fastforward] Checking FastForward crowd bypass...");
+
+          let d = await axios({
+            method: "POST",
+            url: "https://crowd.fastforward.team/crowd/query_v1",
+            data: b
+          });
+
+          if (config.debug == true) console.log("[fastforward] Recieved response", d.status, d.data);
+
+          if (d.status == 204) return null;
+          else if (d.status == 200) return d.data;
+          else throw "Invalid response status.";
+        } else {
+          if (config.debug == true) console.log("[fastforward] Tried to get FastForward URL, not acceptable URL.");
+          return null;
+        }
+      } catch(err) {
+        throw err;
+      }
+    },
+    send: async function(url, dest) {
+      try {
+        if (config.fastforward == true) {
+          let b = `domain=${new URL(url).hostname}&path=${new URL(url).pathname.substring(1)}${new URL(url).search}&target=${encodeURIComponent(dest)}`;
+          if (config.debug == true) console.log(`[fastforward] Made body content: `, b);
+          if (config.debug == true) console.log("[fastforward] Sending to FastForward crowd bypass...");
+
+          let d = await axios({
+            method: "POST",
+            url: "https://crowd.fastforward.team/crowd/contribute_v1",
+            data: b
+          });
+
+          if (config.debug == true) console.log("[fastforward] Recieved response", d.status, d.data);
+
+          if (d.status == 201) return true;
+          else throw "Invalid response status.";
+        }
+      } catch(err) {
+        throw err;
+      }
+    }
+  },
   byteCount: function(string) {return encodeURI(string).split(/%..|./).length - 1;},
   config: function() {return config;},
   isUrl: function(url) {return /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/.test(url);}
+}
+
+function isCrowdBypass(host) {
+  switch(host) {
+    case /wadooo\.com|gotravelgo\.space|pantauterus\.me|liputannubi\.net/:
+    case "rom.io":
+    case "lnk2.cc":
+    case /ouo\.(press|io)/:
+    case /za\.(gl|uy)/:
+    case "zee.gl":
+    case /uiz\.(io|app)|moon7\.xyz/:
+    case "fc.lc":
+    case "fc-lc.com":
+    case "elil.cc":
+    case "cpmlink.net":
+    case /(shon|likn)\.xyz|sloomp\.space/:
+    case "cshort.org":
+    case "shorten.sh":
+    case "gplinks.co":
+    case "exe.io":
+    case "exey.io":
+      return true;
+    default: 
+      return false;
+  }
 }

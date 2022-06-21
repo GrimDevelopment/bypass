@@ -12,5 +12,6 @@
     "port": 32333
   },
   "debug": false,
+  "fastforward": true,
   "alert": ""
 }

@@ -6,12 +6,26 @@ const lib = require("../lib");
 module.exports = {
   hostnames: [],
   requiresCaptcha: true,
-  get: async function(url) {
+  get: async function(url, opt) {
     let b;
     try {
       let stlh = stl();
       stlh.enabledEvasions.delete("iframe.contentWindow");
       pup.use(stlh);
+
+      if (lib.config().fastforward == true && opt?.ignoreFF !== "true") {
+        let r = await lib.fastforward.get(url, true);
+        if (r !== null) {
+          f = {
+            dateSolved: "unknown",
+            originalUrl: url,
+            destination: r,
+            fromCache: false,
+            fromFastforward: true
+          };
+          return f;
+        }
+      }
 
       if (lib.config().captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."
@@ -39,7 +53,6 @@ module.exports = {
 }
 
 async function cont(p, url) {
-
   if (lib.config().debug == true) console.log("[adflylink] Attempting to find CAPTCHA...");
   let isCaptcha = await p.evaluate(function () {
     if (document.querySelector("#link-view > p")?.innerHTML?.includes("Please check the captcha")) return true;
@@ -58,6 +71,7 @@ async function cont(p, url) {
     if (lib.config().debug == true) console.log("[adflylink] Retreiving link...");
     await p.waitForSelector(".btn-success.btn-lg:not(.disabled)");
     let r = await p.evaluate(function() {return document.querySelector(".btn-success").href});
+    
     return r;
   } else {  
     if (lib.config().debug == true) console.log("[adflylink] Auto-submitting form...");

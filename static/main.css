@@ -85,8 +85,12 @@ a > h2 {
 .alert p,
 .info p,
 .desc p,
-.ns {
+.nm {
   margin: 0;
+}
+
+.option {
+  width: 100%;
 }
 
 .extra {
