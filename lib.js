@@ -9,7 +9,7 @@ if (!fs.existsSync("./config.json")) {
 const config = require("./config.json");
 const two = require("2captcha");
 const {MongoClient} = require("mongodb");
-const client = new MongoClient(config["db"]["url"]);
+let client, db, links;
 
 (async function() {
   if (config.db?.active !== false) {
@@ -19,15 +19,16 @@ const client = new MongoClient(config["db"]["url"]);
       console.log("[bifm] Please restart your BIFM instance.");
       process.exit();
     }
+    client = new MongoClient(config["db"]["url"]);
     await client.connect();
+    db = client.db("bifm");
+    links = db.collection("links");
     if (config.debug == true) console.log(`[db] Connected to MongoDB database.`);
   } else {
     if (config.debug == true) console.log(`[db] Not connecting to MongoDB database.`);
   }
 })();
 
-const db = client.db("bifm");
-const links = db.collection("links");
 
 module.exports = {
   get: async function(url, opt) {
