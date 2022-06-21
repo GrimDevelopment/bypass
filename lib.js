@@ -13,6 +13,12 @@ const client = new MongoClient(config["db"]["url"]);
 
 (async function() {
   if (config.db?.active !== false) {
+    if (config.db.active == undefined) {
+      config.db.active = true;
+      fs.writeFileSync("./config.json", JSON.stringify(config, null, 2));
+      console.log("[bifm] Please restart your BIFM instance.");
+      process.exit();
+    }
     await client.connect();
     if (config.debug == true) console.log(`[db] Connected to MongoDB database.`);
   }
@@ -27,30 +33,33 @@ module.exports = {
       let ex = await ext.fromUrl(url);
       let extractor = require(`${__dirname}/extractors/${ex}`);
 
-      if (this.config().debug == true) console.log(`[extract] Starting "${url}"`, opt)
+      if (config.debug == true) console.log(`[extract] Starting "${url}"`, opt)
 
-      if (opt.ignoreCache !== "true" && opt.ignoreCache !== true) {
-        if (this.config().debug == true) console.log("[db] Checking DB for desination...");
-        let f = await links.findOne({"originalUrl": url});
-        if (f == null) f = await links.findOne({"original-url": url});
-        if (f !== null) {
-          if (this.config().debug == true) console.log("[db] Sending DB response...");
-          f._id = undefined;
-          f["fromCache"] = true;
-          f["fromFastforward"] = false;
-          if (f["date-solved"]) {
-            await links.findOneAndReplace({"original-url": url}, {
-              "dateSolved": f["date-solved"],
-              "originalUrl": f["original-url"],
-              "destination": f["destination"]
-            });
-          }
-          return f; 
-        } 
+      if (config.db.active == true) {
+        if (opt.ignoreCache !== "true" && opt.ignoreCache !== true) {
+          if (config.debug == true) console.log("[db] Checking DB for desination...");
+          let f = await links.findOne({"originalUrl": url});
+          if (f == null) f = await links.findOne({"original-url": url});
+          if (f !== null) {
+            if (config.debug == true) console.log("[db] Sending DB response...");
+            f._id = undefined;
+            f["fromCache"] = true;
+            f["fromFastforward"] = false;
+            if (f["date-solved"]) {
+              f = {
+                "dateSolved": f["date-solved"],
+                "originalUrl": f["original-url"],
+                "destination": f["destination"]
+              }
+              await links.findOneAndReplace({"original-url": url}, f);
+            }
+            return f; 
+          } 
+        }
       }
-
+      
       f = await extractor.get(url, opt);
-      if (this.config().debug == true) console.log(`[extract] Finished "${url}", ${JSON.stringify(opt)} [Solution: ${f}]`);
+      if (config.debug == true) console.log(`[extract] Finished "${url}", ${JSON.stringify(opt)} [Solution: ${f}]`);
 
       if (typeof f == "string") {
         if (!this.isUrl(f) || f == url) {
@@ -63,15 +72,17 @@ module.exports = {
           "dateSolved": (new Date() * 1)
         }
 
-        if (opt.allowCache !== "false" && opt.allowCache !== false) {
-          if (opt.ignoreCache == "true" || opt.ignoreCache == true) {
-            if (this.config().debug == true) console.log(`[db] Replacing old version of "${url}" in DB.`)
-            await links.findOneAndReplace({"originalUrl": url}, d);
-            if (this.config().debug == true) console.log(`[db] Replaced.`)
-          } else {
-            if (this.config().debug == true) console.log(`[db] Adding to DB.`)
-            await links.insertOne(d);
-            if (this.config().debug == true) console.log(`[db] Added.`)
+        if (config.db.active == true) {
+          if (opt.allowCache !== "false" && opt.allowCache !== false) {
+            if (opt.ignoreCache == "true" || opt.ignoreCache == true) {
+              if (config.debug == true) console.log(`[db] Replacing old version of "${url}" in DB.`)
+              await links.findOneAndReplace({"originalUrl": url}, d);
+              if (config.debug == true) console.log(`[db] Replaced.`)
+            } else {
+              if (config.debug == true) console.log(`[db] Adding to DB.`)
+              await links.insertOne(d);
+              if (config.debug == true) console.log(`[db] Added.`)
+            }
           }
         }
 
@@ -95,21 +106,21 @@ module.exports = {
     //    "referer": "https://google.com"
     // }
     if (config["captcha"]["active"] == false) return null;
-    if (this.config().captcha.service == "2captcha") {
+    if (config.captcha.service == "2captcha") {
       const tc = new two.Solver(config["captcha"]["key"]);
       let ref = opt.referer;
       
-      if (this.config().debug == true) console.log(`[captcha] Requesting CAPTCHA solve for a ${type} @ ${ref}`);
+      if (config.debug == true) console.log(`[captcha] Requesting CAPTCHA solve for a ${type} @ ${ref}`);
       let a;
       
       switch(type) {
         case "recaptcha":
           a = (await tc.recaptcha(sitekey, ref)).data;
-          if (this.config().debug == true) console.log(`[captcha] Solved ${type} for "${ref}"`);
+          if (config.debug == true) console.log(`[captcha] Solved ${type} for "${ref}"`);
           return a; 
         case "hcaptcha":
           a = (await tc.hcaptcha(sitekey, ref)).data;
-          if (this.config().debug == true) console.log(`[captcha] Solved ${type} for "${ref}"`);
+          if (config.debug == true) console.log(`[captcha] Solved ${type} for "${ref}"`);
           return a;
         default:
           console.log(`[captcha] Invalid parameters were given to CAPTCHA solver.`)

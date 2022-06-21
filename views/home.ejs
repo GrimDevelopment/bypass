@@ -28,10 +28,14 @@
           <input placeholder="Insert adlink here." id="url">
           <button onclick="bypass();">Bypass</button>
           <div class="options"><br>
-            <input type="checkbox" id="allowCache" name="allowCache"> 
-            <label for="allowCache">Disallow caching of your result?</label><br>
-            <input type="checkbox" id="ignoreCache" name="ignoreCache">
-            <label for="ignoreCache">Ignore cached result?</label>
+            <% if (config.db.enabled == false) { %>
+              <input type="checkbox" id="allowCache" name="allowCache"> 
+              <label for="allowCache">Disallow caching of your result?</label><br>
+              <input type="checkbox" id="ignoreCache" name="ignoreCache">
+              <label for="ignoreCache">Ignore cached result?</label>
+            <% } else { %>
+              <p class="nm"><i>This instance doesn't have a cache, so no options for you :(</i></p>
+            <% } %>
           </div>
         </div>
         <div class="loader">

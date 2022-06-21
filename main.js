@@ -59,5 +59,5 @@ app.get("/api/bypass", async function(req, res) {
 });
 
 app.get("/", async function(req, res) {
-  res.render("home", {config: lib.config(), alert: lib.config().alert});
+  res.render("home", {config: (await lib.config()), alert: lib.config().alert});
 });

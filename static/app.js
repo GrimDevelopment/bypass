@@ -10,8 +10,8 @@ function bypass() {
   if (!url.startsWith("http")) url = `http://${url}`;
   let opt = "&";
 
-  if (document.getElementById("allowCache").checked) opt = opt + "allowCache=false&";
-  if (document.getElementById("ignoreCache").checked) opt = opt + "ignoreCache=true";
+  if (document.getElementById("allowCache")?.checked) opt = opt + "allowCache=false&";
+  if (document.getElementById("ignoreCache")?.checked) opt = opt + "ignoreCache=true";
 
   let xhr = new XMLHttpRequest();
   xhr.open("GET", `/api/bypass?url=${decodeURIComponent(url)}${opt}`);
