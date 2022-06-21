@@ -27,8 +27,9 @@ module.exports = {
       if (lib.config().debug == true) console.log("[adflylink] Launching browser...");
       b = await pup.launch({headless: true});
       let p = await b.newPage();
-      await p.goto(url);
-
+      if (lib.config().debug == true) console.log("[adflylink] Launched. Navigating to URL...");
+      await p.goto(url, {waitUntil: "networkidle0"});
+      if (lib.config().debug == true) console.log("[adflylink] Done. Starting continuous function...");
       return (await cont(p, url));
     } catch(err) {
       if (b !== undefined) await b.close();
@@ -38,6 +39,8 @@ module.exports = {
 }
 
 async function cont(p, url) {
+
+  if (lib.config().debug == true) console.log("[adflylink] Attempting to find CAPTCHA...");
   let isCaptcha = await p.evaluate(function () {
     if (document.querySelector("#link-view > p")?.innerHTML?.includes("Please check the captcha")) return true;
     else return false;
@@ -47,6 +50,8 @@ async function cont(p, url) {
     if (lib.config().debug == true) console.log("[adflylink] Solving CAPTCHA...");
     await p.solveRecaptchas();
     if (lib.config().debug == true) console.log("[adflylink] Solved CAPTCHA. Continuing page...");
+  } else {
+    if (lib.config().debug == true) console.log("[adflylink] No CAPTCHA found. Continuing page...");
   }
 
   if ((await p.$("#countdown"))) {

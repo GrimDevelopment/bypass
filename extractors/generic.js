@@ -108,7 +108,7 @@ module.exports = {
       }
 
       // generic redirect
-      if (lib.config()["debug"] == true) console.log("[generic] Checking for http redirects..."); 
+      if (lib.config()["debug"] == true) console.log("[generic] Done. Checking for HTML redirects..."); 
       if (resp.data.includes(`content="0;URL=`)) {
         return resp.data.split(`content="0;URL=`)[1].split(`"`)[0];
       }
@@ -116,7 +116,7 @@ module.exports = {
       let $ = cheerio.load(resp.data);
 
       // wpsafe-link protectors
-      if (lib.config()["debug"] == true) console.log("[generic] Checking for wpsafelink indicators..."); 
+      if (lib.config()["debug"] == true) console.log("[generic] Done. Checking for wpsafelink indicators..."); 
       if ($("#wpsafe-link").length !== 0) {
         if ($("#wpsafe-link a").attr("href") && $("#wpsafe-link a").attr("href").includes("safelink_redirect")) {
           let o = new URL($("#wpsafe-link a").attr("href"));
@@ -129,15 +129,14 @@ module.exports = {
       }
 
       // adlinkfly sites
-      // if there is a better way of detecting these, let me know pls
-      if (lib.config()["debug"] == true) console.log("[generic] Checking if link is adlinkfly link...");
-      if ($("title")?.text()?.includes("AdLinkFly")) {
-        if (lib.config()["debug"] == true) console.log("")
+      if (lib.config()["debug"] == true) console.log("[generic] Done. Checking if link is adlinkfly link...");
+      if ($("body .container form > div[style='display:none;'] > *[name='_method']").length > 0) {
+        if (lib.config()["debug"] == true) console.log("[generic] Link is an adlinkfly link, switching to adflylink extractor...");
         const afl = require("./adlinkfly"); 
         return (await afl.get(url));
       }
 
-      if (lib.config()["debug"] == true) console.log("[generic] Checking for http redirects...");
+      if (lib.config()["debug"] == true) console.log("[generic] Done. Checking for HTTP redirects...");
       if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
         return resp.request.socket._httpMessage._redirectable._currentUrl;
       }
