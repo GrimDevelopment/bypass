@@ -2,7 +2,7 @@
   "name": "bifm",
   "version": "1.0.0",
   "description": "Bypasses link protectors server-side.",
-  "main": "main.js",
+  "main": "server.js",
   "scripts": {
     "start": "node .",
     "test": "node ./tests.js"
