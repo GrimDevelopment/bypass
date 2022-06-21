@@ -68,12 +68,6 @@ async function cont(p, url, b) {
       return r;
     }
   } catch(err) {
-    if (b !== undefined) {
-      if (lib.config().debug == true) {
-        console.log("[exeio] There was an error in the continous function. There is a screenshot at the root of this directory with what the screen looks like.");
-        await p.screenshot({path: "./error.png"});
-      }
-    }
     throw err;
   }
 }
