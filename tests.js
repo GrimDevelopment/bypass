@@ -12,7 +12,7 @@ const examples = [
   { link: "https://exe.io/ZaKsUgDc" }, 
   { link: "http://ity.im/1QZh2" }, 
   { link: "http://karung.in/Gyucc", expected: "https://drive.google.com/uc?id=0B263gKU-C09_WW5rbURLeXN5QXc&export=download"},
-  { extractor: "linkvertise.com (redirect)", link: "https://linkvertise.com/431184/roblox-scripts-website", expected: "https://tobirbxscripts.blogspot.com/" }, // (redirect) is there because there are two types of links on linkvertise, a paste and a redirect
+  { extractor: "linkvertise (redirect)", link: "https://linkvertise.com/431184/roblox-scripts-website", expected: "https://tobirbxscripts.blogspot.com/" }, // (redirect) is there because there are two types of links on linkvertise, a paste and a redirect
   { link: "https://lnkload.com/2z8aF" },
   { link: "https://lnk2.cc/wd1J1" },
   { link: "https://myl.li/NOEgI6aOp3bF" },
@@ -22,21 +22,41 @@ const examples = [
   { link: "https://show.co/HQrPtta", expected: "https://universal-bypass.org" },
   { link: "https://social-unlock.com/417pK" },
   { extractor: "adf.ly", link: "http://usheethe.com/T3F5" },
+  { extractor: "adlinkfly", link: "https://pdiskshortener.com/6I2CR2" },
   { extractor: "WPSafelink", link: "https://demo-safelink.themeson.com/template1/?f7fbb8af", expected: "https://themeson.com/safelink/" }
 ];
 
-console.log("Beginning extractor tests...\n");
 if (process.argv[2]) {
-  let intForm = parseInt(process.argv[2])
-  if (intForm!=process.argv[2]) intForm = examples.findIndex(e => (e.extractor || new URL(e.link).hostname)==process.argv[2])
-  run(intForm);
+  if (lib.config().debug == true) console.log("\n[testing] Detected arguments.");
+
+  if (lib.config().debug == true) console.log("[testing] Parsing arguments...");
+  let intForm = parseInt(process.argv[2]);
+  if (intForm !== process.argv[2]) intForm = examples.findIndex(e => (e.extractor || new URL(e.link).hostname) == process.argv[2]);
+  
+  if (lib.config().debug == true) console.log(`[testing] Parsed starting interger as: ${intForm}`);
+
+  let end;
+  if (process.argv[3]) {
+    if (process.argv[3] == "-") end = (intForm + 1);
+    else {
+      end = parseInt(process.argv[3]);
+      if (end == null) {
+        end = examples.findIndex(e => (e.extractor || new URL(e.link).hostname) == process.argv[2]);
+      }
+    }
+  }
+
+  if (lib.config().debug == true) console.log(`[testing] Parsed ending interger as: ${end}`);
+
+  console.log("\nBeginning extractor tests...\n");
+  run(intForm, end);
 } else {
   run(0);
 }
 
-async function run(i) {
+async function run(i, end) {
   if (!i) i = 0;
-  if (!examples[i]) {
+  if (!examples[i] || end == i) {
     console.log("Testing complete. Exiting...");
     process.exit();
   }
@@ -50,10 +70,10 @@ async function run(i) {
       if (!examples[i].expected) examples[i].expected = "https://git.gay/a/bifm"
       if (r.destination == examples[i].expected) {
         console.log(`\n-- Extractor "${name}" (${i}) got expected solution. [${r.destination}]\n`);
-        run((i + 1));
+        run((i + 1), end);
       } else {
         console.log(`\n-- Extractor "${name}" (${i}) got unexpected solution. [${r.destination} !== ${examples[i].expected}]\n`);
-        run((i + 1));
+        run((i + 1), end);
       }
     } else {
       // for multi-destinations, when i add them
@@ -61,6 +81,6 @@ async function run(i) {
   } catch(err) {
     console.log(`\n-- Extractor "${name}" (${i}) failed. Gave error that is shown below.`);
     console.log(`${(err.stack || err.message || err.code || err)}\n`);
-    run((i + 1));
+    run((i + 1), end);
   }
 }
