@@ -34,7 +34,9 @@ app.get("/api/bypass", async function(req, res) {
     if (lib.config().debug == true) console.log(`[http] Sending response from ./lib.js`);
     res.send({success: true, ...resp});
   } catch(err) {
+    if (lib.config().debug == true) console.log("[http] Recieved error. Displayed below:");
     if (typeof err == "string") {
+      if (lib.config().debug == true) console.log(err)
       res.send({
         success: false,
         error: err,

@@ -10,7 +10,7 @@ module.exports = {
   ],
   "requires-captcha": true,
   get: async function(url) {
-    let b;
+    let b, p;
     try {
       pup.use(adb());
       
@@ -31,39 +31,38 @@ module.exports = {
 
       if (lib.config()["debug"] == true) console.log("[1bitspace] Launching browser...");
       b = await pup.launch({headless: true});
-      let p = await b.newPage();
+      p = await b.newPage();
 
       await p.goto(url);
 
       // first page
-      if (lib.config()["debug"] == true) console.log("[1bitspace] Solving captchas...");
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Launched. Solving CAPTCHA...");
       await p.solveRecaptchas();
-      if (lib.config()["debug"] == true) console.log("[1bitspace] Solved.");
+      await p.waitForTimeout(500);
       await p.click(".button-element-verification");
-      if (lib.config()["debug"] == true) console.log("[1bitspace] Loading second page...");
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Solved CAPTCHA. Counting down (1/2)...");
 
       // second page
-      if (lib.config()["debug"] == true) console.log("[1bitspace] Counting down...");
       await p.waitForSelector(".button-element-redirect:not([disabled])");
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Done. Loading third page...");
       await p.click(".button-element-redirect:not([disabled])");
-      if (lib.config()["debug"] == true) console.log("[1bitspace] Loading third page...");
       await p.waitForNavigation();
 
       // third page
-      if (lib.config()["debug"] == true) console.log("[1bitspace] Counting down (2)...");
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Loaded. Counting down (2)...");
       await p.waitForSelector("#continue-button:not([disabled])");
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Done. Loading final page...");
       await p.click("#continue-button:not([disabled])");
-      if (lib.config()["debug"] == true) console.log("[1bitspace] Loading last page...");
       await p.waitForNavigation();
 
       let u = await p.url();
 
-      if (lib.config()["debug"] == true) console.log("[1bitspace] Closing browser...");
+      if (lib.config()["debug"] == true) console.log("[1bitspace] Loaded. Closing browser...");
       await b.close();
 
       return u;
     } catch(err) {
-      if (b !== undefined) await b.close();
+      if (b !== undefined)  await b.close();
       throw err;
     }
   }

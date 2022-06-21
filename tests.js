@@ -2,6 +2,8 @@ const lib = require("./lib");
 
 // add a new extractor? add it to the test list.
 const examples = [
+  { extractor: "1bit.space", link: "https://1bit.space/FVJcWHr", expected: "https://mega.nz/#F!Xe4kVIII!z7WAxz65DzBhe6d1Cx_xHg" },
+  { extractor: "1link.club", link: "http://1link.club/77679" },
   { extractor: "bc.vc", link: "https://bc.vc/vQesLIh", expected: "https://universal-bypass.org/" },
   { extractor: "boost.ink", link: "https://boost.ink/c5bba" },
   { extractor: "boostme.link", link: "https://boostme.link/iX9Krf" },
@@ -17,7 +19,7 @@ const examples = [
   { extractor: "oke.io", link: "https://oke.io/D3wL", expected: "https://mega.nz/#!TlkjwLrb!jj8GVmZJp1EmmSInnQ4FNsdmb4qq_Pp0b5IAJ5ik8u8" },
   { extractor: "ouo.io", link: "https://ouo.io/2dktqo" },
   { extractor: "sh.st", link: "http://ceesty.com/es47QR" },
-  { extractor: "show.co", link: "https://show.co/HQrPtta", expected: "https://universal-bypass.org/" },
+  { extractor: "show.co", link: "https://show.co/HQrPtta", expected: "https://universal-bypass.org" },
   { extractor: "social-unlock.com", link: "https://social-unlock.com/417pK" },
   { extractor: "adf.ly", link: "http://usheethe.com/T3F5" },
   { extractor: "WPSafelink", link: "https://demo-safelink.themeson.com/template1/?f7fbb8af", expected: "https://themeson.com/safelink/" }
