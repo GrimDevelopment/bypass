@@ -9,10 +9,6 @@ body {
   text-rendering: optimizeLegibility;
 } 
 
-.nm {
-  margin: 0;
-}
-
 a > h2 {
   color: black;
 }
@@ -35,11 +31,7 @@ a > h2 {
   }
 }
 
-.desc p {
-  margin: 0;
-}
-
-#app {
+.require-script {
   display: none; /* Hidden for NoScript users. */
 }
 
@@ -73,16 +65,27 @@ a > h2 {
   margin-bottom: 5px;
 }
 
+.info {
+  color: white;
+  background: gray;
+  margin-top: 2px;
+  margin-bottom: 0;
+}
+
 .success, 
 .error,
-.alert {
+.alert,
+.info {
   padding: 5px;
   border-radius: 3px;
 }
 
 .success p, 
 .error p,
-.alert p {
+.alert p,
+.info p,
+.desc p,
+.ns {
   margin: 0;
 }
 

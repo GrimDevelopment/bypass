@@ -33,15 +33,18 @@
               <label for="allowCache">Disallow caching of your result?</label><br>
               <input type="checkbox" id="ignoreCache" name="ignoreCache">
               <label for="ignoreCache">Ignore cached result?</label>
-            <% } else { %>
-              <p class="nm"><i>This instance doesn't have a cache, so no options for you :(</i></p>
             <% } %>
           </div>
+          
         </div>
         <div class="loader">
           <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
         </div>
         <div class="result"></div>
+      </div>
+      <div class="info">
+        <p>This instance <i><% if (config.captcha.active) { %> does <% } else { %> does not <% } %></i>support CAPTCHAs.</p>
+        <p>This instance <i><% if (config.db.active) { %> does <% } else { %> does not <% } %> have</i> a cache.</i></p>
       </div>
       <noscript>
         <p style="margin-bottom:0;color:red;"><i>This webapp requires Javascript to run, you can use the API via the docs below if you need to.</i></p>

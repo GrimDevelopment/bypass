@@ -53,6 +53,10 @@ async function cont(p, url, b) {
       let c = await lib.solve(sk, "recaptcha", {referer: (await p.url())});
       if (lib.config().debug == true) console.log("[exeio] Solved CAPTCHA. Enterring solution and submitting form...");
       await p.evaluate(`document.querySelector("[name='g-recaptcha-response']").value = "${c}";`);
+      p.on("dialog", function(d) {
+        if (lib.config().debug == true) console.log("[exeio] Recieved a dialog, auto-accepting.");
+        d.accept();
+      })
       await p.evaluate(function() {
         document.querySelector("form").submit();
       });
