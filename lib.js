@@ -12,8 +12,10 @@ const {MongoClient} = require("mongodb");
 const client = new MongoClient(config["db"]["url"]);
 
 (async function() {
-  await client.connect();
-  if (require("./lib").config().debug == true) console.log(`[db] Connected to MongoDB database.`);
+  if (config.db?.active !== false) {
+    await client.connect();
+    if (config.debug == true) console.log(`[db] Connected to MongoDB database.`);
+  }
 })();
 
 const db = client.db("bifm");

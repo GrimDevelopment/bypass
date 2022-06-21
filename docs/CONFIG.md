@@ -12,6 +12,7 @@ This is a quick start guide on configuring your BIFM server.
     "key": "" // enter your api key here
   },
   "db": {
+    "active": true,
     "url": "mongodb://127.0.0.1:27017/bifm" // accepted values: any valid mongoDB url
   },
   "http": {
@@ -24,10 +25,11 @@ This is a quick start guide on configuring your BIFM server.
 ## Definitions
 
 - `captcha` is on object for captcha-solving service, required for certain solvers.
-  - `active` determines whether or not the captcha-solver is enabled.
+  - `active` determines whether or not the CAPTCHA solver is enabled.
   - `service` determines which service is used for captcha-solving, like [2captcha (affiliate link)](https://2captcha.com?from=12366899).
   - `key` is the key used for your captcha-solving service.
 - `db` is the database used by BIFM.
+  - `active` determines whether or not the DB feature is enabled.
   - `url` is the URL to the MongoDB database.
 - `http` contains the HTTP settings for the server.
   - `port` is the port used for BIFM.
