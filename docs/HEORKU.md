@@ -20,4 +20,20 @@ heroku buildpacks:add --index 1 https://github.com/jontewks/puppeteer-heroku-bui
 heroku buildpacks:add --index 1 heroku/nodejs
 ```
 
-4. 
+4. Run the following to commit to Heroku. `git add . && git commit -am "deploying to heroku"`
+
+5. Run the follow to push to Heroku. `git push heroku main`
+
+## All commands
+
+If you don't care about steps, just copy and paste this into the terminal.
+
+```sh
+heroku git:remote -a bifm-rewritten
+heroku buildpacks:clear
+heroku buildpacks:add --index 1 https://github.com/jontewks/puppeteer-heroku-buildpack
+heroku buildpacks:add --index 1 heroku/nodejs
+git add . 
+git commit -am "deploying to heroku"
+git push heroku main
+```
