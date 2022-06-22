@@ -33,5 +33,5 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |Generic Type|Method|Example Links|Needs CAPTCHA solver?|Example domains|
 |---|---|---|---|---|
 |**`adf.ly`**|Axios|[http://usheethe.com/T3F5](http://usheethe.com/T3F5)|No|`usheethe.com`|
-|**`adlinkfly`**|Puppeteer + Stealth|[https://pdiskshortener.com/6I2CR2](https://pdiskshortener.com/6I2CR2)|Sometimes, always required|`adlinkfly.mightyscripts.xyz`, `pdiskshortener.com`|
+|**`adlinkfly`**|Puppeteer + Stealth|[https://pdiskshortener.com/6I2CR2](https://pdiskshortener.com/6I2CR2), [https://dz-linkk.com/N2xFP](https://dz-linkk.com/N2xFP)|Sometimes, always required|`adlinkfly.mightyscripts.xyz`, `pdiskshortener.com`|
 |**`WPSafelink`**|Axios|[https://demo-safelink.themeson.com/template1/?f7fbb8af](https://demo-safelink.themeson.com/template1/?f7fbb8af) redirects to `https://themeson.com/safelink/`.|No|`demo-safelink.themeson.com`|

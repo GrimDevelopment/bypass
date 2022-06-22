@@ -15,7 +15,7 @@ module.exports = {
       pup.use(adb());
 
       if (lib.config().debug == true) console.log("[zagl] Launching browser...");
-      b = await pup.launch();
+      b = await pup.launch({headless: true});
       let p = await b.newPage();
       await p.goto(url);
       if (lib.config().debug == true) console.log(`[zagl] Launched. Listening for "/links/go"...`);

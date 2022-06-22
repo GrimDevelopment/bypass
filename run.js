@@ -14,7 +14,6 @@ if (process.argv[2]) {
 
   (async function() {
     try {
-      console.log(process.argv[2]);
       let solution = await lib.get(process.argv[2], o);
       if (lib.config().debug == true) console.log("[runner] Got result, sending into console below:");
       console.log((solution.destination || solution.destinations));

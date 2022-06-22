@@ -136,6 +136,7 @@ module.exports = {
         return (await afl.get(url, opt));
       }
 
+      // generic http redirects, put any non-specific (like adlinkfly-type extractors) sites above this
       if (lib.config()["debug"] == true) console.log("[generic] Done. Checking for HTTP redirects...");
       if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
         return resp.request.socket._httpMessage._redirectable._currentUrl;

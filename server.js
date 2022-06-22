@@ -18,6 +18,7 @@ app.get("/api/bypass", async function(req, res) {
     if (!lib.isUrl(url) && url.startsWith("aH")) url = Buffer.from(req.query.url, "base64").toString("ascii");
 
     if (!lib.isUrl(url)) {
+      if (lib.config().debug == true) console.log("[http] Gave invalid URL, sending error...");
       res.send({
         success: false,
         error: "Invalid URL to request.",

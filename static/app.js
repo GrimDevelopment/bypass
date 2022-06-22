@@ -11,9 +11,11 @@ function bypass() {
   let opt = "&";
 
   if (document.getElementById("allowCache")?.checked) opt = opt + "allowCache=false&";
-  if (document.getElementById("ignoreCache")?.checked) opt = opt + "ignoreCache=true";
+  if (document.getElementById("ignoreCache")?.checked) opt = opt + "ignoreCache=true&";
   if (document.getElementById("allowFF")?.checked) opt = opt + "allowFF=false&";
   if (document.getElementById("ignoreFF")?.checked) opt = opt + "ignoreFF=false&";
+
+  opt = opt.substring(1);
 
   let xhr = new XMLHttpRequest();
   xhr.open("GET", `/api/bypass?url=${decodeURIComponent(url)}${opt}`);
