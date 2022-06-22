@@ -21,6 +21,7 @@ if (!fs.existsSync("./config.json")) {
       if (process.env.ALERT) d.alert = process.ALERT;
     } else {
       d = JSON.parse(process.env.CONFIG_TEXT);
+      if (process.env.PORT) d.http.port = process.env.PORT; // for heroku support
     }
 
     fs.writeFileSync("./config.json", null, 2);
