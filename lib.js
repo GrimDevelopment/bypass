@@ -10,23 +10,23 @@ if (!fs.existsSync("./config.json")) {
       d.captcha = {};
       d.http = {};
       d.db = {}
-      if (process.env.PORT) d.http.port = (process.env.PORT || 32333);
+      if (process.env.PORT) d.http.port = (parseInt(process.env.PORT) || 32333);
 
-      if (process.env.CAPTCHA_ACTIVE) d.captcha.active = (parseBool(process.env.CAPTCHA_ACTIVE) || false);
-      if (process.env.CAPTCHA_SERVICE) d.captcha.service = (process.env.CAPTCHA_SERVICE || "");
-      if (process.env.CAPTCHA_KEY) d.captcha.key = (process.env.CAPTCHA_KEY || "");
+      d.captcha.active = (parseBool(process.env.CAPTCHA_ACTIVE) || false);
+      d.captcha.service = (process.env.CAPTCHA_SERVICE || "");
+      d.captcha.key = (process.env.CAPTCHA_KEY || "");
 
-      if (process.env.DB_ACTIVE) d.db.active = (parseBool(process.env.DB_ACTIVE) || false);
-      if (process.env.DB_URL) d.db.url = (process.env.DB_URL || "mongodb://127.0.0.1:27017/bifm");
+      d.db.active = (parseBool(process.env.DB_ACTIVE) || false);
+      d.db.url = (process.env.DB_URL || "mongodb://127.0.0.1:27017/bifm");
 
-      if (process.env.DEBUG) d.debug = (parseBool(process.DEBUG) || false);
-      if (process.env.FASTFORWARD) d.fastforward = (parseBool(process.FASTFORWARD) || true);
-      if (process.env.ALERT) d.alert = (process.ALERT || "");
+      d.debug = (parseBool(process.DEBUG) || false);
+      d.fastforward = (parseBool(process.FASTFORWARD) || true);
+      d.alert = (process.ALERT || "");
     } else {
       d = JSON.parse(process.env.CONFIG_TEXT);
       if (process.env.PORT) d.http.port = process.env.PORT; // for heroku support
     }
-    d = JSON.stringify("./config.json", null, 2);
+    d = JSON.stringify(d, null, 2);
 
     fs.writeFileSync("./config.json", d);
   }
@@ -99,7 +99,7 @@ module.exports = {
         }
       }
 
-      if (config.fastforward == true && opt.ignoreFF !== "true" && opt.ignoreFF !== true) {
+      if (config.fastforward == true && opt.ignoreFF !== true) {
         let r = await this.fastforward.get(url);
         if (r !== null) {
           f = {
@@ -192,7 +192,7 @@ module.exports = {
         d.destinations = [...new Set(d.destinations)];
 
         if (config.db.active == true) {
-          if (opt.allowCache !== "false" && opt.allowCache !== false) {
+          if (opt.allowCache !== false) {
             d.destinations = JSON.stringify(d.destinations);
             if (opt.ignoreCache == "true" || opt.ignoreCache == true) {
               if (config.debug == true) console.log(`[db] Replacing old version of "${url}" in DB.`)
@@ -371,7 +371,7 @@ async function waitUntilDbConnected() {
 }
 
 function parseBool(data) {
-  data = data.toLowerCase();
+  if (typeof data == "string") data = data.toLowerCase();
   switch(data) {
     case "true":
     case "tru":
@@ -390,6 +390,6 @@ function parseBool(data) {
     case "n":
       return false;
     default:
-      return null;
+      return data;
   }
 }
