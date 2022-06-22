@@ -6,6 +6,10 @@ This is how to install a local version of BIFM on your system.
 
 You need to have [`git`](https://git-scm.com/downloads), [`node`](https://nodejs.org/) and `npm` (usually included with node).
 
+## Steps
+
+Now, just open a terminal and run the following.
+
 ```sh
 git clone https://git.gay/a/bifm.git
 cd bifm

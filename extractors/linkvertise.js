@@ -31,7 +31,7 @@ module.exports = {
       pup.use(stlh);
     
       if (lib.config().debug == true) console.log("[linkvertise] Launching browser...");
-      b = await pup.launch({headless: true});
+      b = await pup.launch({headless: true, args: ["--no-sandbox", "--disable-setuid-sandbox"]});
       let p = await b.newPage();
 
       await p.setUserAgent("Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36");
@@ -54,7 +54,7 @@ module.exports = {
           }
         }));
 
-        b = await pup.launch({headless: true});
+        b = await pup.launch({headless: true, args: ["--no-sandbox", "--disable-setuid-sandbox"]});
         p = await b.newPage();
 
         if (lib.config().debug == true) console.log("[linkvertise] Reopening page...");

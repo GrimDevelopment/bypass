@@ -23,7 +23,7 @@ module.exports = {
       // opening browser
 
       if (lib.config().debug == true) console.log("[ouo] Launching browser...");
-      b = await pup.launch({headless: true});
+      b = await pup.launch({headless: true, args: ["--no-sandbox", "--disable-setuid-sandbox"]});
       let p = await b.newPage();
       await p.goto(u.href);
 
@@ -47,7 +47,7 @@ module.exports = {
           }
         }));
 
-        b = await pup.launch({headless: true});
+        b = await pup.launch({headless: true, args: ["--no-sandbox", "--disable-setuid-sandbox"]});
         p = await b.newPage();
         await p.goto(u.href);
 

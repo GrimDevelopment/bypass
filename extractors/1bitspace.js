@@ -30,7 +30,7 @@ module.exports = {
       }));
 
       if (lib.config()["debug"] == true) console.log("[1bitspace] Launching browser...");
-      b = await pup.launch({headless: true});
+      b = await pup.launch({headless: true, args: ["--no-sandbox", "--disable-setuid-sandbox"]});
       p = await b.newPage();
 
       await p.goto(url);
