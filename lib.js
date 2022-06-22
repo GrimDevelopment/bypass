@@ -34,6 +34,8 @@ let client, db, links;
 module.exports = {
   get: async function(url, opt) {
     try {
+      if (new URL(url).host.substring(new URL(url).host.length - 8) == "carrd.co") url = url.split("#")[0];
+
       let ex = await ext.fromUrl(url);
       let extractor = require(`${__dirname}/extractors/${ex}`);
 
@@ -54,9 +56,10 @@ module.exports = {
                 originalUrl: f["original-url"],
                 destination: f["destination"],
               }
-                await links.findOneAndReplace({"original-url": url}, f);
+              await links.findOneAndReplace({"original-url": url}, f);
             }
             if (config.debug == true) console.log("[db] Sending DB response...");
+            if (f.destinations) f.destinations = JSON.parse(f.destinations);
             f["fromCache"] = true;
             f["fromFastforward"] = false;
             return f; 
@@ -80,13 +83,16 @@ module.exports = {
       } 
       
       f = await extractor.get(url, opt);
-      if (config.debug == true) console.log(`[extract] Finished "${url}", ${JSON.stringify(opt)} [Solution: ${(f.destination || f.destinations || f)}]`);
+
+      if (config.debug == true) console.log(`[extract] Finished "${url}", ${JSON.stringify(opt)} [Solution: ${(JSON.stringify(f) || f)}]`);
 
       if (typeof f == "string" || typeof f == "object" && !f.destinations) {
         if (!this.isUrl((f.destination || f)) || (f.destination || f) == url) {
           if (config.debug == true) console.log("[extract] URL was invalid.", (f.destination||f), url);
           throw "Invalid URL from backend.";
         } 
+
+        if (config.debug == true) console.log("[extract] Got one link, proceeding...");
 
         let d = {
           destination: (f.destination || f),
@@ -128,7 +134,7 @@ module.exports = {
               await links.findOneAndReplace({"originalUrl": url}, d);
               if (config.debug == true) console.log(`[db] Replaced.`)
             } else {
-              if (config.debug == true) console.log(`[db] Adding to DB.`)
+              if (config.debug == true) console.log(`[db] Adding to DB...`)
               await links.insertOne(d);
               if (config.debug == true) console.log(`[db] Added.`)
             }
@@ -141,7 +147,39 @@ module.exports = {
 
         return d;
       } else if (typeof f == "object" && f.destinations) {
-        // meant for sites like carrd when i add them
+        let d = {
+          destinations: (f.destinations),
+          originalUrl: url,
+          dateSolved: (new Date() * 1)
+        };
+
+        for (let a in d.destinations) {
+          if (!this.isUrl(d.destinations[a])) delete d.destinations[a];
+        }
+
+        d.destinations = [...new Set(d.destinations)];
+
+        if (config.db.active == true) {
+          if (opt.allowCache !== "false" && opt.allowCache !== false) {
+            d.destinations = JSON.stringify(d.destinations);
+            if (opt.ignoreCache == "true" || opt.ignoreCache == true) {
+              if (config.debug == true) console.log(`[db] Replacing old version of "${url}" in DB.`)
+              await links.findOneAndReplace({"originalUrl": url}, d);
+              if (config.debug == true) console.log(`[db] Replaced.`)
+            } else {
+              if (config.debug == true) console.log(`[db] Adding to DB...`)
+              await links.insertOne(d);
+              if (config.debug == true) console.log(`[db] Added.`)
+            }
+            d.destinations = JSON.parse(d.destinations);
+          }
+        }
+
+        delete d["_id"];
+        d["fromCache"] = false;
+        d["fromFastforward"] = false;
+
+        return d;
       } else {
         throw "Invalid response from backend.";
       }
@@ -246,7 +284,15 @@ module.exports = {
   },
   byteCount: function(string) {return encodeURI(string).split(/%..|./).length - 1;},
   config: function() {return config;},
-  isUrl: function(url) {return /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/.test(url);}
+  isUrl: function(url) {
+    try {
+      let u = new URL(url);
+      if (u?.protocol !== null) return true;
+      else return false;
+    } catch(err) {
+      return false;
+    }
+  }
 }
 
 function isCrowdBypass(host) {

@@ -73,11 +73,7 @@ module.exports = {
         }
       });
 
-      await p.waitForNavigation();
-      let a = await p.url();
-      await b.close();
-
-      return a;
+      return (await fireWhenFound(p));
     } catch(err) {
       if (b !== undefined) await b.close();
       throw err;
@@ -85,3 +81,16 @@ module.exports = {
   }
 }
 
+async function fireWhenFound(p) {
+  return new Promise(function(resolve, reject) {
+    p.on("response", async function(res) {
+      let a = new URL((await res.url()));
+      if (a.pathname.startsWith("/xreallcygo") && (await (await(res.request()).method())) == "POST") {
+        let a = (await res.headers());
+        resolve(a?.location)
+      } else {
+        if (lib.config().debug == true && a.hostname.includes("linkvertise")) console.log(`[linkvertise] Ignoring request ${(await (await(res.request()).method()))} "${(await res.url())}" from listener.`);
+      }
+    });
+  });
+}

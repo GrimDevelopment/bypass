@@ -22,7 +22,7 @@ app.get("/api/bypass", async function(req, res) {
       res.send({
         success: false,
         error: "Invalid URL to request.",
-        "from-backend": false
+        fromBackend: false
       });
       return;
     }
@@ -31,29 +31,36 @@ app.get("/api/bypass", async function(req, res) {
     if (lib.config().debug == true) console.log(`[http] Requesting ./lib.js to get "${url}"`, req.query);
 
     let resp = await lib.get(url, req.query);
+    if (resp == undefined || resp == null) {
+      if (lib.config().debug == true) console.log("[http] Recieved undefined, giving error.");
+      res.send({
+        success: false,
+        error: "Invalid response from backend.",
+        fromBackend: true
+      });
+      return;
+    }
   
     if (lib.config().debug == true) console.log(`[http] Sending response from ./lib.js`, resp);
     res.send({success: true, ...resp});
   } catch(err) {
     if (lib.config().debug == true) console.log("[http] Recieved error. Displayed below:");
     if (typeof err == "string") {
-      if (lib.config().debug == true) console.log(err)
+      console.log(req.url, err)
       res.send({
         success: false,
         error: err,
-        "from-backend": true
+        fromBackend: true
       });
     } else {
       let e = (err.message || err.code);
 
-      if (err.stack && lib.config().debug == true) {
-        console.log(err.stack);
-      } 
+      console.log(req.url, err.stack);
 
       res.send({
         success: false,
         error: e,
-        "from-backend": true 
+        fromBackend: true 
       });
     }
   }

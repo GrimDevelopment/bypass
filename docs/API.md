@@ -45,7 +45,7 @@ An errored response would look like this.
 {
   "success": false,
   "error": "Navigation timeout of 30000 ms exceeded",
-  "from-backend": true
+  "fromBackend": true
 }
 ```
 </details>

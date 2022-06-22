@@ -11,6 +11,11 @@ module.exports = {
 
       if (u.host == "href.li" || u.host == "www.href.li") return u.href.split("?").slice(1).join("?");
 
+      if (u.host.substring(u.host.length - 8) == "carrd.co" && u.host !== "carrd.co") {
+        let carrd = require("./carrd");
+        return (await carrd.get(url));
+      }
+
       // redirect via url params
       if (lib.config()["debug"] == true) console.log("[generic] Checking url params..."); 
       if (u.searchParams.get("url")) {

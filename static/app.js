@@ -15,10 +15,10 @@ function bypass() {
   if (document.getElementById("allowFF")?.checked) opt = opt + "allowFF=false&";
   if (document.getElementById("ignoreFF")?.checked) opt = opt + "ignoreFF=false&";
 
-  opt = opt.substring(1);
+  opt = opt.substring(0, (opt.length - 1));
 
   let xhr = new XMLHttpRequest();
-  xhr.open("GET", `/api/bypass?url=${decodeURIComponent(url)}${opt}`);
+  xhr.open("GET", `/api/bypass?url=${encodeURIComponent(url)}${opt}`);
   xhr.send();
   xhr.onload = function() {
     document.querySelector(".loader").style.display = "none";
@@ -28,8 +28,8 @@ function bypass() {
       if (d.success == true) {
         let sd = document.createElement("DIV");
         sd.classList.add("success");
+        let p = document.createElement("P");
         if (d.destination) {
-          let p = document.createElement("P");
           p.innerHTML = "Result: ";
           let a = document.createElement("A");
           a.href = d.destination;
@@ -38,14 +38,26 @@ function bypass() {
           a.innerHTML = d.destination;
           p.append(a);
           sd.append(p);
-          let i = document.createElement("I");
-          i.innerHTML = formatExtra(d);
-          i.classList.add("extra")
-          sd.append(i);
-          document.querySelector(".result").append(sd);
-        } else { 
-          // planned: add multiple-link support
+        } else if (d.destinations) { 
+          p.innerHTML = "Results: <br>";
+          let a, br;
+          for (let b in d.destinations) {
+            a = document.createElement("A");
+            a.href = d.destinations[b];
+            a.rel = "noreferer nofollow";
+            a.target = "_blank";
+            a.innerHTML = d.destinations[b];
+            br = document.createElement("br");
+            p.append(a);
+            p.append(br);
+          }
+          sd.append(p);
         }
+        let i = document.createElement("I");
+        i.innerHTML = formatExtra(d);
+        i.classList.add("extra")
+        sd.append(i);
+        document.querySelector(".result").append(sd);
       } else {
         let ed = document.createElement("DIV");
         ed.classList.add("error");
