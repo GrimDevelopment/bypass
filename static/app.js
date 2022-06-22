@@ -32,7 +32,7 @@ function bypass() {
         if (d.destination) {
           p.innerHTML = "Result: ";
           let a = document.createElement("A");
-          a.href = d.destination;
+          a.href = escapeHtml(d.destination);
           a.rel = "noreferer nofollow";
           a.target = "_blank";
           a.innerHTML = d.destination;
@@ -43,7 +43,7 @@ function bypass() {
           let a, br;
           for (let b in d.destinations) {
             a = document.createElement("A");
-            a.href = d.destinations[b];
+            a.href = escapeHtml(d.destinations[b]);
             a.rel = "noreferer nofollow";
             a.target = "_blank";
             a.innerHTML = d.destinations[b];
@@ -63,7 +63,7 @@ function bypass() {
         ed.classList.add("error");
         let p = document.createElement("P");
         if (d.error) {
-          p.innerHTML = `Error: <b>${d.error}</b>`;
+          p.innerHTML = `Error: <b>${escapeHtml(d.error)}</b>`;
         } else {
           p.innerHTML = `Error: <b>An unknown error occured.</b>`;
         }
@@ -75,7 +75,7 @@ function bypass() {
       ed.classList.add("error");
       let p = document.createElement("P");
       if ((e.message || e.stack || e.code)) {
-        p.innerHTML = `Error: <b>${(e.message || e.stack || e.code)}</b>`;
+        p.innerHTML = `Error: <b>${escapeHtml(e.message || e.stack || e.code)}</b>`;
       } else {
         p.innerHTML = `Error: <b>An unknown error on the frontend occured.</b>`;
       }
@@ -106,8 +106,17 @@ function formatExtra(data) {
     d = d.toLowerCase();
     a = `${a} generated on ${d}`;
   } else {
-    a = `${a} generated on an unknown date`
+    a = `${a} generated on an unknown date`;
   }
 
   return a.substring(1);
+}
+
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
