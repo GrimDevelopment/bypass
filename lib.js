@@ -42,19 +42,21 @@ module.exports = {
       if (config.db.active == true) {
         if (opt.ignoreCache !== "true" && opt.ignoreCache !== true) {
           if (config.debug == true) console.log("[db] Checking DB for desination...");
+          if (links == undefined) await waitUntilDbConnected();
           let f = await links.findOne({"originalUrl": url});
-          if (f == null) f = await links.findOne({"original-url": url});
+          if (f == null) f = await links.findOne({"original-url": url}); // older version compatibility
           if (f !== null) {
-            if (config.debug == true) console.log("[db] Sending DB response...");
             delete f._id;
             if (f["date-solved"]) {
+              if (config.debug == true) console.log("[db] Updating old solution format from DB...");
               f = {
                 dateSolved: f["date-solved"],
                 originalUrl: f["original-url"],
                 destination: f["destination"],
               }
-              await links.findOneAndReplace({"original-url": url}, f);
+                await links.findOneAndReplace({"original-url": url}, f);
             }
+            if (config.debug == true) console.log("[db] Sending DB response...");
             f["fromCache"] = true;
             f["fromFastforward"] = false;
             return f; 
@@ -72,6 +74,7 @@ module.exports = {
             fromCache: false,
             fromFastforward: true
           };
+          console.log(f)
           return f;
         }
       } 
@@ -79,15 +82,39 @@ module.exports = {
       f = await extractor.get(url, opt);
       if (config.debug == true) console.log(`[extract] Finished "${url}", ${JSON.stringify(opt)} [Solution: ${(f.destination || f.destinations || f)}]`);
 
-      if (typeof f == "string") {
-        if (!this.isUrl(f) || f == url) {
+      if (typeof f == "string" || typeof f == "object" && !f.destinations) {
+        if (!this.isUrl((f.destination || f)) || (f.destination || f) == url) {
+          if (config.debug == true) console.log("[extract] URL was invalid.", (f.destination||f), url);
           throw "Invalid URL from backend.";
         } 
 
         let d = {
-          "destination": f,
-          "originalUrl": url,
-          "dateSolved": (new Date() * 1)
+          destination: (f.destination || f),
+          originalUrl: url,
+          dateSolved: (new Date() * 1)
+        };
+
+        if (f.fastforward == true) {
+          if (config.debug == true) console.log(`[extract] Detected FastForward response, correcting and sending...`);
+          if (config.db.active == true) {
+            if (opt.allowCache !== "false" && opt.allowCache !== false) {
+              if (config.debug == true) console.log("[db] Checking if data on this link already exists on the DB...");
+              let f = await links.findOne({"originalUrl": url});
+              if (f == null) f = await links.findOne({"original-url": url}); // older version compatibility
+              if (f == null) {
+                if (config.debug == true) console.log(`[db] Nothing found. Adding FastForward solution to DB...`)
+                await links.insertOne(d);
+                if (config.debug == true) console.log(`[db] Added.`);
+              } else {
+                if (config.debug == true) console.log(`[db] Data already exists. Continuing correcting and sending...`);
+              }
+            }
+          }
+          d["destination"] = d.destination;
+          d["dateSolved"] = "unknown";
+          d["fromCache"] = false;
+          d["fromFastforward"] = true;
+          return d;
         }
 
         if (config.fastforward == true && opt?.allowFF !== "false" && opt.allowFF !== false) {
@@ -113,7 +140,7 @@ module.exports = {
         d["fromFastforward"] = false;
 
         return d;
-      } else if (typeof f == "object") {
+      } else if (typeof f == "object" && f.destinations) {
         // meant for sites like carrd when i add them
       } else {
         throw "Invalid response from backend.";
@@ -167,18 +194,21 @@ module.exports = {
           let b = `domain=${new URL(url).hostname}&path=${new URL(url).pathname.substring(1)}${new URL(url).search}`;
           if (config.debug == true) console.log(`[fastforward] Made body content: `, b);
           if (config.debug == true) console.log("[fastforward] Checking FastForward crowd bypass...");
-
           let d = await axios({
             method: "POST",
             url: "https://crowd.fastforward.team/crowd/query_v1",
-            data: b
+            data: b,
+            validateStatus: function() {return true} // Prevent status errors
           });
 
           if (config.debug == true) console.log("[fastforward] Recieved response", d.status, d.data);
 
           if (d.status == 204) return null;
           else if (d.status == 200) return d.data;
-          else throw "Invalid response status.";
+          else {
+            console.log(`[silent error] FastForward error:\nInvalid response code: ${d.status}\n${d.data}`);
+            return null;
+          }
         } else {
           if (config.debug == true) console.log("[fastforward] Tried to get FastForward URL, not acceptable URL.");
           return null;
@@ -197,13 +227,17 @@ module.exports = {
           let d = await axios({
             method: "POST",
             url: "https://crowd.fastforward.team/crowd/contribute_v1",
-            data: b
+            data: b,
+            validateStatus: function() {return true} // Prevent status errors
           });
 
           if (config.debug == true) console.log("[fastforward] Recieved response", d.status, d.data);
 
           if (d.status == 201) return true;
-          else throw "Invalid response status.";
+          else {
+            console.log(`[silent error] FastForward error:\nInvalid response code: ${d.status}\n${d.data}`);
+            return null;
+          }
         }
       } catch(err) {
         throw err;
@@ -234,8 +268,26 @@ function isCrowdBypass(host) {
     case "gplinks.co":
     case "exe.io":
     case "exey.io":
+    case "za.gl":
+    case "zee.gl":
+    case "za.uy":
       return true;
     default: 
       return false;
   }
+}
+
+async function waitUntilDbConnected() {
+  return new Promise(function(resolve, reject) {
+    try {
+      let a = setInterval(function() {
+        if (links !== undefined) {
+          clearInterval(a);
+          resolve(true);
+        }
+      }, 100);
+    } catch(err) {
+      reject(err);
+    }
+  });
 }

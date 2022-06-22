@@ -21,6 +21,7 @@ const examples = [
   { extractor: "sh.st", link: "http://ceesty.com/es47QR" },
   { link: "https://show.co/HQrPtta", expected: "https://universal-bypass.org" },
   { link: "https://social-unlock.com/417pK" },
+  { link: "https://za.gl/JPk6" },
   { extractor: "adf.ly", link: "http://usheethe.com/T3F5" },
   { extractor: "adlinkfly", link: "https://pdiskshortener.com/6I2CR2" },
   { extractor: "WPSafelink", link: "https://demo-safelink.themeson.com/template1/?f7fbb8af", expected: "https://themeson.com/safelink/" }

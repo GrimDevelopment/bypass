@@ -5,6 +5,8 @@ if (process.argv[2]) {
 
   if (process.argv[3]) o.ignoreCache = (toBool(process.argv[3]) || false);
   if (process.argv[4]) o.allowCache = (toBool(process.argv[4]) || false);
+  if (process.argv[3]) o.ignoreFF = (toBool(process.argv[3]) || false);
+  if (process.argv[4]) o.allowFF = (toBool(process.argv[4]) || false);
   if (lib.config().debug == true) console.log(`[runner] URL: `, process.argv[2]);
   if (lib.config().debug == true) console.log(`[runner] Options: `, o);
 
@@ -12,6 +14,7 @@ if (process.argv[2]) {
 
   (async function() {
     try {
+      console.log(process.argv[2]);
       let solution = await lib.get(process.argv[2], o);
       if (lib.config().debug == true) console.log("[runner] Got result, sending into console below:");
       console.log((solution.destination || solution.destinations));
@@ -22,7 +25,7 @@ if (process.argv[2]) {
     }
   })();
 } else {
-  console.log(`bifm - console runner\nUsage: node ./run.js "<url>" [ignoreCache: y/(n)] [allowCache: (y)/n]`);
+  console.log(`bifm - console runner\nUsage: node ./run.js "<url>" [ignoreCache: y/(n)] [allowCache: (y)/n] [ignoreFF: y/(n)] [allowFF: (y)/n]`);
   process.exit();
 }
 

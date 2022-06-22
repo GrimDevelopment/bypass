@@ -13,17 +13,10 @@ module.exports = {
       stlh.enabledEvasions.delete("iframe.contentWindow");
       pup.use(stlh);
 
-      if (lib.config().fastforward == true && opt?.ignoreFF !== "true") {
+      if (lib.config().fastforward == true && opt.ignoreFF !== "true" && opt.ignoreFF !== true) {
         let r = await lib.fastforward.get(url, true);
         if (r !== null) {
-          f = {
-            dateSolved: "unknown",
-            originalUrl: url,
-            destination: r,
-            fromCache: false,
-            fromFastforward: true
-          };
-          return f;
+          return {destination: r, fastforward: true};
         }
       }
 
