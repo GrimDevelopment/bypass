@@ -54,6 +54,12 @@ module.exports = {
         } else if (lib.isUrl(Buffer.from(u.searchParams.get("r"), "base64").toString("ascii"))) {
           return (Buffer.from(u.searchParams.get("r"), "base64").toString("ascii"));
         }
+      } else if (u.searchParams.get("q")) {
+        if (lib.isUrl(u.searchParams.get("q"))) {
+          return u.searchParams.get("q");
+        } else if (lib.isUrl(Buffer.from(u.searchParams.get("q"), "base64").toString("ascii"))) {
+          return (Buffer.from(u.searchParams.get("q"), "base64").toString("ascii"));
+        }
       }
 
       if (lib.config()["debug"] == true) console.log("[generic] Requesting page...");

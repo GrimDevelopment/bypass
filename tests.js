@@ -4,6 +4,8 @@ const lib = require("./lib");
 const examples = [
   { link: "https://1bit.space/FVJcWHr", expected: "https://mega.nz/#F!Xe4kVIII!z7WAxz65DzBhe6d1Cx_xHg" },
   { link: "http://1link.club/77679" },
+  { extractor: "adf.ly", link: "http://usheethe.com/T3F5" },
+  { extractor: "adlinkfly", link: "https://pdiskshortener.com/6I2CR2" },
   { link: "https://bc.vc/vQesLIh", expected: "https://universal-bypass.org/" },
   { link: "https://boost.ink/c5bba" },
   { link: "https://boostme.link/iX9Krf" },
@@ -18,13 +20,13 @@ const examples = [
   { link: "https://myl.li/NOEgI6aOp3bF" },
   { link: "https://oke.io/D3wL", expected: "https://mega.nz/#!TlkjwLrb!jj8GVmZJp1EmmSInnQ4FNsdmb4qq_Pp0b5IAJ5ik8u8" },
   { link: "https://ouo.io/2dktqo" },
+  { link: "https://rekonise.com/bifm-jv7k6" },
   { extractor: "sh.st", link: "http://ceesty.com/es47QR" },
   { link: "https://show.co/HQrPtta", expected: "https://universal-bypass.org" },
   { link: "https://social-unlock.com/417pK" },
-  { link: "https://za.gl/JPk6" },
-  { extractor: "adf.ly", link: "http://usheethe.com/T3F5" },
-  { extractor: "adlinkfly", link: "https://pdiskshortener.com/6I2CR2" },
-  { extractor: "WPSafelink", link: "https://demo-safelink.themeson.com/template1/?f7fbb8af", expected: "https://themeson.com/safelink/" }
+  { link: "https://tei.ai/HOI4_1_11_11", expected: "https://www.mediafire.com/file/mmxskm3b1uanzfn/OG9134-HOI4FU1.rar/file"},
+  { extractor: "WPSafelink", link: "https://demo-safelink.themeson.com/template1/?f7fbb8af", expected: "https://themeson.com/safelink/" },
+  { link: "https://za.gl/JPk6" }
 ];
 
 if (process.argv[2]) {
