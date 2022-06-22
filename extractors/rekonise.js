@@ -1,4 +1,5 @@
 const axios = require("axios");
+const lib = require("../lib");
 
 module.exports = {
   hostnames: ["rekonise.com"],
