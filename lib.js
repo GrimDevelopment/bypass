@@ -2,7 +2,7 @@ const ext = require("./extractor");
 const fs = require("fs");
 
 if (!fs.existsSync("./config.json")) {
-  if (fs.existsSync("./config.example.json")) fs.copyFileSync("./config.example.json");
+  if (fs.existsSync("./config.example.json")) fs.copyFileSync("./config.example.json", "./config.json");
   else throw "Couldn't find proper config.";
 }
 

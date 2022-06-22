@@ -2,7 +2,7 @@
 
 Welcome to BIFM's documentation. This is where you can find out how to get the best out of our project.
 
-- [Install BIFM](./INSTALL.md)
+- [Install BIFM](./INSTALL.md) [[Heroku Support](./HEORKU.md)]
 - [Configure BIFM](./CONFIG.md)
 - [API Usage](./API.md)
 - [Public Instances](./INSTANCE.md)
