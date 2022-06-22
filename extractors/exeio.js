@@ -26,6 +26,7 @@ module.exports = {
 
       if (lib.config().debug == true) console.log("[exeio] Skipped. Starting continous function...");
       p = await cont(p, url, b);
+      
       await b.close();
       return p;
     } catch(err) {

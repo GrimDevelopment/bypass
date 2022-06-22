@@ -37,7 +37,10 @@ module.exports = {
       if (lib.config().debug == true) console.log("[adflylink] Launched. Navigating to URL...");
       await p.goto(url, {waitUntil: "networkidle0"});
       if (lib.config().debug == true) console.log("[adflylink] Done. Starting continuous function...");
-      return (await cont(p, url));
+
+      let u = (await cont(p, url));
+      await b.close();
+      return u;
     } catch(err) {
       if (b !== undefined) await b.close();
       throw err;

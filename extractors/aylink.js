@@ -41,6 +41,9 @@ module.exports = {
       a = await a.evaluate(function() {
         return document.body.innerHTML.split("url = '")[1]?.split("'")[0];
       });
+
+      await b.close();
+
       return a;
     } catch(err) {
       if (b !== undefined) await b.close();

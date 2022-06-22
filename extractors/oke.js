@@ -30,6 +30,7 @@ module.exports = {
 
       if (lib.config().debug == true) console.log("[okeio] Closing browser...");
       await b.close();
+      
       return l;
     } catch(err) {
       if (b !== undefined) await b.close();

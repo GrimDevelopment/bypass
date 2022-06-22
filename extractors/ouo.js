@@ -72,8 +72,11 @@ module.exports = {
           }
         }
       });
-
-      return (await fireWhenFound(p));
+      
+      let r = await fireWhenFound(p);
+      await b.close();
+      
+      return r;
     } catch(err) {
       if (b !== undefined) await b.close();
       throw err;

@@ -35,6 +35,8 @@ module.exports = {
       
       if (lib.config().debug == true) console.log("[linktl] Launched. Starting continous function...");
       p = (await cont(p, b));
+
+      await b.close();
       return p;
     } catch(err) {
       if (b !== undefined) await b.close();

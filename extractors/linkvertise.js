@@ -69,7 +69,11 @@ module.exports = {
 
       if (lib.config().debug == true) console.log("[linkvertise] Counting down...");
       await p.waitForSelector(".lv-dark-btn");
-      return (await follow(p, b));
+      let u = await follow(p, b);
+
+      await b.close();
+
+      return u;
     } catch(err) {
       if (b !== undefined) await b.close();
       throw err;
@@ -77,14 +81,13 @@ module.exports = {
   }
 }
 
-async function follow(p, b) {
+async function follow(p) {
   p.click("lv-button > .lv-button-component.new-button-style.lv-dark-btn.ng-star-inserted");
   if (lib.config().debug == true) console.log("[linkvertise] Clicking button...");
   try {
     if (lib.config().debug == true) console.log("[linkvertise] Setting up listener for network events...");
     let a = await fireWhenFound(p);
     if (lib.config().debug == true) console.log("[linkvertise] Closing browser...");
-    await b.close();
     return a;
   } catch(err) {
     throw err;

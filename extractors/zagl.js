@@ -21,6 +21,8 @@ module.exports = {
       if (lib.config().debug == true) console.log(`[zagl] Launched. Listening for "/links/go"...`);
 
       p = await fireWhenFound(p);
+      await b.close();
+
       return p;
     } catch(err) {
       if (b !== undefined) await b.close();

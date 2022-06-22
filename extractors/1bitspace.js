@@ -62,7 +62,7 @@ module.exports = {
 
       return u;
     } catch(err) {
-      if (b !== undefined)  await b.close();
+      if (b !== undefined) await b.close();
       throw err;
     }
   }
