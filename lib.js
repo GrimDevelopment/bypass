@@ -255,9 +255,9 @@ module.exports = {
         throw err;
       }
     },
-    send: async function(url, dest) {
+    send: async function(url, dest, igcb) {
       try {
-        if (config.fastforward == true) {
+        if ((isCrowdBypass(new URL(url).hostname) || igcb == true)) {
           let b = `domain=${new URL(url).hostname}&path=${new URL(url).pathname.substring(1)}${new URL(url).search}&target=${encodeURIComponent(dest)}`;
           if (config.debug == true) console.log(`[fastforward] Made body content: `, b);
           if (config.debug == true) console.log("[fastforward] Sending to FastForward crowd bypass...");

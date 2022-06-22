@@ -4,11 +4,14 @@ Sites supported by BIFM currently. Example links redirect to `https://git.gay/a/
 
 Redirects not directly linking to our site may be NSFW and are not endorsements of the content.
 
+## Adlink sites
 |Domain|Method|Needs CAPTCHA solver?|Example Links|Additional Domains|Additional Notes|
 |---|---|---|---|---|---|
 |**`1bit.space`**|Puppeteer + Adblocker + Stealth|Yes|[https://1bit.space/FVJcWHr](https://1bit.space/FVJcWHr) redirects to ``https://universal-bypass.org/``.||
 |**`1link.club`**|Axios|No|[http://1link.club/77679](http://1link.club/77679)|||
 |**`123link.pw`**|Puppeteer + Adblocker + Stealth|Yes||`123link.biz`, `123link.co`, `123link.vip`||
+|**`adf.ly`**|Axios|No|[http://usheethe.com/T3F5](http://usheethe.com/T3F5)|`usheethe.com`|There is not a complete list of domains under adf.ly's net that I could find, but there is an algorythm for finding them.|
+|**`adlinkfly`**|Puppeteer + Stealth|Sometimes, but always required|[https://pdiskshortener.com/6I2CR2](https://pdiskshortener.com/6I2CR2), [https://dz-linkk.com/N2xFP](https://dz-linkk.com/N2xFP)|`adlinkfly.mightyscripts.xyz`, `pdiskshortener.com`, `dzlinkk.com`|Like adf.ly, there is not a list of adlinkfly sites, but there is an algorithm to find them.|
 |**`bc.vc`**|Puppeteer + Stealth|No|[https://bc.vc/vQesLIh](https://bc.vc/vQesLIh) redirects to `https://universal-bypass.org/`.||
 |**`boost.ink`**|Axios|No|[https://boost.ink/c5bba](https://boost.ink/c5bba)|`bst.gg`, `bst.wtf`, `booo.st`||
 |**`boostme.link`**|Axios|No|[https://boostme.link/iX9Krf](https://boostme.link/iX9Krf)||
@@ -27,11 +30,12 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`sh.st`**|Axios|No|[http://ceesty.com/es47QR](http://ceesty.com/es47QR)|`ceesty.com`, `cestyy.com`, `clkme.me`, `clkmein.com`, `cllkme.com`, `corneey.com`, `destyy.com`, `festyy.com`, `gestyy.com`, `jnw0.me`, `xiw34.com`, `wiid.me`|The list to the right may not be 100% correct or complete.|
 |**`show.co`**|Axios|No|[https://show.co/HQrPtta](https://show.co/HQrPtta) redirects to `https://universal-bypass.org/`.||
 |**`social-unlock.com`**|Axios|No|[https://social-unlock.com/417pK](https://social-unlock.com/417pK)|||
+|**`wpsafelink`**|Axios|No|[https://demo-safelink.themeson.com/template1/?f7fbb8af](https://demo-safelink.themeson.com/template1/?f7fbb8af) redirects to `https://themeson.com/safelink/`.|`demo-safelink.themeson.com`||
 |**`za.gl`**|Puppeteer + Adblocker + Stealth|No|[https://za.gl/JPk6](https://za.gl/JPk6)|`za.uy`, `zee.gl`||
 
-## Generic Sites
-|Generic Type|Method|Example Links|Needs CAPTCHA solver?|Example domains|
-|---|---|---|---|---|
-|**`adf.ly`**|Axios|[http://usheethe.com/T3F5](http://usheethe.com/T3F5)|No|`usheethe.com`|
-|**`adlinkfly`**|Puppeteer + Stealth|[https://pdiskshortener.com/6I2CR2](https://pdiskshortener.com/6I2CR2), [https://dz-linkk.com/N2xFP](https://dz-linkk.com/N2xFP)|Sometimes, always required|`adlinkfly.mightyscripts.xyz`, `pdiskshortener.com`|
-|**`WPSafelink`**|Axios|[https://demo-safelink.themeson.com/template1/?f7fbb8af](https://demo-safelink.themeson.com/template1/?f7fbb8af) redirects to `https://themeson.com/safelink/`.|No|`demo-safelink.themeson.com`|
+## Other Sites
+
+There are some sites included in BIFM that aren't adlinks as well, and are here to save you a visit from being tracked.
+
+- Social link pages: `carrd.co`, `linktr.ee`, `bio.link`
+- General URL Shortener: `bit.ly`, `tinyurl.com`
