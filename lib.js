@@ -7,18 +7,21 @@ if (!fs.existsSync("./config.json")) {
     let d = JSON.parse(fs.readFileSync("./config.json"));
 
     if (!process.env.CONFIG_TEXT) {
-      if (process.env.PORT) d.http.port = process.env.PORT;
+      d.captcha = {};
+      d.http = {};
+      d.db = {}
+      if (process.env.PORT) d.http.port = (process.env.PORT || 32333);
 
-      if (process.env.CAPTCHA_ACTIVE) d.captcha.active = parseBool(process.env.CAPTCHA_ACTIVE);
-      if (process.env.CAPTCHA_SERVICE) d.captcha.service = process.env.CAPTCHA_SERVICE;
-      if (process.env.CAPTCHA_KEY) d.captcha.key = process.env.CAPTCHA_KEY;
+      if (process.env.CAPTCHA_ACTIVE) d.captcha.active = (parseBool(process.env.CAPTCHA_ACTIVE) || false);
+      if (process.env.CAPTCHA_SERVICE) d.captcha.service = (process.env.CAPTCHA_SERVICE || "");
+      if (process.env.CAPTCHA_KEY) d.captcha.key = (process.env.CAPTCHA_KEY || "");
 
-      if (process.env.DB_ACTIVE) d.db.active = parseBool(process.env.DB_ACTIVE);
-      if (process.env.DB_URL) d.db.url = process.env.DB_URL;
+      if (process.env.DB_ACTIVE) d.db.active = (parseBool(process.env.DB_ACTIVE) || false);
+      if (process.env.DB_URL) d.db.url = (process.env.DB_URL || "mongodb://127.0.0.1:27017/bifm");
 
-      if (process.env.DEBUG) d.debug = parseBool(process.DEBUG);
-      if (process.env.FASTFORWARD) d.fastforward = parseBool(process.FASTFORWARD);
-      if (process.env.ALERT) d.alert = process.ALERT;
+      if (process.env.DEBUG) d.debug = (parseBool(process.DEBUG) || false);
+      if (process.env.FASTFORWARD) d.fastforward = (parseBool(process.FASTFORWARD) || true);
+      if (process.env.ALERT) d.alert = (process.ALERT || "");
     } else {
       d = JSON.parse(process.env.CONFIG_TEXT);
       if (process.env.PORT) d.http.port = process.env.PORT; // for heroku support
