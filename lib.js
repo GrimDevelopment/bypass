@@ -2,7 +2,29 @@ const ext = require("./extractor");
 const fs = require("fs");
 
 if (!fs.existsSync("./config.json")) {
-  if (fs.existsSync("./config.example.json")) fs.copyFileSync("./config.example.json", "./config.json");
+  if (fs.existsSync("./config.example.json")) {
+    fs.copyFileSync("./config.example.json", "./config.json");
+    let d = JSON.parse(fs.readFileSync("./config.json"));
+
+    if (!process.env.CONFIG_TEXT) {
+      if (process.env.PORT) d.http.port = process.env.PORT;
+
+      if (process.env.CAPTCHA_ACTIVE) d.captcha.active = parseBool(process.env.CAPTCHA_ACTIVE);
+      if (process.env.CAPTCHA_SERVICE) d.captcha.service = process.env.CAPTCHA_SERVICE;
+      if (process.env.CAPTCHA_KEY) d.captcha.key = process.env.CAPTCHA_KEY;
+
+      if (process.env.DB_ACTIVE) d.db.active = parseBool(process.env.DB_ACTIVE);
+      if (process.env.DB_URL) d.db.url = process.env.DB_URL;
+
+      if (process.env.DEBUG) d.debug = parseBool(process.DEBUG);
+      if (process.env.FASTFORWARD) d.fastforward = parseBool(process.FASTFORWARD);
+      if (process.env.ALERT) d.alert = process.ALERT;
+    } else {
+      d = JSON.parse(process.env.CONFIG_TEXT);
+    }
+
+    fs.writeFileSync("./config.json", null, 2);
+  }
   else throw "Couldn't find proper config.";
 }
 
@@ -38,6 +60,11 @@ module.exports = {
 
       let ex = await ext.fromUrl(url);
       let extractor = require(`${__dirname}/extractors/${ex}`);
+
+      if (opt.ignoreCache) opt.ignoreCache = parseBool(opt.ignoreCache);
+      if (opt.allowCache) opt.allowCache = parseBool(opt.allowCache);
+      if (opt.ignoreFF) opt.ignoreFF = parseBool(opt.ignoreFF);
+      if (opt.allowFF) opt.allowFF = parseBool(opt.allowFF);
 
       if (config.debug == true) console.log(`[extract] Starting "${url}"`, opt)
 
@@ -336,4 +363,28 @@ async function waitUntilDbConnected() {
       reject(err);
     }
   });
+}
+
+function parseBool(data) {
+  data = data.toLowerCase();
+  switch(data) {
+    case "true":
+    case "tru":
+    case "tr":
+    case "t":
+    case "y":
+    case "ye":
+    case "yes":
+      return true;
+    case "false":
+    case "fals":
+    case "fal":
+    case "fa":
+    case "f":
+    case "no":
+    case "n":
+      return false;
+    default:
+      return null;
+  }
 }

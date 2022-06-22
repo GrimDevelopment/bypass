@@ -12,7 +12,7 @@ This is a quick start guide on configuring your BIFM server.
     "key": "" // enter your api key here
   },
   "db": {
-    "active": true,
+    "active": false, // accepted values: true, false
     "url": "mongodb://127.0.0.1:27017/bifm" // accepted values: any valid mongoDB url
   },
   "http": {
@@ -48,3 +48,24 @@ Debug mode being set to `true` currently:
 Debug mode being set to `false` currently:
 - Makes errors only show the *message* rather than the stack.
 - Keeps logging to an absolute minimum whenever possible.
+
+### Heroku Enviroment Variables
+
+You can set each individually when you don't have a `config.json` file in the root of BIFM's folder. Like so:
+
+```sh
+PORT
+
+CAPTCHA_ACTIVE
+CAPTCHA_SERVICE
+CAPTCHA_KEY
+
+DB_ACTIVE
+DB_URL
+
+DEBUG
+FASTFORWARD
+ALERT
+```
+
+Or you can set a variable called `CONFIG_TEXT` with a stringified version of a config.json file compatible with BIFM.
