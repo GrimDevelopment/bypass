@@ -19,7 +19,7 @@ module.exports = {
       let p = await b.newPage();
       await p.goto(url);
 
-      if (lib.config().debug == true) console.log("[aylink] Solving CAPTCHA...");
+      if (lib.config().debug == true) console.log("[aylink] Launched. Solving CAPTCHA...");
       await p.evaluate(function() {window.stop()});
       let sk = await p.evaluate(function() {return document.querySelector(".g-recaptcha").getAttribute("data-sitekey")});
       let c = await lib.solve(sk, "recaptcha", {referer: (await p.url())});
