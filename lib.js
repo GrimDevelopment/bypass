@@ -135,7 +135,7 @@ module.exports = {
         if (f.fastforward == true) {
           if (config.debug == true) console.log(`[extract] Detected FastForward response, correcting and sending...`);
           if (config.db.active == true) {
-            if (opt.allowCache !== "false" && opt.allowCache !== false) {
+            if (opt.allowCache !== false) {
               if (config.debug == true) console.log("[db] Checking if data on this link already exists on the DB...");
               let f = await links.findOne({"originalUrl": url});
               if (f == null) f = await links.findOne({"original-url": url}); // older version compatibility
@@ -148,6 +148,7 @@ module.exports = {
               }
             }
           }
+
           d["destination"] = d.destination;
           d["dateSolved"] = "unknown";
           d["fromCache"] = false;
@@ -160,8 +161,8 @@ module.exports = {
         }
 
         if (config.db.active == true) {
-          if (opt.allowCache !== "false" && opt.allowCache !== false) {
-            if (opt.ignoreCache == "true" || opt.ignoreCache == true) {
+          if (opt.allowCache !== false) {
+            if (opt.ignoreCache == true) {
               if (config.debug == true) console.log(`[db] Replacing old version of "${url}" in DB.`)
               await links.findOneAndReplace({"originalUrl": url}, d);
               if (config.debug == true) console.log(`[db] Replaced.`)
@@ -194,7 +195,7 @@ module.exports = {
         if (config.db.active == true) {
           if (opt.allowCache !== false) {
             d.destinations = JSON.stringify(d.destinations);
-            if (opt.ignoreCache == "true" || opt.ignoreCache == true) {
+            if (opt.ignoreCache == true) {
               if (config.debug == true) console.log(`[db] Replacing old version of "${url}" in DB.`)
               await links.findOneAndReplace({"originalUrl": url}, d);
               if (config.debug == true) console.log(`[db] Replaced.`)
