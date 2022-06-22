@@ -7,6 +7,8 @@ app.set("view engine", "ejs");
 
 app.listen(lib.config().http.port, function() {
   console.log(`[http] Listening on HTTP port ${lib.config().http.port}`);
+  if (lib.config().debug == true) console.log("[config] Debug is enabled.");
+  if (lib.config().debug == true) console.log("[config] Listing current config", lib.config());
 });
 
 app.get("/api/bypass", async function(req, res) {
