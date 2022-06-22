@@ -19,9 +19,9 @@ if (!fs.existsSync("./config.json")) {
       d.db.active = (parseBool(process.env.DB_ACTIVE) || false);
       d.db.url = (process.env.DB_URL || "mongodb://127.0.0.1:27017/bifm");
 
-      d.debug = (parseBool(process.BIFM_DEBUG) || false);
-      d.fastforward = (parseBool(process.FASTFORWARD) || true);
-      d.alert = (process.ALERT || "");
+      d.debug = (parseBool(process.env.BIFM_DEBUG) || false);
+      d.fastforward = (parseBool(process.env.FASTFORWARD) || true);
+      d.alert = (process.env.ALERT || "");
     } else {
       d = JSON.parse(process.env.CONFIG_TEXT);
       if (process.env.PORT) d.http.port = process.env.PORT; // for heroku support
