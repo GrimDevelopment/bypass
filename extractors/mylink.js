@@ -64,7 +64,7 @@ module.exports = {
   }
 }
 
-async function cont(p, n) {
+async function cont(p) {
   await p.evaluate('document.querySelectorAll(`br`).forEach(function(ele) {ele.remove()});');
 
   if ((await p.$("#captcha"))) {
