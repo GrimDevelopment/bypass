@@ -23,8 +23,9 @@ if (!fs.existsSync("./config.json")) {
       d = JSON.parse(process.env.CONFIG_TEXT);
       if (process.env.PORT) d.http.port = process.env.PORT; // for heroku support
     }
+    d = JSON.stringify("./config.json", null, 2);
 
-    fs.writeFileSync("./config.json", null, 2);
+    fs.writeFileSync("./config.json", d);
   }
   else throw "Couldn't find proper config.";
 }
