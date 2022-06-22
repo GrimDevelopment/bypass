@@ -12,6 +12,7 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`123link.pw`**|Puppeteer + Adblocker + Stealth|Yes||`123link.biz`, `123link.co`, `123link.vip`||
 |**`adf.ly`**|Axios|No|[http://usheethe.com/T3F5](http://usheethe.com/T3F5)|`usheethe.com`|There is not a complete list of domains under adf.ly's net that I could find, but there is an algorythm for finding them.|
 |**`adlinkfly`**|Puppeteer + Stealth|Sometimes, but always required|[https://pdiskshortener.com/6I2CR2](https://pdiskshortener.com/6I2CR2), [https://dz-linkk.com/N2xFP](https://dz-linkk.com/N2xFP)|`adlinkfly.mightyscripts.xyz`, `pdiskshortener.com`, `dzlinkk.com`|Like adf.ly, there is not a list of adlinkfly sites, but there is an algorithm to find them.|
+|**`aylink.co`**|Puppeteer + Stealth|Yes|[https://aylink.co/xay664](https://aylink.co/xay664) redirects to `https://mega.nz/folder/hpIAnRLS#fJZX651qRZdf_DU2Y_k0kA`||
 |**`bc.vc`**|Puppeteer + Stealth|No|[https://bc.vc/vQesLIh](https://bc.vc/vQesLIh) redirects to `https://universal-bypass.org/`.||
 |**`boost.ink`**|Axios|No|[https://boost.ink/c5bba](https://boost.ink/c5bba)|`bst.gg`, `bst.wtf`, `booo.st`||
 |**`boostme.link`**|Axios|No|[https://boostme.link/iX9Krf](https://boostme.link/iX9Krf)||
