@@ -1,6 +1,10 @@
 # Heroku Setup
 
-Setting up Heroku is pretty simple.
+Setting up Heroku is pretty simple. 
+
+## ⚠️ Warning
+
+Support for Heroku is pretty spotty right now due to both scrapers now using Puppeteer and just in general a bit longer of a wait time on scrapers like `myl.li`.
 
 ## Prerequisites
 
