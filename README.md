@@ -19,6 +19,7 @@ If you would rather use the Unlicense version, use [this commit and behind](http
 - Heroku (and similar services) support (with guide, if difficult).
 - Add passworded-link support.
 - Add referer support.
+- Find a way around the 30 second rule on Heroku.
  
 ### Sites being planned
 
