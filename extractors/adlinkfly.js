@@ -80,7 +80,7 @@ async function cont(p, url) {
   
     await p.waitForNavigation();
   
-    if (new URL(await p.url()).hostname !== new URL(url).hostname) {console.log(await p.url()); return (await p.url());}
+    if (new URL(await p.url()).hostname !== new URL(url).hostname) return (await p.url());
     else return (await cont(p, url));
   }
 }
