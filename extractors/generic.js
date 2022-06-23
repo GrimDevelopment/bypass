@@ -118,10 +118,16 @@ module.exports = {
         return r;
       }
 
-      // generic redirect
+      // generic HTML redirect
       if (lib.config()["debug"] == true) console.log("[generic] Done. Checking for HTML redirects..."); 
       if (resp.data.includes(`content="0;URL=`)) {
         return resp.data.split(`content="0;URL=`)[1].split(`"`)[0];
+      }
+
+      // generic HTTP redirects, put any non-specific (like adlinkfly-type extractors) sites below this
+      if (lib.config()["debug"] == true) console.log("[generic] Done. Checking for HTTP redirects...");
+      if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
+        return resp.request.socket._httpMessage._redirectable._currentUrl;
       }
 
       let $ = cheerio.load(resp.data);
@@ -137,12 +143,6 @@ module.exports = {
           o = decodeURIComponent(o.safelink);
           return o;
         }
-      }
-
-      // generic http redirects, put any non-specific (like adlinkfly-type extractors) sites below this
-      if (lib.config()["debug"] == true) console.log("[generic] Done. Checking for HTTP redirects...");
-      if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
-        return resp.request.socket._httpMessage._redirectable._currentUrl;
       }
 
       // adlinkfly sites

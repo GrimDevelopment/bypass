@@ -9,7 +9,6 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |---|---|---|---|---|---|
 |**`1bit.space`**|Puppeteer + Adblocker + Stealth|Yes|[https://1bit.space/FVJcWHr](https://1bit.space/FVJcWHr) redirects to ``https://universal-bypass.org/``.||
 |**`1link.club`**|Axios|No|[http://1link.club/77679](http://1link.club/77679)|||
-|**`123link.pw`**|Puppeteer + Adblocker + Stealth|Yes||`123link.biz`, `123link.co`, `123link.vip`||
 |**`adf.ly`**|Axios|No|[http://usheethe.com/T3F5](http://usheethe.com/T3F5)|`usheethe.com`|There is not a complete list of domains under adf.ly's net that I could find, but there is an algorythm for finding them.|
 |**`adlinkfly`**|Puppeteer + Stealth|Sometimes, but always required|[https://pdiskshortener.com/6I2CR2](https://pdiskshortener.com/6I2CR2), [https://dz-linkk.com/N2xFP](https://dz-linkk.com/N2xFP)|`adlinkfly.mightyscripts.xyz`, `pdiskshortener.com`, `dzlinkk.com`|Like adf.ly, there is not a list of adlinkfly sites, but there is an algorithm to find them.|
 |**`aylink.co`**|Puppeteer + Stealth|Yes|[https://aylink.co/xay664](https://aylink.co/xay664) redirects to `https://mega.nz/folder/hpIAnRLS#fJZX651qRZdf_DU2Y_k0kA`||
@@ -17,6 +16,7 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`boost.ink`**|Axios|No|[https://boost.ink/c5bba](https://boost.ink/c5bba)|`bst.gg`, `bst.wtf`, `booo.st`||
 |**`boostme.link`**|Axios|No|[https://boostme.link/iX9Krf](https://boostme.link/iX9Krf)||
 |**`cpmlink.net`**|Axios|Yes|[https://cpmlink.net/i7FyAQ](https://cpmlink.net/i7FyAQ)||
+|**`cutw.in`**|Puppeteer + Adblocker + Stealth|Yes|[https://cutw.in/8q9wzl](https://cutw.in/8q9wzl)|||
 |**`cshort.org`**|Axios|No|[https://cshort.org/8i8dwPx0](https://cshort.org/8i8dwPx0)|
 |**`exe.io`**|Puppeteer + Stealth|Yes|[https://exe.io/ZaKsUgDc](https://exe.io/ZaKsUgDc)|`exey.io`||
 |**`ity.im`**|Axios|No|[http://ity.im/1QZh2](http://ity.im/1QZh2)|||

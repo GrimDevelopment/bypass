@@ -3,10 +3,11 @@ const lib = require("./lib");
 if (process.argv[2]) {
   let o = {};
 
-  if (process.argv[3]) o.ignoreCache = (toBool(process.argv[3]) || false);
-  if (process.argv[4]) o.allowCache = (toBool(process.argv[4]) || false);
-  if (process.argv[3]) o.ignoreFF = (toBool(process.argv[3]) || false);
-  if (process.argv[4]) o.allowFF = (toBool(process.argv[4]) || false);
+  o.ignoreCache = (toBool(process.argv[3]) || false);
+  o.allowCache = (toBool(process.argv[4]) || true);
+  o.ignoreFF = (toBool(process.argv[3]) || false);
+  o.allowFF = (toBool(process.argv[4]) || true);
+  
   if (lib.config().debug == true) console.log(`[runner] URL: `, process.argv[2]);
   if (lib.config().debug == true) console.log(`[runner] Options: `, o);
 

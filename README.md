@@ -18,12 +18,10 @@ If you would rather use the Unlicense version, use [this commit and behind](http
   - Detect when the site itself is down via the frontend, like previous version.
 - Heroku (and similar services) support (with guide, if difficult).
 - Add passworded-link support.
-- Add multi-link support.
+- Add referer support.
  
 ### Sites being planned
 
 There's a general need on our part to support all sites that previously were supported, but these are also some we would like to get done.
 
-- carrd.co
-- linktr.ee
 - mirrorace.org

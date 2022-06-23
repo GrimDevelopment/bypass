@@ -10,6 +10,7 @@ const examples = [
   { link: "https://bc.vc/vQesLIh", expected: "https://universal-bypass.org/" },
   { link: "https://boost.ink/c5bba" },
   { link: "https://boostme.link/iX9Krf" },
+  { link: "https://cutw.in/8q9wzl" },
   { link: "https://cpmlink.net/i7FyAQ" },
   { link: "https://cshort.org/8i8dwPx0" },
   { link: "https://exe.io/ZaKsUgDc" }, 

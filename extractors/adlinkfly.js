@@ -68,7 +68,7 @@ async function cont(p, url) {
 
   if ((await p.$("#countdown"))) {
     if (lib.config().debug == true) console.log("[adflylink] Retreiving link...");
-    await p.waitForSelector(".btn-success.btn-lg:not(.disabled)");
+    await p.waitForSelector(".btn-success.btn-lg:not(.disabled):not([disabled]):not([href='javascript: void(0)'])");
     let r = await p.evaluate(function() {return document.querySelector(".btn-success").href});
     
     return r;
