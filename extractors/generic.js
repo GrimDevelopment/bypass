@@ -139,18 +139,18 @@ module.exports = {
         }
       }
 
+      // generic http redirects, put any non-specific (like adlinkfly-type extractors) sites below this
+      if (lib.config()["debug"] == true) console.log("[generic] Done. Checking for HTTP redirects...");
+      if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
+        return resp.request.socket._httpMessage._redirectable._currentUrl;
+      }
+
       // adlinkfly sites
       if (lib.config()["debug"] == true) console.log("[generic] Done. Checking if link is adlinkfly link...");
       if ($("body .container form > div[style='display:none;'] > *[name='_method']").length > 0) {
         if (lib.config()["debug"] == true) console.log("[generic] Link is an adlinkfly link, switching to adflylink extractor...");
         const afl = require("./adlinkfly"); 
         return (await afl.get(url, opt));
-      }
-
-      // generic http redirects, put any non-specific (like adlinkfly-type extractors) sites above this
-      if (lib.config()["debug"] == true) console.log("[generic] Done. Checking for HTTP redirects...");
-      if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
-        return resp.request.socket._httpMessage._redirectable._currentUrl;
       }
 
       throw "Redirect not found.";

@@ -1,5 +1,6 @@
 const pup = require("puppeteer-extra");
 const stl = require("puppeteer-extra-plugin-stealth");
+const adb = require("puppeteer-extra-plugin-adblocker");
 const cap = require("puppeteer-extra-plugin-recaptcha");
 const lib = require("../lib");
 
@@ -12,6 +13,8 @@ module.exports = {
       let stlh = stl();
       stlh.enabledEvasions.delete("iframe.contentWindow");
       pup.use(stlh);
+
+      pup.use(adb());
 
       if (lib.config().fastforward == true && opt.ignoreFF !== "true" && opt.ignoreFF !== true) {
         let r = await lib.fastforward.get(url, true);
@@ -56,7 +59,7 @@ async function cont(p, url) {
   });
 
   if (isCaptcha) {
-    if (lib.config().debug == true) console.log("[adflylink] Solving CAPTCHA...");
+    if (lib.config().debug == true) console.log("[adflylink] Found CAPTCHA. Solving CAPTCHA...");
     await p.solveRecaptchas();
     if (lib.config().debug == true) console.log("[adflylink] Solved CAPTCHA. Continuing page...");
   } else {
@@ -77,7 +80,7 @@ async function cont(p, url) {
   
     await p.waitForNavigation();
   
-    if (new URL(await p.url()).hostname !== new URL(url).hostname) return p;
+    if (new URL(await p.url()).hostname !== new URL(url).hostname) {console.log(await p.url()); return (await p.url());}
     else return (await cont(p, url));
   }
 }
