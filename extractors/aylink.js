@@ -15,13 +15,6 @@ module.exports = {
       if (lib.config().captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."
       }
- 
-      pup.use(cap({
-        provider: {
-          id: lib.config().captcha.service,
-          token: lib.config().captcha.key
-        }
-      }));
 
       if (lib.config().debug == true) console.log("[aylink] Launching browser...");
       b = await pup.launch({headless: true});
