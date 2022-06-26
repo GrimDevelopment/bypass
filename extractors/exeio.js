@@ -1,5 +1,6 @@
 const pup = require("puppeteer-extra");
 const stl = require("puppeteer-extra-plugin-stealth");
+const adb = require("puppeteer-extra-plugin-adblocker");
 const lib = require("../lib")
 
 module.exports = {
@@ -11,6 +12,8 @@ module.exports = {
       let stlh = stl();
       stlh.enabledEvasions.delete("iframe.contentWindow");
       pup.use(stlh);
+
+      pup.use(adb());
 
       if (lib.config().captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."

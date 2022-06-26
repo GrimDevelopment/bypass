@@ -95,7 +95,7 @@ module.exports = {
             f["fromCache"] = true;
             f["fromFastforward"] = false;
             return f; 
-          } 
+          }
         }
       }
 
