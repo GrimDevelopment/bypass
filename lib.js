@@ -47,7 +47,7 @@ let client, db, links;
       console.log("[bifm] Please restart your BIFM instance.");
       process.exit();
     }
-    client = new MongoClient(config["db"]["url"]);
+    client = new MongoClient(config.db.url);
     await client.connect();
     db = client.db("bifm");
     links = db.collection("links");
@@ -74,28 +74,14 @@ module.exports = {
       if (config.debug == true) console.log(`[extract] Starting "${url}"`, opt)
 
       if (config.db.active == true) {
-        if (opt.ignoreCache !== "true" && opt.ignoreCache !== true) {
+        if (opt.ignoreCache !== true) {
           if (config.debug == true) console.log("[db] Checking DB for desination...");
-          if (links == undefined) await waitUntilDbConnected();
-          let f = await links.findOne({"originalUrl": url});
-          if (f == null) f = await links.findOne({"original-url": url}); // older version compatibility
+          let f = await this.db.get(url);
           if (f !== null) {
-            delete f._id;
-            if (f["date-solved"]) {
-              if (config.debug == true) console.log("[db] Updating old solution format from DB...");
-              f = {
-                dateSolved: f["date-solved"],
-                originalUrl: f["original-url"],
-                destination: f["destination"],
-              }
-              await links.findOneAndReplace({"original-url": url}, f);
-            }
-            if (config.debug == true) console.log("[db] Sending DB response...");
-            if (f.destinations) f.destinations = JSON.parse(f.destinations);
-            f["fromCache"] = true;
-            f["fromFastforward"] = false;
-            return f; 
-          }
+            f.fromCache = true;
+            f.fromFastforward = false;
+            return f;
+          } 
         }
       }
 
@@ -109,7 +95,6 @@ module.exports = {
             fromCache: false,
             fromFastforward: true
           };
-          console.log(f)
           return f;
         }
       } 
@@ -149,10 +134,9 @@ module.exports = {
             }
           }
 
-          d["destination"] = d.destination;
-          d["dateSolved"] = "unknown";
-          d["fromCache"] = false;
-          d["fromFastforward"] = true;
+          d.dateSolved = "unknown";
+          d.fromCache = false;
+          d.fromFastforward = true;
           return d;
         }
 
@@ -187,10 +171,10 @@ module.exports = {
         };
 
         for (let a in d.destinations) {
-          if (!this.isUrl(d.destinations[a])) delete d.destinations[a];
+          if (!this.isUrl(d.destinations[a])) delete d.destinations[a]; // removes non-urls
         }
 
-        d.destinations = [...new Set(d.destinations)];
+        d.destinations = [...new Set(d.destinations)]; // removes duplicates
 
         if (config.db.active == true) {
           if (opt.allowCache !== false) {
@@ -208,9 +192,9 @@ module.exports = {
           }
         }
 
-        delete d["_id"];
-        d["fromCache"] = false;
-        d["fromFastforward"] = false;
+        delete d._id;
+        d.fromCache = false;
+        d.fromFastforward = false;
 
         return d;
       } else {
@@ -225,7 +209,7 @@ module.exports = {
     // {
     //    "referer": "https://google.com"
     // }
-    if (config["captcha"]["active"] == false) return null;
+    if (config.captcha.active == false) return null;
     if (config.captcha.service == "2captcha") {
       const tc = new two.Solver(config["captcha"]["key"]);
       let ref = opt.referer;
@@ -324,6 +308,54 @@ module.exports = {
       else return false;
     } catch(err) {
       return false;
+    }
+  },
+  db: {
+    get: async function(url) {
+      if (links == undefined) await waitUntilDbConnected();
+      let f = await links.findOne({"originalUrl": url});
+      if (f !== null) {
+        if (f.destinations) f.destinations = JSON.parse(f.destinations);
+        return f;
+      } else {
+        f = await links.findOne({"original-url": url}); // older version compatibility
+        if (f !== null) {
+          delete f._id;
+          if (f["date-solved"]) {
+            if (config.debug == true) console.log("[db] Updating old solution format from DB...");
+            f = {
+              dateSolved: f["date-solved"],
+              originalUrl: f["original-url"],
+              destination: f["destination"],
+            }
+            delete f._id;
+            await links.findOneAndReplace({"original-url": url}, f);
+          }
+          if (config.debug == true) console.log("[db] Sending DB response...");
+          if (f.destinations) f.destinations = JSON.parse(f.destinations);
+          delete f._id;
+          return f; 
+        } else if (f == null) {
+          f = await links.findOne({"url": url}); // older version compatibility
+          if (f !== null) {
+            if (config.debug == true) console.log("[db] Updating old solution format from DB...");
+            f = {
+              originalUrl: f["url"],
+              destination: f["response"],
+              dateSolved: (new Date(f.date) * 1)
+            }
+            delete f._id;
+            await links.findOneAndReplace({"url": url}, f);
+            delete f._id;
+            return f;
+          } else {
+            return null;
+          }
+        }
+      }
+    }, 
+    send: async function(f) {
+
     }
   }
 }

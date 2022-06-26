@@ -16,7 +16,8 @@ const examples = [
   { link: "https://exe.io/ZaKsUgDc" }, 
   { link: "http://ity.im/1QZh2" }, 
   { link: "http://karung.in/Gyucc", expected: "https://drive.google.com/uc?id=0B263gKU-C09_WW5rbURLeXN5QXc&export=download"},
-  { extractor: "linkvertise (redirect)", link: "https://linkvertise.com/431184/roblox-scripts-website", expected: "https://tobirbxscripts.blogspot.com/" }, // (redirect) is there because there are two types of links on linkvertise, a paste and a redirect
+  { extractor: "linkvertise (redirect)", link: "https://linkvertise.com/425581/example1" }, // (redirect) is there because there are two types of links on linkvertise, a paste and a redirect
+  { extractor: "linkvertise (paste)", link: "https://link-target.net/425581/example" },
   { link: "https://lnkload.com/2z8aF" },
   { link: "https://lnk2.cc/wd1J1" },
   { link: "https://myl.li/NOEgI6aOp3bF" },

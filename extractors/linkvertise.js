@@ -34,13 +34,13 @@ module.exports = {
       b = await pup.launch({headless: true});
       let p = await b.newPage();
 
-      await p.setUserAgent("Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36");
+      await p.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1");
       await p.goto(url);
 
       if (lib.config().debug == true) console.log("[linkvertise] Waiting to see if CAPTCHA shows up...");
       await p.waitForTimeout(3000); // this is just for waiting to see if a captcha shows up
       if ((await p.$(".captcha-content"))) {
-        if (lib.config().debug == true) console.log(`[linkvertise] CAPTCHA was found, relaunching with CAPTCHA support.`);
+        if (lib.config().debug == true) console.log(`[linkvertise] CAPTCHA was found, relaunching with CAPTCHA support...`);
         await b.close();
 
         if (lib.config().captcha.active == false) {
@@ -56,16 +56,19 @@ module.exports = {
 
         b = await pup.launch({headless: true});
         p = await b.newPage();
-
-        if (lib.config().debug == true) console.log("[linkvertise] Reopening page...");
+        await p.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1");
+      
+        if (lib.config().debug == true) console.log("[linkvertise] Launched. Reopening page...");
         await p.goto(url);
         await p.waitForTimeout(3000); 
-        if (lib.config().debug == true) console.log("[linkvertise] Solving CAPTCHA...");
+        if (lib.config().debug == true) console.log("[linkvertise] Done. Solving CAPTCHA...");
         await p.solveRecaptchas();
-        if (lib.config().debug == true) console.log(`[linkvertise] Solved CAPTCHA.`);
+        if (lib.config().debug == true) console.log(`[linkvertise] Solved CAPTCHA, continuing as normal...`);
       } else {
-        if (lib.config().debug == true) console.log(`[linkvertise] No CAPTCHAs, continuing as normal.`) 
+        if (lib.config().debug == true) console.log(`[linkvertise] No CAPTCHAs, continuing as normal...`) 
       }
+
+      if ((await p.url()) == "https://linkvertise.com/") throw "The link is dead.";
 
       if (lib.config().debug == true) console.log("[linkvertise] Counting down...");
       await p.waitForSelector(".lv-dark-btn");
@@ -98,13 +101,28 @@ async function fireWhenFound(p) {
   return new Promise(function(resolve, reject) {
     p.on("response", async function(res) {
       let a = new URL((await res.url()));
-      if (a.pathname.startsWith("/api/v1/") && (await (await(res.request()).method())) == "POST" && a.pathname.includes("/target")) {
-        let a = (await res.json());
-        if (lib.config().debug == true) console.log("[linkvertise] Got URL that met requirements, parsing...");
-        if (a.data.target) resolve(a.data.target);
-        else reject("Redirect not found.");
-      } else {
-        if (lib.config().debug == true && a.hostname.includes("linkvertise")) console.log(`[linkvertise] Ignoring request ${(await (await(res.request()).method()))} "${(await res.url())}" from listener.`);
+      if (a.host == "publisher.linkvertise.com") {
+        if (a.pathname.startsWith("/api/v1/") && (await (await(res.request()).method())) == "POST" && a.pathname.includes("/target")) {
+          try {
+            let a = (await res?.json());
+            if (lib.config().debug == true) console.log("[linkvertise] Got URL that met requirements, parsing...");
+            if (a?.data?.target) resolve(a.data.target);
+            else reject("Redirect not found.");
+          } catch(err) {
+            console.log("[silent error] Error extracting linkvertise URL.", err.stack);
+          }
+        } else if (a.pathname.startsWith("/api/v1/") && (await (await(res.request()).method())) == "POST" && a.pathname.includes("/paste")) {
+          try {
+            let a = (await res?.json());
+            if (lib.config().debug == true) console.log("[linkvertise] Got URL that met requirements, parsing...");
+            if (a?.data?.paste) resolve(a.data.paste);
+            else reject("Redirect not found.");
+          } catch(err) {
+            console.log("[silent error] Error extracting linkvertise URL.", err.stack);
+          }
+        } else {
+          if (lib.config().debug == true && a.hostname.includes("linkvertise")) console.log(`[linkvertise] Ignoring request ${(await (await(res.request()).method()))} "${(await res.url())}" from listener.`);
+        }
       }
     });
   });
