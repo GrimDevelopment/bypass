@@ -16,7 +16,7 @@ module.exports = {
 
       pup.use(adb());
 
-      if (lib.config().fastforward == true && opt.ignoreFF !== "true" && opt.ignoreFF !== true) {
+      if (lib.config().fastforward == true && opt.ignoreFF !== true) {
         let r = await lib.fastforward.get(url, true);
         if (r !== null) {
           return {destination: r, fastforward: true};
@@ -78,7 +78,7 @@ async function cont(p, url) {
       document.querySelector("form").submit();
     });
   
-    await p.waitForNavigation();
+    await p.waitForNavigation({waitUntil: "networkidle0"});
   
     if (new URL(await p.url()).hostname !== new URL(url).hostname) return (await p.url());
     else return (await cont(p, url));
