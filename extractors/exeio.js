@@ -17,7 +17,7 @@ module.exports = {
       }
 
       if (lib.config().debug == true) console.log("[exeio] Launching browser...");
-      b = await pup.launch({headless: true});
+      b = await pup.launch({headless: false});
       let p = await b.newPage();
 
       await p.goto(url);
@@ -71,6 +71,8 @@ async function cont(p, url, b) {
         return document.querySelector(".procced > .btn.get-link.text-white").href
       });
       return r;
+    } else {
+      throw "The exe.io link is dead.";
     }
   } catch(err) {
     throw err;

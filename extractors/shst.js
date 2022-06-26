@@ -27,7 +27,7 @@ module.exports = {
         headers: {
           "user-agent": ""
         },
-        maxRedirects: 1
+        maxRedirects: 999
       });
   
       if (lib.config().debug == true) console.log("[shst] Got page. Parsing Axios data...");

@@ -30,6 +30,7 @@ if (process.argv[2]) {
 }
 
 function toBool(c) {
+  if (c == undefined) return c;
   switch(c.toLowerCase()) {
     case "y":
     case "ye":
