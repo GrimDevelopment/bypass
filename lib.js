@@ -70,7 +70,6 @@ module.exports = {
       if (opt.allowCache) opt.allowCache = parseBool(opt.allowCache);
       if (opt.ignoreFF) opt.ignoreFF = parseBool(opt.ignoreFF);
       if (opt.allowFF) opt.allowFF = parseBool(opt.allowFF);
-      console.log(opt)
 
       if (config.debug == true) console.log(`[extract] Starting "${url}"`, opt)
 

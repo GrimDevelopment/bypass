@@ -30,6 +30,7 @@ app.get("/api/bypass", async function(req, res) {
     }
 
     delete req.query.url;
+
     if (lib.config().debug == true) console.log(`[http] Requesting ./lib.js to get "${url}"`, req.query);
 
     let resp = await lib.get(url, req.query);

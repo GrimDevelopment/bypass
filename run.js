@@ -5,8 +5,8 @@ if (process.argv[2]) {
 
   o.ignoreCache = (toBool(process.argv[3]) || false);
   o.allowCache = (toBool(process.argv[4]) || true);
-  o.ignoreFF = (toBool(process.argv[3]) || false);
-  o.allowFF = (toBool(process.argv[4]) || true);
+  o.ignoreFF = (toBool(process.argv[5]) || false);
+  o.allowFF = (toBool(process.argv[6]) || true);
   
   if (lib.config().debug == true) console.log(`[runner] URL: `, process.argv[2]);
   if (lib.config().debug == true) console.log(`[runner] Options: `, o);
