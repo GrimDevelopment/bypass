@@ -26,7 +26,7 @@ module.exports = {
 async function cont(b, p) {
   let u = await p.url();
   if (u.includes("k=")) {
-    if (lib.config().debug == true) console.log("[trylink] Auto-redirecting based on URL...");
+    if (lib.config().debug == true) console.log("[try2link] Auto-redirecting based on URL...");
     await p.goto(Buffer.from(u.split("k=")[1].split("&")[0], "base64").toString("ascii"));
     return (await cont(b, p));
   } else {

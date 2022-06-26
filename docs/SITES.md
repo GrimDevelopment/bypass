@@ -29,12 +29,14 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`myl.li`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|[https://myl.li/NOEgI6aOp3bF](https://myl.li/NOEgI6aOp3bF)|`mylink.vc`||
 |**`oke.io`**|Puppeteer + Stealth|No|[https://oke.io/D3wL](https://oke.io/D3wL) redirects to a broken Mega.nz link.|||
 |**`ouo.io`**|Puppeteer + Stealth|Sometimes, only to bypass Cloudflare|[https://ouo.io/2dktqo](https://ouo.io/2dktqo)|`ouo.press`||
+|**`psa.pm`**|Axios|No|||If anyone can find a legal example of this, that'd be nice.|
 |**`rekonise.com`**|Axios|No|[https://rekonise.com/bifm-jv7k6](https://rekonise.com/bifm-jv7k6)||
 |**`sh.st`**|Axios|No|[http://ceesty.com/es47QR](http://ceesty.com/es47QR)|`ceesty.com`, `cestyy.com`, `clkme.me`, `clkmein.com`, `cllkme.com`, `corneey.com`, `destyy.com`, `festyy.com`, `gestyy.com`, `jnw0.me`, `xiw34.com`, `wiid.me`|The list to the right may not be 100% correct or complete.|
 |**`show.co`**|Axios|No|[https://show.co/HQrPtta](https://show.co/HQrPtta) redirects to `https://universal-bypass.org/`.||
 |**`social-unlock.com`**|Axios|No|[https://social-unlock.com/417pK](https://social-unlock.com/417pK)|||
 |**`tei.ai`**|Axios|No|[https://tei.ai/HOI4_1_11_11](https://tei.ai/HOI4_1_11_11) redirects to `https://www.mediafire.com/file/mmxskm3b1uanzfn/OG9134-HOI4FU1.rar/file`|`tii.ai`||
-|**`thinfi.com`**|Axios|No|https://thinfi.com/088ud (no password), https://thinfi.com/088uk (password: `bifm`)||
+|**`thinfi.com`**|Axios|No|[https://thinfi.com/088ud](https://thinfi.com/088ud) (no password), [https://thinfi.com/088uk](https://thinfi.com/088uk) (password: `bifm`)||
+|**`try2link.com`**|Puppeteer + Adblocker|No|||If anyone can find a legal example of this, that'd be nice.|
 |**`wpsafelink`**|Axios|No|[https://demo-safelink.themeson.com/template1/?f7fbb8af](https://demo-safelink.themeson.com/template1/?f7fbb8af) redirects to `https://themeson.com/safelink/`.|`demo-safelink.themeson.com`||
 |**`za.gl`**|Puppeteer + Adblocker + Stealth|No|[https://za.gl/JPk6](https://za.gl/JPk6)|`za.uy`, `zee.gl`||
 
