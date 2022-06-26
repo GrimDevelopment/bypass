@@ -14,6 +14,7 @@ function bypass() {
   if (document.getElementById("ignoreCache")?.checked) opt = opt + "ignoreCache=true&";
   if (document.getElementById("allowFF")?.checked) opt = opt + "allowFF=false&";
   if (document.getElementById("ignoreFF")?.checked) opt = opt + "ignoreFF=true&";
+  if (document.getElementById("password").value !== "") opt = opt + `password=${encodeURIComponent(document.getElementById("password").value)}&`;
 
   opt = opt.substring(0, (opt.length - 1));
 

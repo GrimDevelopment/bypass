@@ -132,7 +132,7 @@ module.exports = {
           dateSolved: (new Date() * 1)
         };
 
-        if (config.fastforward == true) {
+        if (f.fastforward == true) {
           if (config.debug == true) console.log(`[extract] Detected FastForward response, correcting and sending...`);
           if (config.db.active == true) {
             if (opt.allowCache !== false) {
@@ -174,9 +174,9 @@ module.exports = {
           }
         }
 
-        delete d["_id"];
-        d["fromCache"] = false;
-        d["fromFastforward"] = false;
+        delete d._id;
+        d.fromCache = false;
+        d.fromFastforward = false;
 
         return d;
       } else if (typeof f == "object" && f.destinations) {

@@ -34,24 +34,28 @@
               <p class="extra nm"><i class="nm">hover on each option for more information.</i></p>
               <% if (config.db.active == true) { %>
                 <div class="option" title="Checking this box means your result will not be cached to this instance.">
-                  <input type="checkbox" id="allowCache" name="allowCache"> 
                   <label for="allowCache">Disallow caching of your result?</label>
+                  <input type="checkbox" id="allowCache" name="allowCache"> 
                 </div>
                 <div class="option" title="Checking this box means the server will not check our cache for previous entries of the same URL.">
-                  <input type="checkbox" id="ignoreCache" name="ignoreCache">
                   <label for="ignoreCache">Ignore cached result?</label>
+                  <input type="checkbox" id="ignoreCache" name="ignoreCache">
                 </div>
               <% } %>
               <% if (config.fastforward == true) { %>
                 <div class="option" title="Checking this box means that, even if your URL is compatible, it will not be sent to FastForward's Crowd Bypass server.">
-                  <input type="checkbox" id="allowFF" name="allowFF"> 
                   <label for="allowFF">Disallow sending FastForward's Crowd Bypass server your result?</label>
+                  <input type="checkbox" id="allowFF" name="allowFF"> 
                 </div>
                 <div class="option" title="Checking this box means that the server will not check FastForward's Crowd Bypass server for previous entries of the same URL.">
-                  <input type="checkbox" id="ignoreFF" name="ignoreFF">
                   <label for="ignoreFF">Ignore FastForward Crowd Bypass result?</label>
+                  <input type="checkbox" id="ignoreFF" name="ignoreFF">
                 </div>
               <% } %>
+              <div class="option">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="The URL's password, if any.">
+              </div>
             </details>
           </div>
         </div>

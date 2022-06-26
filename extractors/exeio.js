@@ -45,6 +45,8 @@ module.exports = {
 
 async function cont(p, url, b) {
   try {
+    if (lib.config().debug == true) console.log("[exeio] Scanning page information...");
+
     if ((await p.$(".box-main > #before-captcha"))) {
       if (lib.config().debug == true) console.log("[exeio] Skipping non-CAPTCHA page...");
       await p.evaluate(function() {
