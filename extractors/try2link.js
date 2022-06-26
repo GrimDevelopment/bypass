@@ -9,7 +9,7 @@ module.exports = {
     try {
       if (lib.config().debug == true) console.log("[try2link] Launching browser...");
       pup.use(adb());
-      b = await pup.launch({headless: false});
+      b = await pup.launch({headless: true});
       let p = await b.newPage();
       await p.goto(url);
       if (lib.config().debug == true) console.log("[try2link] Launched. Starting continous function...");
