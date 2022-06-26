@@ -28,7 +28,7 @@ const examples = [
   { link: "https://social-unlock.com/417pK" },
   { link: "https://tei.ai/HOI4_1_11_11", expected: "https://www.mediafire.com/file/mmxskm3b1uanzfn/OG9134-HOI4FU1.rar/file"},
   { extractor: "thinfi (no password)", link: "https://thinfi.com/088ud" },
-  { extractor: "thinfi (passworded)", link: "https://thinfi.com/088ua", password: "bifm"},
+  { extractor: "thinfi (passworded)", link: "https://thinfi.com/088uk", password: "bifm"},
   { extractor: "WPSafelink", link: "https://demo-safelink.themeson.com/template1/?f7fbb8af", expected: "https://themeson.com/safelink/" },
   { link: "https://za.gl/JPk6" }
 ];

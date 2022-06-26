@@ -51,7 +51,7 @@ module.exports = {
         return $("body > main > section > p > a").attr("href");
       } else {
         if (resp.data == "") throw "Thinfi has rate-limited us. Please try again in a moment.";
-        if ($("body > main > section > h2 > a").attr("href") == url) throw "Password is incorrect."
+        else if ($("body > main > section > h2 > a").attr("href") == url) throw "Password is incorrect."
         throw "Thinfi has changed their website. Please update this extractor."
       }
     } catch(err) {

@@ -19,11 +19,12 @@ Click to expand each endpoint.
 
 |Name|Type|Required|Description|
 |---|---|---|---|
-|`url`|A URL encoded string.|Yes|The URL of the adlink you want to bypass.|
+|`url`|A URL encoded `string`.|Yes|The URL of the adlink you want to bypass.|
 |`ignoreCache`|`boolean`: `true`/`false`|No|Determines if you want to avoid using the cache for your solution.|
 |`allowCache`|`boolean`: `true`/`false`|No|Determines if you don't want to have your link's solution be in the cache.|
 |`ignoreFF`|`boolean`: `true`/`false`|No|Determines if you don't want to avoid checking FastForward's Crowd Bypass for a destination.|
 |`allowFF`|`boolean`: `true`/`false`|No|Determines if you don't want to sync certain types of links to FastForward's Crowd Bypass.|
+|`password`|`string`|Yes, if link is passworded.|Password of the link.|
 
 
 ### Responses

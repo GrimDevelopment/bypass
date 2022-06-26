@@ -33,7 +33,7 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`show.co`**|Axios|No|[https://show.co/HQrPtta](https://show.co/HQrPtta) redirects to `https://universal-bypass.org/`.||
 |**`social-unlock.com`**|Axios|No|[https://social-unlock.com/417pK](https://social-unlock.com/417pK)|||
 |**`tei.ai`**|Axios|No|[https://tei.ai/HOI4_1_11_11](https://tei.ai/HOI4_1_11_11) redirects to `https://www.mediafire.com/file/mmxskm3b1uanzfn/OG9134-HOI4FU1.rar/file`|`tii.ai`||
-|**`thinfi.com`**|Axios|No|https://thinfi.com/088ud (no password), https://thinfi.com/088ua (password: `bifm`)||
+|**`thinfi.com`**|Axios|No|https://thinfi.com/088ud (no password), https://thinfi.com/088uk (password: `bifm`)||
 |**`wpsafelink`**|Axios|No|[https://demo-safelink.themeson.com/template1/?f7fbb8af](https://demo-safelink.themeson.com/template1/?f7fbb8af) redirects to `https://themeson.com/safelink/`.|`demo-safelink.themeson.com`||
 |**`za.gl`**|Puppeteer + Adblocker + Stealth|No|[https://za.gl/JPk6](https://za.gl/JPk6)|`za.uy`, `zee.gl`||
 
