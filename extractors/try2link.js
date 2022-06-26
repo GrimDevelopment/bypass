@@ -1,5 +1,6 @@
 const pup = require("puppeteer-extra");
 const adb = require("puppeteer-extra-plugin-adblocker");
+const lib = require("../lib");
 
 module.exports = {
   hostnames: ["try2link.com"],
