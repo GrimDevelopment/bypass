@@ -13,7 +13,7 @@ function bypass() {
   if (document.getElementById("allowCache")?.checked) opt = opt + "allowCache=false&";
   if (document.getElementById("ignoreCache")?.checked) opt = opt + "ignoreCache=true&";
   if (document.getElementById("allowFF")?.checked) opt = opt + "allowFF=false&";
-  if (document.getElementById("ignoreFF")?.checked) opt = opt + "ignoreFF=false&";
+  if (document.getElementById("ignoreFF")?.checked) opt = opt + "ignoreFF=true&";
 
   opt = opt.substring(0, (opt.length - 1));
 

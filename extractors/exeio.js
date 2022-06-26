@@ -17,14 +17,18 @@ module.exports = {
       }
 
       if (lib.config().debug == true) console.log("[exeio] Launching browser...");
-      b = await pup.launch({headless: false});
+      b = await pup.launch({headless: true});
       let p = await b.newPage();
 
       await p.goto(url);
-      if (lib.config().debug == true) console.log("[exeio] Launched. Skipping first page...");
-      await p.waitForNavigation();
 
-      if (lib.config().debug == true) console.log("[exeio] Skipped. Starting continous function...");
+      if (!(await p.url()).includes("exey.io")) {
+        if (lib.config().debug == true) console.log("[exeio] Launched. Skipping first page...");
+        await p.waitForNavigation();
+      }
+
+      if (lib.config().debug == true) console.log("[exeio] Starting continous function...");
+      
       p = await cont(p, url, b);
       
       await b.close();
