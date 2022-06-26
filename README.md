@@ -12,6 +12,8 @@ Since [this commit](https://git.gay/a/bifm/commit/adec8de080c4f18545ba3d7cfb4e7e
 If you would rather use the Unlicense version, use [this commit and behind](https://git.gay/a/bifm/commit/5db9b17f7796bac35170e00acfe9da043cbc4b29).
 
 ## Roadmap
+
+- Optimize `puppeteer` extractors, espescially [`aylink`](./extractors/aylink.js).
 - Improve frontend site.
   - Detect when the site itself is down via the frontend, like previous version.
 - Add back proper Heroku support.
