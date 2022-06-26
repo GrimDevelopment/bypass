@@ -35,7 +35,7 @@ module.exports = {
       // opening browser
 
       if (lib.config().debug == true) console.log("[mylink] Launching browser...");
-      b = await pup.launch({headless: false, args: ["--no-sandbox", "--disable-setuid-sandbox"]});
+      b = await pup.launch({headless: false});
       let p = await b.newPage();
       await p.goto(url);
 

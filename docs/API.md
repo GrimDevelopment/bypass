@@ -8,6 +8,8 @@ When using our API, no matter the instance, you must follow our [license terms](
 
 ## Endpoints
 
+Click to expand each endpoint.
+
 <details>
   <summary>
     <code>GET /api/bypass</code> - Get a bypass

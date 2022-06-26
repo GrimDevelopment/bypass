@@ -27,7 +27,7 @@ module.exports = {
       }));
 
       if (lib.config().debug == true) console.log("[cutwin] Launching browser...");
-      b = await pup.launch({headless: true, args: ["--no-sandbox", "--disable-setuid-sandbox"]});
+      b = await pup.launch({headless: true});
       let p = await b.newPage();
       await p.goto(url);
 

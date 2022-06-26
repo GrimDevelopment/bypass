@@ -140,3 +140,13 @@ For example, if you're parsing JSON left in the page, do the following:
 ```js
 if (lib.config().debug == true) console.log("[scraper] Parsing JSON data...");
 ```
+
+Also, you should also add you scraper to [these docs](../SITES.md), adding all relevant information to there.
+
+As well as adding it to the [testing script](../../tests.js), simply by adding an object like so to the `examples` array:
+
+```js
+{ extractor: "<name of extractor, leave out if it's just the domain name>", link: "<example of url>", expected: "<expected destination, if not https://git.gay/a/bifm>" }
+```
+
+Please make sure the expected link *and* the destination is SFW (safe for work), SFL (safe for life), and legal (find a dead link if it's from a download site). 
