@@ -75,10 +75,13 @@ module.exports = {
     let b;
     try {
       pup.use(stl());
-      /* Delete the portion above and uncomment this if the site 
+      /* 
+        Delete the portion above and uncomment this if the site 
+        
         let stlh = stl();
         stlh.enabledEvasions.delete("iframe.contentWindow");
         pup.use(stlh);
+      
       */
 
       /*
@@ -98,8 +101,11 @@ module.exports = {
         Uncomment the portion above if the site given uses CAPTCHAs.
       */
 
+
+      if (lib.config().debug == true) console.log("[scraper] Launching browser...");
       b = await pup.launch({headless: true});
       let p = await b.newPage();
+      if (lib.config().debug == true) console.log("[scraper] Launched. Going to page...");
       p.goto(url);
 
       // put your code here :p
@@ -119,3 +125,18 @@ Before you do anything, add the domain name (or names) to the hostnames array at
 
 Obviously mess with headers and other details as needed. Then, you can scrape the result you need to get the end URL, once your code finds it, be sure to return it. You need to return it, otherwise you will get the error `Invalid response from backend.`
 
+## Additional Information
+
+Before pull requesting, add logging to your extractor. This makes it easy to debug if/when your extractor becomes out of date.
+
+Logging with BIFM is as simple as below:
+
+```js
+if (lib.config().debug == true) console.log("[<scraper name>] <infomation of what's happening>");
+```
+
+For example, if you're parsing JSON left in the page, do the following:
+
+```js
+if (lib.config().debug == true) console.log("[scraper] Parsing JSON data...");
+```
