@@ -27,6 +27,8 @@ const examples = [
   { link: "https://show.co/HQrPtta", expected: "https://universal-bypass.org" },
   { link: "https://social-unlock.com/417pK" },
   { link: "https://tei.ai/HOI4_1_11_11", expected: "https://www.mediafire.com/file/mmxskm3b1uanzfn/OG9134-HOI4FU1.rar/file"},
+  { extractor: "thinfi (no password)", link: "https://thinfi.com/088ud" },
+  { extractor: "thinfi (passworded)", link: "https://thinfi.com/088ua", password: "bifm"},
   { extractor: "WPSafelink", link: "https://demo-safelink.themeson.com/template1/?f7fbb8af", expected: "https://themeson.com/safelink/" },
   { link: "https://za.gl/JPk6" }
 ];
@@ -36,7 +38,7 @@ if (process.argv[2]) {
 
   if (lib.config().debug == true) console.log("[testing] Parsing arguments...");
   let intForm = parseInt(process.argv[2]);
-  if (intForm !== process.argv[2]) intForm = examples.findIndex(e => (e.extractor || new URL(e.link).hostname || new URL(e.link).hostname).split(".")[0] == process.argv[2]);
+  if (intForm !== process.argv[2] && typeof intForm !== "number") intForm = examples.findIndex(e => (e.extractor || new URL(e.link).hostname || new URL(e.link).hostname).split(".")[0] == process.argv[2]);
   
   if (lib.config().debug == true) console.log(`[testing] Parsed starting interger as: ${intForm}`);
 
@@ -45,7 +47,7 @@ if (process.argv[2]) {
     if (process.argv[3] == "-") end = (intForm + 1);
     else {
       end = parseInt(process.argv[3]);
-      if (end == null) {
+      if (typeof end !== "number") {
         end = examples.findIndex(e => (e.extractor || new URL(e.link).hostname) == process.argv[2]);
       }
     }
@@ -70,7 +72,9 @@ async function run(i, end) {
   console.log(`- Testing "${name}" (${i}) extractor...\n`);
 
   try {
-    let r = await lib.get(examples[i].link, {ignoreCache: true, allowCache: false, allowFF: false, ignoreFF: true});
+    let d = {ignoreCache: true, allowCache: false, allowFF: false, ignoreFF: true};
+    if (examples[i].password) d.password = examples[i].password
+    let r = await lib.get(examples[i].link, d);
     if (r.destination) {
       if (!examples[i].expected) examples[i].expected = "https://git.gay/a/bifm"
       if (r.destination == examples[i].expected) {

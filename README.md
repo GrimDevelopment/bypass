@@ -14,8 +14,7 @@ If you would rather use the Unlicense version, use [this commit and behind](http
 ## Roadmap
 - Improve frontend site.
   - Detect when the site itself is down via the frontend, like previous version.
-- Heroku (and similar services) support (with guide, if difficult).
-- Add passworded-link support.
+- Add back proper Heroku support.
 - Add referer support.
 - Find a way around the 30 second rule on Heroku.
  
