@@ -46,9 +46,9 @@ An errored response would look like this.
 
 ```json
 {
-  "success": false,
-  "error": "Navigation timeout of 30000 ms exceeded",
-  "fromBackend": true
+  "success": false, // Detemines success of request.
+  "error": "Navigation timeout of 30000 ms exceeded", // error message, see console for error trace
+  "fromBackend": true // determines if error is from frontend or backend
 }
 ```
 </details>
