@@ -35,7 +35,7 @@ module.exports = {
       // opening browser
 
       if (lib.config().debug == true) console.log("[mylink] Launching browser...");
-      b = await pup.launch({headless: false});
+      b = await pup.launch({headless: true});
       let p = await b.newPage();
       await p.goto(url);
 
