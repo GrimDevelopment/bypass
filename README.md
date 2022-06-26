@@ -15,10 +15,10 @@ If you would rather use the Unlicense version, use [this commit and behind](http
 
 - Optimize `puppeteer` extractors, espescially [`aylink`](./extractors/aylink.js).
 - Improve frontend site.
-  - Detect when the site itself is down via the frontend, like previous version.
+  - Add dark mode, 
 - Add back proper Heroku support.
+  - Improve the 30 second rule (requests cannot take longer than 30 seconds w/o timing out) with it.
 - Add referer support.
-- Find a way around the 30 second rule on Heroku.
  
 ### Sites being planned
 
