@@ -3,7 +3,7 @@ const cheerio = require("cheerio");
 const lib = require("../lib");
 
 module.exports = {
-  hostnames: ["boostme.link"],
+  hostnames: ["boostme.link", "boost.fusedgt.com"],
   requiresCaptcha: false,
   get: async function(url, opt) {
     try {
