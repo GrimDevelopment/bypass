@@ -59,4 +59,58 @@ Obviously mess with headers and other details as needed. Then, you can scrape th
 
 ### Puppeteer
 
-*Rest is coming later.*
+Copy and paste this template into your extractor.
+
+```js
+const pup = require("puppeteer-extra");
+//const stl = require("puppeteer-extra-plugin-stealth");
+//const adb = require("puppeteer-extra-plugin-adblocker");
+//const cap = require("puppeteer-extra-plugin-recaptcha");
+const lib = require("../lib");
+
+module.exports = {
+  hostnames: [],
+  requiresCaptcha: true,
+  get: async function(url) {
+    let b;
+    try {
+      pup.use(stl());
+      /* Delete the portion above and uncomment this if the site 
+        let stlh = stl();
+        stlh.enabledEvasions.delete("iframe.contentWindow");
+        pup.use(stlh);
+      */
+
+      /*
+        pup.use(adb()); 
+
+        Uncomment this to enable the adblocker.
+      */
+
+      /* 
+        pup.use(cap({
+          provider: {
+            id: lib.config().captcha.service,
+            token: lib.config().captcha.key
+          }
+        }));
+
+        Uncomment the portion above if the site given uses CAPTCHAs.
+      */
+
+      b = await pup.launch({headless: true});
+      let p = await b.newPage();
+      p.goto(url);
+
+      // put your code here :p
+
+      let r = await p.url(); // insert your solution here.
+      await b.close();
+      return r;
+    } catch(err) {
+      if (b !== undefined) await b.close();
+      throw err;
+    }
+  }
+}
+```
