@@ -5,7 +5,7 @@ const lib = require("../lib");
 module.exports = {
   hostnames: ["tei.ai", "tii.ai"],
   requiresCaptcha: false,
-  get: async function(url) {
+  get: async function(url, opt) {
     try {
       if (lib.config().debug == true) console.log("[teiai] Requesting page...");
 

@@ -114,3 +114,8 @@ module.exports = {
   }
 }
 ```
+
+Before you do anything, add the domain name (or names) to the hostnames array at the beginning of the exports. That way, the library code can find your scraper. If the domains for your site is `link.com`, then your array should just be `["link.com"]`.
+
+Obviously mess with headers and other details as needed. Then, you can scrape the result you need to get the end URL, once your code finds it, be sure to return it. You need to return it, otherwise you will get the error `Invalid response from backend.`
+

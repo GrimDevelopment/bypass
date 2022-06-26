@@ -5,7 +5,7 @@ const lib = require("../lib");
 module.exports = {
   hostnames: ["1link.club"],
   requiresCaptcha: false,
-  get: async function(url) {
+  get: async function(url, opt) {
     try {
       if (lib.config()["debug"] == true) console.log("[1link] Requesting page...");
       let resp = await axios({

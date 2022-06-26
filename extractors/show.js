@@ -5,7 +5,7 @@ const lib = require("../lib");
 module.exports = {
   hostnames: ["show.co"],
   requiresCaptcha: false,
-  get: async function(url) {
+  get: async function(url, opt) {
     try {
       if (lib.config().debug == true) console.log("[show] Requesting page...");
       let resp = await axios({

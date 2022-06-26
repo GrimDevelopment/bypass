@@ -9,7 +9,7 @@ module.exports = {
     "1bit.space"
   ],
   requiresCaptcha: true,
-  get: async function(url) {
+  get: async function(url, opt) {
     let b, p;
     try {
       pup.use(adb());

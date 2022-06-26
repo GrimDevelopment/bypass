@@ -4,7 +4,7 @@ const lib = require("../lib");
 module.exports = {
   hostnames: ["linktr.ee"],
   requiresCaptcha: false,
-  get: async function(url) {
+  get: async function(url, opt) {
     try {
       if (lib.config().debug == true) console.log("[linktree] Requesting page...");
       let resp = await axios({

@@ -17,7 +17,7 @@ module.exports = {
     "link-target.net"
   ],
   requiresCaptcha: false,
-  get: async function (url) {
+  get: async function (url, opt) {
     let b;
     try {
       // this may not work for pastes, will add support for them once i come across one

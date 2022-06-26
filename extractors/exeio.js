@@ -5,7 +5,7 @@ const lib = require("../lib")
 module.exports = {
   hostnames: ["exe.io", "exey.io"],
   requiresCaptcha: true,
-  get: async function(url) {
+  get: async function(url, opt) {
     let b;
     try {
       let stlh = stl();

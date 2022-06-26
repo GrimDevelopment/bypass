@@ -5,7 +5,7 @@ const lib = require("../lib");
 module.exports = {
   hostnames: [],
   requireCaptcha: false,
-  get: async function(url) {
+  get: async function(url, opt) {
     if (lib.config().debug == true) console.log("[carrd] Requesting page...");
     let resp = await axios({
       method: "GET",

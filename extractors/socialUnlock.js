@@ -4,7 +4,7 @@ const lib = require("../lib");
 module.exports = {
   hostnames: ["social-unlock.com"],
   requiresCaptcha: false,
-  get: async function(url) {
+  get: async function(url, opt) {
     try {
       if (lib.config().debug == true) console.log("[social-unlock] Reformatting URL...");
       url = url.split("/").slice(0, 3).join("/") + "/redirect/" + url.split("/").slice(3).join("/");

@@ -9,7 +9,7 @@ module.exports = {
     "ouo.today"
   ],
   requiresCaptcha: false,
-  get: async function (url) {
+  get: async function (url, opt) {
     let b;
     try {
       // setup plugins

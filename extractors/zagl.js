@@ -6,7 +6,7 @@ const lib = require("../lib");
 module.exports = {
   hostnames: ["za.uy", "za.gl", "zee.gl"],
   requiresCaptcha: false,
-  get: async function(url) {
+  get: async function(url, opt) {
     let b;
     try {
       let stlh = stl();

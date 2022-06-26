@@ -6,7 +6,7 @@ const lib = require("../lib");
 
 module.exports = {
   hostnames: ["cutw.in"],
-  get: async function(url) {
+  get: async function(url, opt) {
     let b;
     try {
       pup.use(adb());

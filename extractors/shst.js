@@ -18,7 +18,7 @@ module.exports = {
     "wiid.me"
   ],
   requiresCaptcha: false,
-  get: async function (url) {
+  get: async function (url, opt) {
     try {
       if (lib.config().debug == true) console.log("[shst] Requesting page...");
       let resp = await axios({

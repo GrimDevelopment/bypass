@@ -5,7 +5,7 @@ const lib = require("../lib");
 module.exports = {
   hostnames: ["boostme.link"],
   requiresCaptcha: false,
-  get: async function(url) {
+  get: async function(url, opt) {
     try {
       if (lib.config().debug == true) console.log("[boostme] Requesting page...");
       let resp = await axios({

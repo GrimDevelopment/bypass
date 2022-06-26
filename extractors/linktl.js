@@ -10,7 +10,7 @@ module.exports = {
     "lnkload.com"
   ],
   requiresCaptcha: true,
-  get: async function(url) {
+  get: async function(url, opt) {
     let b;
     try {
       if (lib.config().captcha.active == false) {

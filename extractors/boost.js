@@ -5,7 +5,7 @@ const lib = require("../lib");
 module.exports = {
   hostnames: ["bst.gg", "bst.wtf", "booo.st", "boost.ink"],
   requiresCaptcha: false,
-  get: async function(url) {
+  get: async function(url, opt) {
     try {
       if (lib.config().debug == true) console.log("[boost] Requesting page...");
       let resp = await axios({

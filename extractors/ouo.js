@@ -6,7 +6,7 @@ const stl = require("puppeteer-extra-plugin-stealth");
 module.exports = {
   hostnames: ["ouo.press", "ouo.io"],
   requiresCaptcha: false,
-  get: async function(url) {
+  get: async function(url, opt) {
     let b;
     try {
       let u = new URL(url);

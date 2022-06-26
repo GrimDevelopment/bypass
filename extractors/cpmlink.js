@@ -6,7 +6,7 @@ const lib = require("../lib");
 module.exports = {
   hostnames: ["cpmlink.net"],
   requiresCaptcha: false,
-  get: async function (url) {
+  get: async function (url, opt) {
     try {
       if (lib.config().captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."

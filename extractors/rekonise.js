@@ -4,7 +4,7 @@ const lib = require("../lib");
 module.exports = {
   hostnames: ["rekonise.com"],
   requiresCaptcha: false, 
-  get: async function(url) {
+  get: async function(url, opt) {
     try {
       let id = new URL(url).pathname;
       if (lib.config().debug == true) console.log("[rekonise] Requesting API...");
