@@ -132,7 +132,7 @@ module.exports = {
           dateSolved: (new Date() * 1)
         };
 
-        if (f.fastforward == true) {
+        if (config.fastforward == true) {
           if (config.debug == true) console.log(`[extract] Detected FastForward response, correcting and sending...`);
           if (config.db.active == true) {
             if (opt.allowCache !== false) {
