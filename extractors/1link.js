@@ -7,7 +7,7 @@ module.exports = {
   requiresCaptcha: false,
   get: async function(url, opt) {
     try {
-      if (lib.config()["debug"] == true) console.log("[1link] Requesting page...");
+      if (lib.config().debug == true) console.log("[1link] Requesting page...");
       let resp = await axios({
         method: "GET",
         url: url,

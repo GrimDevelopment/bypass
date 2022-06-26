@@ -17,7 +17,7 @@ module.exports = {
       }
 
       // redirect via url params
-      if (lib.config()["debug"] == true) console.log("[generic] Checking url params..."); 
+      if (lib.config().debug == true) console.log("[generic] Checking url params..."); 
       if (u.searchParams.get("url")) {
         if (lib.isUrl(u.searchParams.get("url"))) {
           return u.searchParams.get("url");
@@ -60,9 +60,15 @@ module.exports = {
         } else if (lib.isUrl(Buffer.from(u.searchParams.get("q"), "base64").toString("ascii"))) {
           return (Buffer.from(u.searchParams.get("q"), "base64").toString("ascii"));
         }
+      } else if (u.searchParams.get("k")) {
+        if (lib.isUrl(u.searchParams.get("k"))) {
+          return u.searchParams.get("k");
+        } else if (lib.isUrl(Buffer.from(u.searchParams.get("k"), "base64").toString("ascii"))) {
+          return (Buffer.from(u.searchParams.get("k"), "base64").toString("ascii"));
+        }
       }
 
-      if (lib.config()["debug"] == true) console.log("[generic] Requesting page...");
+      if (lib.config().debug == true) console.log("[generic] Requesting page...");
 
       let resp = await axios({
         method: "GET",
@@ -78,7 +84,7 @@ module.exports = {
 
       // adf.ly detection
       // i don't remember the origin of this script unfortunately so uh can't credit this
-      if (lib.config()["debug"] == true) console.log("[generic] Got page. Checking for indicators that this is an adf.ly link..."); 
+      if (lib.config().debug == true) console.log("[generic] Got page. Checking for indicators that this is an adf.ly link..."); 
       if (resp.data.includes(`var ysmm = `)) {
         let a, m, I = "",
           X = "",
@@ -119,13 +125,13 @@ module.exports = {
       }
 
       // generic HTML redirect
-      if (lib.config()["debug"] == true) console.log("[generic] Done. Checking for HTML redirects..."); 
+      if (lib.config().debug == true) console.log("[generic] Done. Checking for HTML redirects..."); 
       if (resp.data.includes(`content="0;URL=`)) {
         return resp.data.split(`content="0;URL=`)[1].split(`"`)[0];
       }
 
       // generic HTTP redirects, put any non-specific (like adlinkfly-type extractors) sites below this
-      if (lib.config()["debug"] == true) console.log("[generic] Done. Checking for HTTP redirects...");
+      if (lib.config().debug == true) console.log("[generic] Done. Checking for HTTP redirects...");
       if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
         return resp.request.socket._httpMessage._redirectable._currentUrl;
       }
@@ -133,7 +139,7 @@ module.exports = {
       let $ = cheerio.load(resp.data);
 
       // wpsafe-link protectors
-      if (lib.config()["debug"] == true) console.log("[generic] Done. Checking for wpsafelink indicators..."); 
+      if (lib.config().debug == true) console.log("[generic] Done. Checking for wpsafelink indicators..."); 
       if ($("#wpsafe-link").length !== 0) {
         if ($("#wpsafe-link a").attr("href") && $("#wpsafe-link a").attr("href").includes("safelink_redirect")) {
           let o = new URL($("#wpsafe-link a").attr("href"));
@@ -146,9 +152,9 @@ module.exports = {
       }
 
       // adlinkfly sites
-      if (lib.config()["debug"] == true) console.log("[generic] Done. Checking if link is adlinkfly link...");
+      if (lib.config().debug == true) console.log("[generic] Done. Checking if link is adlinkfly link...");
       if ($("body .container form > div[style='display:none;'] > *[name='_method']").length > 0) {
-        if (lib.config()["debug"] == true) console.log("[generic] Link is an adlinkfly link, switching to adflylink extractor...");
+        if (lib.config().debug == true) console.log("[generic] Link is an adlinkfly link, switching to adflylink extractor...");
         const afl = require("./adlinkfly"); 
         return (await afl.get(url, opt));
       }
