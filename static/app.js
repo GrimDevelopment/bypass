@@ -15,6 +15,7 @@ function bypass() {
   if (document.getElementById("allowFF")?.checked) opt = opt + "allowFF=false&";
   if (document.getElementById("ignoreFF")?.checked) opt = opt + "ignoreFF=true&";
   if (document.getElementById("password").value !== "") opt = opt + `password=${encodeURIComponent(document.getElementById("password").value)}&`;
+  if (document.getElementById("referer").value !== "") opt = opt + `referer=${encodeURIComponent(document.getElementById("referer").value)}&`;
 
   opt = opt.substring(0, (opt.length - 1));
 

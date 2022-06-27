@@ -31,6 +31,18 @@ app.get("/api/bypass", async function(req, res) {
 
     delete req.query.url;
 
+    if (req.query.referer) {
+      if (!lib.isUrl(req.query.referer)) {
+        if (lib.config().debug == true) console.log("[http] Gave invalid referer URL, sending error...");
+        res.send({
+          success: false,
+          error: "Invalid referer URL to request.",
+          fromBackend: false
+        });
+        return;
+      }
+    }
+
     if (lib.config().debug == true) console.log(`[http] Requesting ./lib.js to get "${url}"`, req.query);
 
     let resp = await lib.get(url, req.query);

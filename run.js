@@ -3,10 +3,16 @@ const lib = require("./lib");
 if (process.argv[2]) {
   let o = {};
 
-  o.ignoreCache = (toBool(process.argv[3]) || false);
-  o.allowCache = (toBool(process.argv[4]) || true);
-  o.ignoreFF = (toBool(process.argv[5]) || false);
-  o.allowFF = (toBool(process.argv[6]) || true);
+  o.ignoreCache = toBool(process.argv[3]);
+  o.allowCache = toBool(process.argv[4]);
+  o.ignoreFF = toBool(process.argv[5]);
+  o.allowFF = toBool(process.argv[6]);
+  o.password = process.argv[7];
+  if (o.password == "" || o.password == " " || o.password == "null") delete o.password;
+  o.referer = process.argv[8];
+  if (lib.isUrl(o.referer)) delete o.referer;
+
+  Object.keys(o).forEach(key => o[key] === undefined ? delete o[key] : {});
   
   if (lib.config().debug == true) console.log(`[runner] URL: `, process.argv[2]);
   if (lib.config().debug == true) console.log(`[runner] Options: `, o);
@@ -51,6 +57,7 @@ function toBool(c) {
     case "0":
       return false;
     default:
-      return null;
+      console.log(c)
+      return c;
   }
 }
