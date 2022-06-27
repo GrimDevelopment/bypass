@@ -30,14 +30,19 @@ module.exports = {
 
       // opening browser
 
-      if (lib.config().debug == true) console.log("[lnk2] Launching browser...");
-      b = await pup.launch({headless: true});
-      let p = await b.newPage();
+      if (lib.config().debug == true) console.log("[lnk2] Launching browser...");  
+      let args = (lib.config().defaults?.puppeteer || {headless: true});
+      b = await pup.launch(lib.removeTor(args));
+      p = await b.newPage();
+      if (opt.referer) {
+        if (lib.config().debug == true) console.log("[lnk2] Launched. Going to referer URL first.");
+        await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
+      }
       await p.goto(url);
 
       // solving captchas and navigating
 
-      if (lib.config().debug == true) console.log("[lnk2] Launched. Solving CAPTCHA...");     
+      if (lib.config().debug == true) console.log("[lnk2] Done. Solving CAPTCHA...");     
       await p.solveRecaptchas();
       if (lib.config().debug == true) console.log("[lnk2] Solved CAPTCHA. Submitting form...");
       await p.evaluate(function() {

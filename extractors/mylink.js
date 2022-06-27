@@ -35,8 +35,13 @@ module.exports = {
       // opening browser
 
       if (lib.config().debug == true) console.log("[mylink] Launching browser...");
-      b = await pup.launch({headless: true});
-      let p = await b.newPage();
+      let args = (lib.config().defaults?.puppeteer || {headless: true});
+      b = await pup.launch(lib.removeTor(args));
+      p = await b.newPage();
+      if (opt.referer) {
+        if (lib.config().debug == true) console.log("[lnk2] Launched. Going to referer URL first.");
+        await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
+      }
       await p.goto(url);
 
       if (lib.config().debug == true) console.log("[mylink] Launched. Resolving data...");

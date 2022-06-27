@@ -8,18 +8,38 @@ module.exports = {
   get: async function (url, opt) {
     try {
       if (lib.config().debug == true) console.log("[cshort] Requesting page...");
+
+      let header =  {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Accept-Encoding": "gzip, deflate, br",
+        "DNT": "1",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1"
+      };
+      if (opt.referer) header.Referer = opt.referer;
+
+      let proxy;
+      if (lib.config().defaults?.axios.proxy) {
+        if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+          const agent = require("socks-proxy-agent");
+          let prox = `socks5://${lib.config().defaults?.axios.proxy?.host}:${lib.config().defaults?.axios.proxy?.port}`;
+          if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(proxy).port == "9050") {
+            proxy = {};
+          } else {
+            proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
+          }
+        } else {
+          proxy = {};
+        }
+      }
+
       let resp = await axios({
         method: "GET",
         url: url,
-        headers: {
-          "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0",
-          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-          "Accept-Language": "en-US,en;q=0.5",
-          "Accept-Encoding": "gzip, deflate, br",
-          "DNT": "1",
-          "Connection": "keep-alive",
-          "Upgrade-Insecure-Requests": "1"
-        }
+        headers: header,
+        ...proxy
       });
   
       if (lib.config().debug == true) console.log("[cshort] Getting next page URL (1/2)...");

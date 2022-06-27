@@ -31,7 +31,8 @@ module.exports = {
       pup.use(stlh);
     
       if (lib.config().debug == true) console.log("[linkvertise] Launching browser...");
-      b = await pup.launch({headless: true});
+      let a = (lib.config().defaults?.puppeteer || {headless: true});
+      b = await pup.launch(a);
       let p = await b.newPage();
 
       await p.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1");
@@ -54,8 +55,14 @@ module.exports = {
           }
         }));
 
-        b = await pup.launch({headless: true});
+        let args = (lib.config().defaults?.puppeteer || {headless: true});
+        b = await pup.launch(lib.removeTor(args));
         p = await b.newPage();
+        if (opt.referer) {
+          if (lib.config().debug == true) console.log("[adflylink] Launched. Going to referer URL first.");
+          await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
+        }
+        await p.goto(url);
         await p.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1");
       
         if (lib.config().debug == true) console.log("[linkvertise] Launched. Reopening page...");

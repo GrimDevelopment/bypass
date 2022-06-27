@@ -30,9 +30,15 @@ module.exports = {
       }));
 
       if (lib.config().debug == true) console.log("[1bitspace] Launching browser...");
-      b = await pup.launch({headless: true});
-      p = await b.newPage();
+      
+      let a = (lib.config().defaults?.puppeteer || {headless: true});
 
+      b = await pup.launch(lib.removeTor(a));
+      p = await b.newPage();
+      if (opt.referer) {
+        if (lib.config().debug == true) console.log("[1bitspace] Launched. Going to referer URL first.");
+        await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
+      }
       await p.goto(url);
 
       // first page

@@ -15,8 +15,13 @@ module.exports = {
       pup.use(adb());
 
       if (lib.config().debug == true) console.log("[zagl] Launching browser...");
-      b = await pup.launch({headless: true});
-      let p = await b.newPage();
+      let args = (lib.config().defaults?.puppeteer || {headless: true});
+      b = await pup.launch(args);
+      p = await b.newPage();
+      if (opt.referer) {
+        if (lib.config().debug == true) console.log("[lnk2] Launched. Going to referer URL first.");
+        await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
+      }
       await p.goto(url);
       if (lib.config().debug == true) console.log(`[zagl] Launched. Listening for "/links/go"...`);
 

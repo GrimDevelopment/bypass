@@ -29,8 +29,13 @@ module.exports = {
       }));
 
       if (lib.config().debug == true) console.log("[linktl] Launching browser...");
-      b = await pup.launch({headless: true});
-      let p = await b.newPage();
+      let args = (lib.config().defaults?.puppeteer || {headless: true});
+      b = await pup.launch(args);
+      p = await b.newPage();
+      if (opt.referer) {
+        if (lib.config().debug == true) console.log("[linktl] Launched. Going to referer URL first.");
+        await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
+      }
       await p.goto(url);
       
       if (lib.config().debug == true) console.log("[linktl] Launched. Starting continous function...");

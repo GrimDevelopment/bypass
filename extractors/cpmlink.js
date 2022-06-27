@@ -13,16 +13,22 @@ module.exports = {
       }
 
       if (lib.config().debug == true) console.log("[cpmlink] Requesting page...");
+
+      let header = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Accept-Encoding": "gzip, deflate",
+        "Connection": "keep-alive"
+      }
+
+      if (opt.referer) h.Referer = opt.referer;
+
       let resp = await axios({
         method: "GET",
         url: url,
-        headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
-          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-          "Accept-Language": "en-US,en;q=0.5",
-          "Accept-Encoding": "gzip, deflate",
-          "Connection": "keep-alive"
-        }
+        headers: header,
+        ...proxy
       });
 
       if (lib.config().debug == true) console.log("[cpmlink] Got page. Parsing page...");

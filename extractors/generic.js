@@ -69,17 +69,28 @@ module.exports = {
       }
 
       if (lib.config().debug == true) console.log("[generic] Requesting page...");
+      let header = lib.config().defaults?.axios.headers;
+      if (opt.referer) header.Referer = opt.referer;
+
+      let proxy;
+      if (lib.config().defaults?.axios.proxy) {
+        if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+          const agent = require("socks-proxy-agent");
+          let prox = `socks5://${lib.config().defaults?.axios.proxy?.host}:${lib.config().defaults?.axios.proxy?.port}`;
+          proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
+        } else {
+          proxy = {};
+        }
+      }
 
       let resp = await axios({
         method: "GET",
         url: url,
-        headers: {
-          "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0",
-          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-        },
+        headers: header,
         validateStatus: function() {
           return true;
-        }
+        },
+        ...proxy
       });
 
       // adf.ly detection

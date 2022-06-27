@@ -21,13 +21,26 @@ module.exports = {
   get: async function (url, opt) {
     try {
       if (lib.config().debug == true) console.log("[shst] Requesting page...");
+
+      let proxy;
+      if (lib.config().defaults?.axios.proxy) {
+        if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+          const agent = require("socks-proxy-agent");
+          let prox = `socks5://${lib.config().defaults?.axios.proxy?.host}:${lib.config().defaults?.axios.proxy?.port}`;
+          proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
+        } else {
+          proxy = {};
+        }
+      }
+
       let resp = await axios({
         method: "GET",
         url: url,
         headers: {
           "user-agent": ""
         },
-        maxRedirects: 999
+        maxRedirects: 999,
+        ...proxy
       });
   
       if (lib.config().debug == true) console.log("[shst] Got page. Parsing Axios data...");

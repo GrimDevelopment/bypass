@@ -9,38 +9,44 @@ module.exports = {
     try {
       let resp; 
 
+      let h = lib.config().defaults?.axios.headers;
+      if (opt.referer) {
+        h.Referer = opt.referer;
+      }
+
+      let proxy;
+      if (lib.config().defaults?.axios.proxy) {
+        if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+          const agent = require("socks-proxy-agent");
+          let prox = `socks5://${lib.config().defaults?.axios.proxy?.host}:${lib.config().defaults?.axios.proxy?.port}`;
+          proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
+        } else {
+          proxy = {};
+        }
+      }
+
       if (opt.password) {
         if (lib.config().debug == true) console.log("[thinfi] Password was sent in request, sending password request...");
         resp = await axios({
           method: "POST",
           url: url,
           data: `password=${encodeURIComponent(opt.password)}`,
-          headers: {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.5",
-            "Accept-Encoding": "gzip, deflate",
-            "Connection": "keep-alive"
-          },
+          headers: h,
           validateStatus: function(stat) {
             if (stat == 500 || stat == 200) return true;
-          }
+          },
+          ...proxy
         });
       } else {
         if (lib.config().debug == true) console.log("[thinfi] No password was sent, sending regular request...");
         resp = await axios({
           method: "GET",
           url: url,
-          headers: {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.5",
-            "Accept-Encoding": "gzip, deflate",
-            "Connection": "keep-alive"
-          },
+          headers: h,
           validateStatus: function(stat) {
             if (stat == 500 || stat == 200) return true;
-          }
+          },
+          ...proxy
         });
       }
 

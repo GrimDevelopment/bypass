@@ -20,7 +20,18 @@ This is a quick start guide on configuring your BIFM server.
   }, 
   "debug": false, // accepted values: true, false
   "fastforward": true, // accepted values: true, false
-  "alert": "" // any string that isn't ""
+  "alert": "", // any string that isn't ""
+  "defaults": { // defaults for scrapers
+    "axios": { // axios-type scrapers
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0", // the default user agent
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" // accept header
+      }
+    },
+    "puppeteer": { // puppeteer-type scrapers, here are the default launching headers.
+      "headless": true
+    }
+  }
 }
 ```
 
@@ -38,6 +49,9 @@ This is a quick start guide on configuring your BIFM server.
 - `debug` determines the status of the server, whether or not it's in debug mode. 
 - `fastforward` deteremines if FastForward's Crowd Bypass server queries are allowed from your server.
 - `alert` is text that is displayed on your server's homepage.
+- `defaults` is an object containing default information for scrapers, like launching arguments for puppeteer or headers for Axios.
+  - `axios` is an object of the axios-type scrapers, setting defaults such as headers for each request.
+  - `puppeteer` is the `.launch()` object for `puppeteer-extra`. Allows disabling 
 
 ### Debug mode
 

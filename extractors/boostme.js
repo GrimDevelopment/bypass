@@ -8,21 +8,48 @@ module.exports = {
   get: async function(url, opt) {
     try {
       if (lib.config().debug == true) console.log("[boostme] Requesting page...");
+      let h = lib.config().defaults?.axios.headers;
+      if (opt.referer) {
+        h.Referer = opt.referer;
+      }
+      
+      let proxy;
+      if (lib.config().defaults?.axios.proxy) {
+        if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+          const agent = require("socks-proxy-agent");
+          let prox = `socks5://${lib.config().defaults?.axios.proxy?.host}:${lib.config().defaults?.axios.proxy?.port}`;
+          if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(prox).port == "9050") {
+            proxy = {};
+          } else {
+            proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
+          }
+        } else {
+          proxy = {};
+        }
+      }
+
       let resp = await axios({
         method: "GET",
         url: url,
-        headers: {
-          "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0",
-          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+        headers: h,
+        ...proxy,
+        validateStatus: function(stat) {
+          if (stat !== 403) return true;
         }
       });
   
       let $ = cheerio.load(resp.data);
       if (lib.config().debug == true) console.log("[boostme] Got page. Decoding page...");
-      
-      return Buffer.from($(".main #home").attr("data-url"), "base64").toString("ascii");
+      if (!$(".main #home").attr("data-url")) {
+        console.log(resp.data)
+        throw "Boostme.link bypass has changed or we have been rate limited. If you are the owner of this instance, please dump the terminal contents into an issue on the repo.";
+      } else {  
+        return Buffer.from($(".main #home").attr("data-url"), "base64").toString("ascii");
+      }
     } catch(err) {
       throw err;
     }
   }
 }
+
+//async function resolve
