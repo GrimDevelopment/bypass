@@ -1,6 +1,7 @@
 const pup = require("puppeteer-extra");
 const adb = require("puppeteer-extra-plugin-adblocker");
 const stl = require("puppeteer-extra-plugin-stealth");
+const lib = require("../lib");
 
 module.exports = {
   hostnames: ["ez4short.com"],
