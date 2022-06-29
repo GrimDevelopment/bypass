@@ -16,11 +16,14 @@ module.exports = {
       if (lib.config().defaults?.axios.proxy) {
         if (lib.config().defaults?.axios.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
-          let prox = `socks5://${lib.config().defaults?.axios.proxy?.host}:${lib.config().defaults?.axios.proxy?.port}`;
-          if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(proxy).port == "9050") {
+          try { 
+            if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(proxy).port == "9050") {
+              proxy = {};
+            } else {
+              proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
+            }
+          } catch(err) {
             proxy = {};
-          } else {
-            proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
           }
         } else {
           proxy = {};

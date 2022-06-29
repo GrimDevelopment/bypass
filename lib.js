@@ -78,10 +78,13 @@ module.exports = {
           if (config.debug == true) console.log("[db] Checking DB for desination...");
           let f = await this.db.get(url);
           if (f !== null) {
+            if (lib.config().debug == true) console.log("[db] Found, sending solution...");
             f.fromCache = true;
             f.fromFastforward = false;
             return f;
-          } 
+          } else {
+            if (lib.config().debug == true) console.log("[db] Not found, continuing...");
+          }
         }
       }
 
@@ -359,11 +362,13 @@ module.exports = {
     }
   },
   removeTor: async function(args) {
-    if (config.debug == true) console.log("[lib] Removing Tor from arguments, if any...");
     for (let b in args?.args) {
       if (args?.args?.includes("proxy-server")) {
         let c = new URL(a[b].split("=")[1]);
-        if ((c.hostname == "localhost" || c.hostname == "127.0.0.1") && c.port == "9050") delete a[b];
+        if ((c.hostname == "localhost" || c.hostname == "127.0.0.1") && c.port == "9050") {
+          delete a[b];
+          if (lib.config().debug == true) console.log("[lib] Removed Tor from Puppeteer arguments, due to compatibility issues.");
+        }
         else continue; 
       }
     }
