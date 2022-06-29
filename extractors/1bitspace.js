@@ -36,7 +36,7 @@ module.exports = {
       b = await pup.launch(lib.removeTor(a));
       p = await b.newPage();
       if (opt.referer) {
-        if (lib.config().debug == true) console.log("[1bitspace] Launched. Going to referer URL first.");
+        if (lib.config().debug == true) console.log("[1bitspace] Going to referer URL first...");
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
       }
       await p.goto(url);

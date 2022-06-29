@@ -59,7 +59,7 @@ module.exports = {
         b = await pup.launch(lib.removeTor(args));
         p = await b.newPage();
         if (opt.referer) {
-          if (lib.config().debug == true) console.log("[adflylink] Launched. Going to referer URL first.");
+          if (lib.config().debug == true) console.log("[linkvertise] Going to referer URL first...");
           await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
         }
         await p.goto(url);

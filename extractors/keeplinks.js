@@ -21,7 +21,7 @@ module.exports = {
       b = await pup.launch(args);
       p = await b.newPage();
       if (opt.referer) {
-        if (lib.config().debug == true) console.log("[keeplinks] Launched. Going to referer URL first.");
+        if (lib.config().debug == true) console.log("[keeplinks] Going to referer URL first...");
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
       }
       await p.goto(url);

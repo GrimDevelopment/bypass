@@ -13,9 +13,9 @@ If you would rather use the Unlicense version, use [this commit and behind](http
 
 ## Roadmap
 
-- Optimize `puppeteer` extractors, espescially [`aylink`](./extractors/aylink.js).
+- Optimize `puppeteer` extractors, espescially [`aylink`](./extractors/aylink.js) and [`exeio`](./extractors/exeio.js).
 - Improve frontend site.
-  - Add dark mode, 
+  - Add dark mode.
 - Add back proper Heroku support.
   - Improve the 30 second rule (requests cannot take longer than 30 seconds w/o timing out) with it.
 - Add referer support.
