@@ -19,7 +19,8 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`cutw.in`**|Puppeteer + Adblocker + Stealth|Yes|[https://cutw.in/8q9wzl](https://cutw.in/8q9wzl)|||
 |**`cshort.org`**|Axios|No|[https://cshort.org/8i8dwPx0](https://cshort.org/8i8dwPx0)|
 |**`DaddyScripts`**|Axios|Sometimes, not always required|[https://lnk.snahp.eu/EBRs14BxyZ5oIlvrEx4EZGPlrwGm31VeNZ1Uo](https://lnk.snahp.eu/EBRs14BxyZ5oIlvrEx4EZGPlrwGm31VeNZ1Uo) (no password), [https://lnk.snahp.eu/W4hPgdadk7F9WtY5hb00uCdWzHZK5n5kt32ZG](https://lnk.snahp.eu/W4hPgdadk7F9WtY5hb00uCdWzHZK5n5kt32ZG) (password: `bifm`)|||
-|**`exe.io`**|Puppeteer|Yes|[https://exe.io/ZaKsUgDc](https://exe.io/ZaKsUgDc)|`exey.io`||
+|**`droplink.co`**|Puppeteer|No|[https://droplink.co/VOpK](https://droplink.co/VOpK)|||
+|**`exe.io`**|Puppeteer + Adblock|Yes|[https://exe.io/ZaKsUgDc](https://exe.io/ZaKsUgDc)|`exey.io`||
 |**`ez4short.com`**|Puppeteer + Adblocker + Stealth|No|[https://ez4short.com/nzcU](https://ez4short.com/nzcU)|||
 |**`hrshort.com`**|Puppeteer|No|[https://open.crazyblog.in/tXDGig](https://open.crazyblog.in/tXDGig)|`crazyblog.in`, `open.crazyblog.in`, `redd.crazyblog.in`|Need a SFW and legal example for this extractor.|
 |**`ity.im`**|Axios|No|[http://ity.im/1QZh2](http://ity.im/1QZh2)|||
