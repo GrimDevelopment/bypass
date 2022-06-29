@@ -362,7 +362,7 @@ module.exports = {
     if (config.debug == true) console.log("[lib] Removing Tor from arguments, if any...");
     let a = (args.args || args);
     for (let b in a) {
-      if (a.includes("proxy-server")) {
+      if (a?.includes("proxy-server")) {
         let c = new URL(a[b].split("=")[1]);
         if ((c.hostname == "localhost" || c.hostname == "127.0.0.1") && c.port == "9050") delete a[b];
         else continue; 

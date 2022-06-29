@@ -2,6 +2,8 @@
 
 Using Tor with BIFM allows for your instance to be more anonymous to the sites it vists. Here's a quick start guide to enabling Tor on BIFM.
 
+**Note**: Certain sites flat out block Tor exit
+
 1. Install Tor on your system.
 
 This is pretty simple to do on Linux, simply ask your package manager to install Tor.
