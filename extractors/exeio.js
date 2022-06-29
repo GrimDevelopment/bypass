@@ -9,10 +9,6 @@ module.exports = {
   get: async function(url, opt) {
     let b;
     try {
-      let stlh = stl();
-      stlh.enabledEvasions.delete("iframe.contentWindow");
-      pup.use(stlh);
-
       pup.use(adb());
 
       if (lib.config().captcha.active == false) {

@@ -40,7 +40,7 @@ if (process.argv[2]) {
 
   if (lib.config().debug == true) console.log("[testing] Parsing arguments...");
   let intForm = parseInt(process.argv[2]);
-  if (intForm !== process.argv[2] && typeof intForm !== "number") intForm = examples.findIndex(e => (e.extractor || new URL(e.link).hostname || new URL(e.link).hostname).split(".")[0] == process.argv[2]);
+  if (intForm !== process.argv[2] || typeof intForm !== "number") intForm = examples.findIndex(e => (e.extractor || new URL(e.link).hostname) == process.argv[2]);
   
   if (lib.config().debug == true) console.log(`[testing] Parsed starting interger as: ${intForm}`);
 
