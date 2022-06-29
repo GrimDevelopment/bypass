@@ -78,12 +78,12 @@ module.exports = {
           if (config.debug == true) console.log("[db] Checking DB for desination...");
           let f = await this.db.get(url);
           if (f !== null) {
-            if (lib.config().debug == true) console.log("[db] Found, sending solution...");
+            if (config.debug == true) console.log("[db] Found, sending solution...");
             f.fromCache = true;
             f.fromFastforward = false;
             return f;
           } else {
-            if (lib.config().debug == true) console.log("[db] Not found, continuing...");
+            if (config.debug == true) console.log("[db] Not found, continuing...");
           }
         }
       }
@@ -367,7 +367,7 @@ module.exports = {
         let c = new URL(a[b].split("=")[1]);
         if ((c.hostname == "localhost" || c.hostname == "127.0.0.1") && c.port == "9050") {
           delete a[b];
-          if (lib.config().debug == true) console.log("[lib] Removed Tor from Puppeteer arguments, due to compatibility issues.");
+          if (config.debug == true) console.log("[lib] Removed Tor from Puppeteer arguments, due to compatibility issues.");
         }
         else continue; 
       }

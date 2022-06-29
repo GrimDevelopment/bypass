@@ -35,11 +35,11 @@ module.exports = {
       b = await pup.launch(a);
       let p = await b.newPage();
 
-      await p.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1");
-      await p.goto(url);
+      if (lib.config().debug == true) console.log("[linkvertise] Launched. Opening page...");
 
-      if (lib.config().debug == true) console.log("[linkvertise] Waiting to see if CAPTCHA shows up...");
-      await p.waitForTimeout(3000); // this is just for waiting to see if a captcha shows up
+      await p.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1");
+      await p.goto(url, {waitUntil: "networkidle2"});
+
       if ((await p.$(".captcha-content"))) {
         if (lib.config().debug == true) console.log(`[linkvertise] CAPTCHA was found, relaunching with CAPTCHA support...`);
         await b.close();
@@ -66,8 +66,7 @@ module.exports = {
         await p.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1");
       
         if (lib.config().debug == true) console.log("[linkvertise] Launched. Reopening page...");
-        await p.goto(url);
-        await p.waitForTimeout(3000); 
+        await p.goto(url, {waitUntil: "networkidle2"});
         if (lib.config().debug == true) console.log("[linkvertise] Done. Solving CAPTCHA...");
         await p.solveRecaptchas();
         if (lib.config().debug == true) console.log(`[linkvertise] Solved CAPTCHA, continuing as normal...`);
