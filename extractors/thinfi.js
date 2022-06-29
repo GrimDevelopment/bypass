@@ -56,8 +56,11 @@ module.exports = {
       if ($("body > main > section > p > a").length == 1) {
         return $("body > main > section > p > a").attr("href");
       } else {
-        if (resp.data == "") throw "Thinfi has rate-limited us. Please try again in a moment.";
-        else if ($("body > main > section > h2 > a").attr("href") == url) throw "Password is incorrect."
+        if (resp.data == "") {
+          if (lib.config().debug == true) console.log("[thinfi] Got rate-limited, waiting 6 seconds to retry...");
+          await new Promise(resolve => setTimeout(resolve, 6000)); // waiting 6 seconds to retry...
+          return (await this.get(url, opt));
+        } else if ($("body > main > section > h2 > a").attr("href") == url) throw "Password is incorrect."
         throw "Thinfi has changed their website. Please update this extractor."
       }
     } catch(err) {
