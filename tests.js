@@ -14,6 +14,7 @@ const examples = [
   { link: "https://cpmlink.net/i7FyAQ" },
   { link: "https://cshort.org/8i8dwPx0" },
   { link: "https://exe.io/ZaKsUgDc" }, 
+  { extractor: "hrshort.com", link: "https://open.crazyblog.in/tXDGig"},
   { link: "http://ity.im/1QZh2" }, 
   { link: "http://karung.in/Gyucc", expected: "https://drive.google.com/uc?id=0B263gKU-C09_WW5rbURLeXN5QXc&export=download"},
   { link: "https://www.keeplinks.org/p100/62b878489fbc5" },
