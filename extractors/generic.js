@@ -170,6 +170,14 @@ module.exports = {
         return (await afl.get(url, opt));
       }
 
+      // daddy's link protector
+      if (lib.config().debug == true) console.log("[generic] Done. Checking if link is DLP link...");
+      if ($("#wrapper > #footer > center a[target='_blank'][href='http://www.daddyscripts.com']")) {
+        if (lib.config().debug == true) console.log("[generic] Link is an DLP link, switching to DLP extractor...");
+        const dlp = require("./dlp"); 
+        return (await dlp.get(url, opt));
+      }
+
       throw "Redirect not found.";
     } catch(err) {
       throw err;

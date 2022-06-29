@@ -39,8 +39,18 @@ function bypass() {
           a.href = escapeHtml(d.destination);
           a.rel = "noreferer nofollow";
           a.target = "_blank";
-          a.innerHTML = d.destination;
+          a.innerHTML = `${d.destination} `;
           p.append(a);
+          let btn = document.createElement("button");
+          btn.setAttribute("data-url", d.destination);
+          btn.setAttribute("data-referer", url);
+          btn.innerHTML = "Bypass this URL";
+          btn.onclick = function() {
+            document.getElementById("url").value = this.getAttribute("data-url");
+            document.getElementById("referer").value = this.getAttribute("data-referer");
+            bypass();
+          }
+          p.append(btn);
           sd.append(p);
         } else if (d.destinations) { 
           p.innerHTML = "Results: <br>";
@@ -50,7 +60,16 @@ function bypass() {
             a.href = escapeHtml(d.destinations[b]);
             a.rel = "noreferer nofollow";
             a.target = "_blank";
-            a.innerHTML = d.destinations[b];
+            a.innerHTML = `${d.destinations[b]} `;
+            let btn = document.createElement("button");
+            btn.setAttribute("data-url", d.destination);
+            btn.setAttribute("data-referer", url);
+            btn.innerHTML = "Bypass this URL";
+            btn.onclick = function() {
+              document.getElementById("url").value = this.getAttribute("data-url");
+              document.getElementById("referer").value = this.getAttribute("data-referer");
+              bypass();
+            }
             br = document.createElement("br");
             p.append(a);
             p.append(br);

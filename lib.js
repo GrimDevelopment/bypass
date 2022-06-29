@@ -180,6 +180,11 @@ module.exports = {
 
         d.destinations = [...new Set(d.destinations)]; // removes duplicates
 
+        if (f.destinations.length == 0) {
+          if (config.debug == true) console.log("[lib] Destination array size is 0, throwing error...");
+          throw "Invalid response from backend.";
+        } 
+
         if (config.db.active == true) {
           if (opt.allowCache !== false) {
             d.destinations = JSON.stringify(d.destinations);
@@ -216,7 +221,7 @@ module.exports = {
     if (config.captcha.active == false) return null;
     if (config.captcha.service == "2captcha") {
       const tc = new two.Solver(config["captcha"]["key"]);
-      let ref = opt.referer;
+      let ref = (opt?.referer || "unknown location");
       
       if (config.debug == true) console.log(`[captcha] Requesting CAPTCHA solve for a ${type} @ "${ref}"...`);
       let a;
@@ -229,6 +234,10 @@ module.exports = {
         case "hcaptcha":
           a = (await tc.hcaptcha(sitekey, ref)).data;
           if (config.debug == true) console.log(`[captcha] Solved ${type} for "${ref}".`);
+          return a;
+        case "image": 
+          a = (await(tc.imageCaptcha(sitekey))).data;
+          if (config.debug == true) console.log("[captcha] Solved image captcha.", a);
           return a;
         default:
           console.log(`[captcha] Invalid parameters were given to CAPTCHA solver.`)
