@@ -172,7 +172,7 @@ module.exports = {
 
       // daddy's link protector
       if (lib.config().debug == true) console.log("[generic] Done. Checking if link is DLP link...");
-      if ($("#wrapper > #footer > center a[target='_blank'][href='http://www.daddyscripts.com']")) {
+      if ($("#wrapper > #footer > center a[target='_blank'][href='http://www.daddyscripts.com']").length > 0) {
         if (lib.config().debug == true) console.log("[generic] Link is an DLP link, switching to DLP extractor...");
         const dlp = require("./dlp"); 
         return (await dlp.get(url, opt));
