@@ -51,13 +51,13 @@ The default file looks like [this](./CONFIG.md), you should change the `defaults
       },
       "proxy": {
         "type": "socks5",
-        "host": "127.0.0.1",
+        "host": "127.0.0.1", // don't modify this object if you want tor.
         "port": "9050"
       }
     },
     "puppeteer": {
       "headless": true,
-      "args": ["--proxy-server=socks5://127.0.0.1:9050"]
+      "args": ["--proxy-server=socks5://127.0.0.1:9050"] // don't modify this line if you want tor.
     }
   }
 ```
