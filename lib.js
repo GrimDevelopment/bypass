@@ -74,6 +74,7 @@ module.exports = {
       if (config.debug == true) console.log(`[extract] Starting "${url}"`, opt)
 
       if (config.db.active == true) {
+        await waitUntilDbConnected();
         if (opt.ignoreCache !== true) {
           if (config.debug == true) console.log("[db] Checking DB for desination...");
           let f = await this.db.get(url);

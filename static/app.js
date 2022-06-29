@@ -20,9 +20,11 @@ function bypass() {
   opt = opt.substring(0, (opt.length - 1));
 
   let xhr = new XMLHttpRequest();
+  document.title = "[Waiting...] BIFM";
   xhr.open("GET", `/api/bypass?url=${encodeURIComponent(url)}${opt}`);
   xhr.send();
   xhr.onload = function() {
+    document.title = "[Parsing...] BIFM";
     document.querySelector(".loader").style.display = "none";
     document.querySelector(".result").style.display = "inline";
     try { 
@@ -60,7 +62,9 @@ function bypass() {
         i.classList.add("extra")
         sd.append(i);
         document.querySelector(".result").append(sd);
+        document.title = "BIFM";
       } else {
+        document.title = "[Error] BIFM";
         let ed = document.createElement("DIV");
         ed.classList.add("error");
         let p = document.createElement("P");
@@ -73,6 +77,7 @@ function bypass() {
         document.querySelector(".result").append(ed);
       }
     } catch (e) {
+      document.title = "[Error] BIFM";
       let ed = document.createElement("DIV");
       ed.classList.add("error");
       let p = document.createElement("P");
@@ -86,6 +91,7 @@ function bypass() {
     }
   }
   xhr.onerror = function(e) {
+    document.title = "[Error] BIFM";
     let ed = document.createElement("DIV");
     ed.classList.add("error");
     let p = document.createElement("P");

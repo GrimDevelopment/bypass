@@ -60,6 +60,9 @@ async function cont(p, b) {
     if (lib.config().debug == true) console.log("[linktl] Done. Solving CAPTCHA...");
     await p.solveRecaptchas();
     if (lib.config().debug == true) console.log("[linktl] Solved CAPTCHA. Waiting for next page to load.");
+    await p.evaluate(function() {
+      document.querySelector("form").submit();
+    })
     await p.waitForNavigation();
     return (await cont(p, b));
   } else if ((await p.$("#get_link_btn"))) {
