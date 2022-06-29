@@ -41,8 +41,10 @@ module.exports = {
         // passworded
         if (!opt.password) throw "Incorrect password.";
         b = `Pass1=${encodeURIComponent(opt.password)}&Submit0=Submit`;
-
       } else {
+        if (lib.config().captcha.active == false) {
+          throw "Normally this bypass wouldn't require a CAPTCHA, but it does in it's current state.";
+        }
         let c = lib.cookieString(scp(resp.headers["set-cookie"]));
         header["Cookie"] = c;
         let cap = $("#wrapper > #content > form > p > img").attr("src");
@@ -106,6 +108,8 @@ async function fetchCaptcha(url, ref, h) {
     headers: h,
     url: url
   });
+
+  if (lib.config().debug == true) console.log(`[dlp] Got CAPTCHA, content type `, resp.headers["content-type"]);
 
   return `data:${resp.headers["content-type"]};base64,${Buffer.from(resp.data).toString("base64")}`;
 }
