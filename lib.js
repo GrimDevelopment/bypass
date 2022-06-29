@@ -371,7 +371,7 @@ module.exports = {
 
     }
   },
-  removeTor: async function(args) {
+  removeTor: function(args) {
     for (let b in args?.args) {
       if (args?.args?.includes("proxy-server")) {
         let c = new URL(a[b].split("=")[1]);

@@ -16,10 +16,12 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`boost.ink`**|Axios|No|[https://boost.ink/c5bba](https://boost.ink/c5bba)|`bst.gg`, `bst.wtf`, `booo.st`||
 |**`boostme.link`**|Axios|No|[https://boostme.link/iX9Krf](https://boostme.link/iX9Krf)||
 |**`cpmlink.net`**|Axios|Yes|[https://cpmlink.net/i7FyAQ](https://cpmlink.net/i7FyAQ)||
+|**`crazyblog.in`**|Puppeteer|No||`open.crazyblog.in`, `redd.crazyblog.in`|Need a SFW and legal example for this extractor.|
 |**`cutw.in`**|Puppeteer + Adblocker + Stealth|Yes|[https://cutw.in/8q9wzl](https://cutw.in/8q9wzl)|||
 |**`cshort.org`**|Axios|No|[https://cshort.org/8i8dwPx0](https://cshort.org/8i8dwPx0)|
 |**`DaddyScripts`**|Axios|Sometimes, not always required|[https://lnk.snahp.eu/EBRs14BxyZ5oIlvrEx4EZGPlrwGm31VeNZ1Uo](https://lnk.snahp.eu/EBRs14BxyZ5oIlvrEx4EZGPlrwGm31VeNZ1Uo) (no password), [https://lnk.snahp.eu/W4hPgdadk7F9WtY5hb00uCdWzHZK5n5kt32ZG](https://lnk.snahp.eu/W4hPgdadk7F9WtY5hb00uCdWzHZK5n5kt32ZG) (password: `bifm`)|||
-|**`exe.io`**|Puppeteer + Stealth|Yes|[https://exe.io/ZaKsUgDc](https://exe.io/ZaKsUgDc)|`exey.io`||
+|**`exe.io`**|Puppeteer|Yes|[https://exe.io/ZaKsUgDc](https://exe.io/ZaKsUgDc)|`exey.io`||
+|**`ez4short.com`**|Puppeteer + Adblocker + Stealth|No|[https://ez4short.com/nzcU](https://ez4short.com/nzcU)|||
 |**`ity.im`**|Axios|No|[http://ity.im/1QZh2](http://ity.im/1QZh2)|||
 |**`karung.in`**|Axios|No|[http://karung.in/Gyucc](http://karung.in/Gyucc) redirects to `https://drive.google.com/uc?id=0B263gKU-C09_WW5rbURLeXN5QXc&export=download`.||Passworded links are currently not supported.|
 |**`keeplinks.org`**|Puppeteer + Adblocker + Stealth|No|[https://www.keeplinks.org/p100/62b878489fbc5](https://www.keeplinks.org/p100/62b878489fbc5)||Passworded links don't need a password due to a cookie exploit.|
