@@ -1,5 +1,4 @@
 const pup = require("puppeteer-extra");
-const stl = require("puppeteer-extra-plugin-stealth");
 const adb = require("puppeteer-extra-plugin-adblocker");
 const lib = require("../lib")
 
