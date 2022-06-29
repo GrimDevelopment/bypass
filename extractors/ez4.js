@@ -16,31 +16,36 @@ module.exports = {
       b = await pup.launch(args);
       p = await b.newPage();
       if (opt.referer) {
-        if (lib.config().debug == true) console.log("[adflylink] Going to referer URL first...");
+        if (lib.config().debug == true) console.log("[ez4] Going to referer URL first...");
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
       }
       await p.goto(url, {waitUntil: "networkidle2"});
-      if (lib.config().debug == true) console.log("[ez4] Launched. Skipping first page...");
-
-      await p.evaluate(function() {
-        yuidea1();
-      });
-      await p.waitForNavigation();
-      if (lib.config().debug == true) console.log("[ez4] Done. Skipping second page...");
-      await p.evaluate(function() {
-        yuidea1();
-      });
-      await p.waitForNavigation();
-      if (lib.config().debug == true) console.log("[ez4] Done. Waiting for final page...");
-      await p.waitForSelector(".procced > .btn.get-link:not(.disabled)");
-      if (lib.config().debug == true) console.log("[ez4] Done. Retrieving URL...");
-      let r = await p.evaluate(function() {
-        return document.querySelector(".procced > .btn.get-link").href
-      });
+      if (lib.config().debug == true) console.log("[ez4] Launched. Starting continous function...");
+      let r = await cont(p);
+      await b.close();
       return r;
     } catch(err) {
       if (b !== undefined) await b.close();
       throw err;
     }
+  }
+}
+
+async function cont(p) {
+  if ((await p.$(".procced"))) {
+    if (lib.config().debug == true) console.log("[ez4] Found final page, counting down...");
+    await p.waitForSelector(".procced > .btn.get-link:not(.disabled)");
+    if (lib.config().debug == true) console.log("[ez4] Done. Retrieving URL...");
+    let r = await p.evaluate(function() {
+      return document.querySelector(".procced > .btn.get-link").href
+    });
+    return r;
+  } else {
+    if (lib.config().debug == true) console.log("[ez4] Skipping non-final page...");
+    await p.evaluate(function() {
+      yuidea1();
+    });
+    await p.waitForNavigation();
+    return (await cont(p));
   }
 }
