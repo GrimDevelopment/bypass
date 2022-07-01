@@ -165,7 +165,7 @@ module.exports = {
       // adlinkfly sites
       if (lib.config().debug == true) console.log("[generic] Done. Checking if link is adlinkfly link...");
       if ($("body .container form > div[style='display:none;'] > *[name='_method']").length > 0) {
-        if (lib.config().debug == true) console.log("[generic] Link is an adlinkfly link, switching to adflylink extractor...");
+        if (lib.config().debug == true) console.log("[generic] Link is an adlinkfly link, switching to adlinkfly extractor...");
         const afl = require("./adlinkfly"); 
         return (await afl.get(url, opt));
       }

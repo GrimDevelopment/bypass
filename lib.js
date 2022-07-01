@@ -366,9 +366,6 @@ module.exports = {
           }
         }
       }
-    }, 
-    send: async function(f) {
-
     }
   },
   removeTor: function(args) {
@@ -383,6 +380,74 @@ module.exports = {
       }
     }
     return args;
+  },
+  cloudflare: {
+    check: async function(p) {
+      return (await p.evaluate(function() {
+        if (document.title.includes("| Cloudflare")) return true;
+        else return false;
+      }));
+    },
+    solve: async function(p, attempt) {
+      let cfd = await this.check(p);
+      if (cfd !== true) {
+        if (config.debug == true) console.log("[cloudflare] No protection found, sending back current page object.");
+        return p;
+      }
+
+      if (config.debug == true) console.log("[cloudflare] Detected Cloudflare protection, looking for the CAPTCHA...");
+    
+      try {
+        await p.waitForSelector("#cf-hcaptcha-container", {timeout: (1000 * 3)});
+        if (config.debug == true) console.log("[cloudflare] Found regular CAPTCHA, solving...");
+        await p.solveRecaptchas();
+      } catch(e) {
+        try {
+          if (config.debug == true) console.log("[cloudflare] No regular CAPTCHA found, checking for click CAPTCHA...");
+          if ((await p.$("#cf-norobot-container"))) {
+            if (config.debug == true) console.log("[cloudflare] Found click CAPTCHA, clicking button and continuing...");
+            await p.click("#cf-norobot-container");
+          } else {
+            if (config.debug == true) console.log("[cloudflare] No click CAPTCHA found, continuing page...");
+          }
+        } catch(e) {
+          if (e.message !== "Execution context was destroyed, most likely because of a navigation.") {
+            throw e;
+          }
+        }
+      }
+    
+      try {
+        cf = await p.evaluate(function() {
+          if (document.title.includes("| Cloudflare")) return true;
+          else return false;
+        });
+      } catch(e) {
+        if (e.message !== "Execution context was destroyed, most likely because of a navigation.") throw e;
+        return p;
+      }
+      
+    
+      if (cf == true) {
+        if (config.debug == true) console.log("[cloudflare] Solved CAPTCHA. Waiting for page to refresh...");
+        await p.waitForNavigation({waitUntil: "networkidle2"});
+        cc = ((attempt + 1) || 0);
+        if (config.debug == true) console.log("[cloudflare] Cloudflare bypass attempt", cc);
+        if (cc >= 9) {
+          if (config.debug == true) console.log("[cloudflare] Cloudflare bypass attempt has exceeded ten times, quitting...");
+          throw "Could not bypass Cloudflare.";
+        }
+        return (await this.solve(p, cc));
+      } else {
+        try {
+          await p.waitForNavigation({waitUntil: "networkidle2", timeout: (1000 * 5)});
+        } catch(e) {
+          await p.waitForTimeout(1000);
+        }
+        if (config.debug == true) console.log("[cloudflare] Was a normal CF redirect, sending back original page object...");
+        return p;
+      }
+    }
   }
 }
 

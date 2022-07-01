@@ -57,7 +57,8 @@ The default file looks like [this](./CONFIG.md), you should change the `defaults
     },
     "puppeteer": {
       "headless": true,
-      "args": ["--proxy-server=socks5://127.0.0.1:9050"] // don't modify this line if you want tor.
+     "args": ["--proxy-server=socks5://127.0.0.1:9050", "--user-agent='Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0'"]
+     // don't modify this line if you want tor.
     }
   }
 ```

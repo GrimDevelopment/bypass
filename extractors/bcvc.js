@@ -27,8 +27,7 @@ module.exports = {
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
       }
       await p.goto(url);
-
-      await p.goto(url);
+      
       if (lib.config().debug == true) console.log("[bcvc] Launched. Counting down...");
       await p.waitForSelector("#getLink", {visible: true});
       await p.click("#getLink");

@@ -32,35 +32,11 @@ module.exports = {
       await p.goto(url);
 
       if (lib.config().debug == true) console.log("[ouo] Launched. Detecting if the site is protected via Cloudflare...");
-      let cf = await p.evaluate(function() {
-        if (document.title.includes("Attention")) return true;
-        else return false;
-      });
-
+      let cf = await lib.cloudflare.check(p);
       if (cf == true) {
-        if (lib.config().debug == true) console.log("[ouo] Relaunching browser with CAPTCHA support...");
-        await b.close();
-        if (lib.config().captcha.active == false) {
-          throw "Captcha service isn't normally required for this link, but it does under these circumstances, but this instance doesn't support it."
-        }
-  
-        pup.use(cap({
-          provider: {
-            id: lib.config().captcha.service,
-            token: lib.config().captcha.key
-          }
-        }));
-
-        b = await pup.launch({headless: true});
-        p = await b.newPage();
-        await p.goto(u.href);
-
-        if (lib.config().debug == true) console.log("[ouo] Solving CAPTCHA...");
-        await p.waitForSelector("#cf-hcaptcha-container");
-        await p.solveRecaptchas();
-        if (lib.config().debug == true) console.log("[ouo] Solved CAPTCHA. Waiting for page to refresh...");
-        await p.waitForNavigation();
-      }
+        if (lib.config().debug == true) console.log("[ouo] ouo is currently protected by Cloudflare, bypassing...");
+        p = await lib.cloudflare.solve(p);
+      } 
 
       // 2nd eval code sourced from https://github.com/FastForwardTeam/FastForward/blob/main/src/js/injection_script.js#L1095
 
