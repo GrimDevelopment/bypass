@@ -22,6 +22,12 @@ module.exports = {
     try {
       // this may not work for pastes, will add support for them once i come across one
 
+      let host = new URL(url).hostname;
+      if (host == "linkvertise.download") {
+        url = `https://linkvertise.com/${new URL(url).pathname.split("/").slice(2, 4).join("/")}`;
+        if (lib.config().debug == true) console.log(`[linkvertise] Converted linkvertise.download link to ${url}`);
+      }
+
       pup.use(adb({
         blockTrackers: true
       }));
