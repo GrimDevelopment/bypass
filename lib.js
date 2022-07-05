@@ -97,7 +97,8 @@ module.exports = {
             originalUrl: url,
             destination: r,
             fromCache: false,
-            fromFastforward: true
+            fromFastforward: true,
+            isURL: true
           };
           return f;
         }
@@ -108,17 +109,24 @@ module.exports = {
       if (config.debug == true) console.log(`[extract] Finished "${url}", ${JSON.stringify(opt)} [Solution: ${(JSON.stringify(f) || f)}]`);
 
       if (typeof f == "string" || typeof f == "object" && !f.destinations) {
-        if (!this.isUrl((f.destination || f)) || (f.destination || f) == url && !url.includes("linkvertise.")) {
-          if (config.debug == true) console.log("[extract] URL was invalid.", (f.destination||f), url);
-          throw "Invalid URL from backend.";
+        if (!this.isUrl((f.destination || f)) || (f.destination || f) == url) {
+          if (ex !== "linkvertise.js") {
+            if (config.debug == true) console.log("[extract] URL was invalid.", (f.destination||f), url);
+            throw "Invalid URL from backend.";
+          } else {
+            if (config.debug == true) console.log("[extract] URL was invalid, but it was ignored because it was a Linkvertise link.", url);
+          }
         } 
 
         if (config.debug == true) console.log("[extract] Got one link, proceeding...");
 
+        let iu = this.isUrl((f.destination || f));
+
         let d = {
           destination: (f.destination || f),
           originalUrl: url,
-          dateSolved: (new Date() * 1)
+          dateSolved: (new Date() * 1),
+          isURL: iu
         };
 
         if (f.fastforward == true) {
@@ -329,6 +337,9 @@ module.exports = {
       let f = await links.findOne({"originalUrl": url});
       if (f !== null) {
         if (f.destinations) f.destinations = JSON.parse(f.destinations);
+        if (f.destination && f.isURL == undefined || f.isURL == null) {
+          f.isURL = require("./lib").isUrl(f.destination);
+        }
         return f;
       } else {
         f = await links.findOne({"original-url": url}); // older version compatibility
@@ -340,12 +351,12 @@ module.exports = {
               dateSolved: f["date-solved"],
               originalUrl: f["original-url"],
               destination: f["destination"],
+              isURL: require("./lib").isUrl(f["destination"])
             }
             delete f._id;
             await links.findOneAndReplace({"original-url": url}, f);
           }
           if (config.debug == true) console.log("[db] Sending DB response...");
-          if (f.destinations) f.destinations = JSON.parse(f.destinations);
           delete f._id;
           return f; 
         } else if (f == null) {

@@ -35,22 +35,29 @@ function bypass() {
         let p = document.createElement("P");
         if (d.destination) {
           p.innerHTML = "Result: ";
-          let a = document.createElement("A");
-          a.href = escapeHtml(d.destination);
-          a.rel = "noreferer nofollow";
-          a.target = "_blank";
+          let a;
+          if (d.isURL == true) {
+            a = document.createElement("A");
+            a.href = escapeHtml(d.destination);
+            a.rel = "noreferer nofollow";
+            a.target = "_blank";
+          } else {
+            a = document.createElement("CODE");
+          }
           a.innerHTML = `${d.destination} `;
           p.append(a);
           let btn = document.createElement("button");
           btn.setAttribute("data-url", d.destination);
           btn.setAttribute("data-referer", url);
-          btn.innerHTML = "Bypass this URL";
-          btn.onclick = function() {
-            document.getElementById("url").value = this.getAttribute("data-url");
-            document.getElementById("referer").value = this.getAttribute("data-referer");
-            bypass();
+          if (d.isURL == true) {
+            btn.innerHTML = "Bypass this URL";
+            btn.onclick = function() {
+              document.getElementById("url").value = this.getAttribute("data-url");
+              document.getElementById("referer").value = this.getAttribute("data-referer");
+              bypass();
+            }
+            p.append(btn);
           }
-          p.append(btn);
           sd.append(p);
         } else if (d.destinations) { 
           p.innerHTML = "Results: <br>";
@@ -125,7 +132,7 @@ function formatExtra(data) {
 
   if (data["fromCache"]) a = `${a} from cache,`;
   else if (data["fromFastforward"]) a = `${a} from fastforward,`;
-  else a = `${a} unique link,`;
+  else a = `${a} unique destination,`;
 
   if (data["dateSolved"] && data["dateSolved"] !== "unknown") {
     let d = new Date(parseInt(data["dateSolved"]));
