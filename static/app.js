@@ -18,12 +18,17 @@ function bypass() {
   if (document.getElementById("referer").value !== "") opt = opt + `referer=${encodeURIComponent(document.getElementById("referer").value)}&`;
 
   opt = opt.substring(0, (opt.length - 1));
+  if (window.isLoading == 1) return;
 
   let xhr = new XMLHttpRequest();
   document.title = "[Waiting...] BIFM";
+  window.isLoading = 1;
+  toggleFields();
   xhr.open("GET", `/api/bypass?url=${encodeURIComponent(url)}${opt}`);
   xhr.send();
   xhr.onload = function() {
+    window.isLoading = 0;
+    toggleFields();
     document.title = "[Parsing...] BIFM";
     document.querySelector(".loader").style.display = "none";
     document.querySelector(".result").style.display = "inline";
@@ -117,6 +122,8 @@ function bypass() {
     }
   }
   xhr.onerror = function(e) {
+    window.isLoading = 0;
+    toggleFields();
     document.title = "[Error] BIFM";
     let ed = document.createElement("DIV");
     ed.classList.add("error");
@@ -153,4 +160,18 @@ function escapeHtml(unsafe) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function toggleFields() {
+  let d = document.getElementById("url").disabled;
+  let od;
+  if (d == true) od = false;
+  else od = true;
+  document.getElementById("url").disabled = od;
+  if (document.getElementById("allowCache")) document.getElementById("allowCache").disabled = od;
+  if (document.getElementById("ignoreCache")) document.getElementById("ignoreCache").disabled = od;
+  if (document.getElementById("allowFF")) document.getElementById("allowFF").disabled = od;
+  if (document.getElementById("ignoreFF")) document.getElementById("ignoreFF").disabled = od;
+  document.getElementById("password").disabled = od;
+  document.getElementById("referer").disabled = od;
 }
