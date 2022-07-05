@@ -44,7 +44,8 @@ module.exports = {
       if (lib.config().debug == true) console.log("[linkvertise] Launched. Opening page...");
 
       await p.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1");
-      await p.goto(url, {waitUntil: "networkidle2"});
+      await p.goto(url);
+      await p.waitForTimeout(3000);
 
       if ((await p.$(".captcha-content"))) {
         if (lib.config().debug == true) console.log(`[linkvertise] CAPTCHA was found, relaunching with CAPTCHA support...`);
@@ -68,11 +69,10 @@ module.exports = {
           if (lib.config().debug == true) console.log("[linkvertise] Going to referer URL first...");
           await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
         }
-        await p.goto(url);
-        await p.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1");
       
         if (lib.config().debug == true) console.log("[linkvertise] Launched. Reopening page...");
-        await p.goto(url, {waitUntil: "networkidle2"});
+        await p.goto(url);
+        await p.waitForTimeout(3000);
         if (lib.config().debug == true) console.log("[linkvertise] Done. Solving CAPTCHA...");
         await p.solveRecaptchas();
         if (lib.config().debug == true) console.log(`[linkvertise] Solved CAPTCHA, continuing as normal...`);
