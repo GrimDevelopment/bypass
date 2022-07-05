@@ -108,7 +108,7 @@ module.exports = {
       if (config.debug == true) console.log(`[extract] Finished "${url}", ${JSON.stringify(opt)} [Solution: ${(JSON.stringify(f) || f)}]`);
 
       if (typeof f == "string" || typeof f == "object" && !f.destinations) {
-        if (!this.isUrl((f.destination || f)) || (f.destination || f) == url) {
+        if (!this.isUrl((f.destination || f)) || (f.destination || f) == url && !url.includes("linkvertise.")) {
           if (config.debug == true) console.log("[extract] URL was invalid.", (f.destination||f), url);
           throw "Invalid URL from backend.";
         } 
