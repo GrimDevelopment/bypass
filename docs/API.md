@@ -40,7 +40,7 @@ A successful response would look like this.
   "dateSolved": 1655685246159, // JS Date() output
   "fromCache": true, // Determines if the solution came from the BIFM instance's cache or not.
   "fromFastforward": false, // Determines if the solution came from FastForward's Crowd Bypass feature or not.
-  "isURL": true // Determines if the response given is a visitable URL
+  "isURL": true // Determines if the response given is a visitable URL. If it's false, the destination is text (likely from a paste).
 }
 ```
 

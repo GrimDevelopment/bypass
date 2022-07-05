@@ -110,7 +110,7 @@ module.exports = {
 
       if (typeof f == "string" || typeof f == "object" && !f.destinations) {
         if (!this.isUrl((f.destination || f)) || (f.destination || f) == url) {
-          if (ex !== "linkvertise.js") {
+          if (ex !== "linkvertise.js" && typeof (f.destination || f) == "string") {
             if (config.debug == true) console.log("[extract] URL was invalid.", (f.destination||f), url);
             throw "Invalid URL from backend.";
           } else {
