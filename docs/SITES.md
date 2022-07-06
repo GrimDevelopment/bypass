@@ -34,8 +34,9 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`mboost.me`**|Axios|No|[https://mboost.me/a/47n](https://mboost.me/a/47n) redirects to `https://www.nukevscity.com/hehehehaw5`|||
 |**`myl.li`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|[https://myl.li/NOEgI6aOp3bF](https://myl.li/NOEgI6aOp3bF)|`mylink.vc`||
 |**`oke.io`**|Puppeteer + Stealth|No|[https://oke.io/D3wL](https://oke.io/D3wL) redirects to a broken Mega.nz link.|||
+|**`olamovies.cfd`**|Axios|No||`olamovies.top`|Need example link that is SFW and legal.|
 |**`ouo.io`**|Puppeteer + Stealth|Sometimes, only to bypass Cloudflare|[https://ouo.io/2dktqo](https://ouo.io/2dktqo)|`ouo.press`||
-|**`psa.pm`**|Axios|No|||If anyone can find a legal example of this, that'd be nice.|
+|**`psa.pm`**|Axios|No|||Need example link that is SFW and legal.|
 |**`rekonise.com`**|Axios|No|[https://rekonise.com/bifm-jv7k6](https://rekonise.com/bifm-jv7k6)||
 |**`sh.st`**|Axios|No|[http://ceesty.com/es47QR](http://ceesty.com/es47QR)|`ceesty.com`, `cestyy.com`, `clkme.me`, `clkmein.com`, `cllkme.com`, `corneey.com`, `destyy.com`, `festyy.com`, `gestyy.com`, `jnw0.me`, `xiw34.com`, `wiid.me`|The list to the right may not be 100% correct or complete.|
 |**`shorturllink.in`**|Axios|No|[https://urlsopen.com/DC6F](https://urlsopen.com/DC6F)|`urlsopen.com`, `blog.textpage.xyz`, `short.url2go.in`||
