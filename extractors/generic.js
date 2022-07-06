@@ -141,6 +141,12 @@ module.exports = {
         return resp.data.split(`content="0;URL=`)[1].split(`"`)[0];
       }
 
+      // generic countdown sites
+      if (lib.config().debug == true) console.log("[generic] Done. Checking for general countdown sites...");
+      if (resp.data.split("$('.skip-btn').attr('href','").length > 1) {
+        return resp.data.split("$('.skip-btn').attr('href','")[1].split("')")[0];
+      }
+
       // generic HTTP redirects, put any non-specific (like adlinkfly-type extractors) sites below this
       if (lib.config().debug == true) console.log("[generic] Done. Checking for HTTP redirects...");
       if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
