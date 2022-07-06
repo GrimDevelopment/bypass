@@ -26,7 +26,7 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`ity.im`**|Axios|No|[http://ity.im/1QZh2](http://ity.im/1QZh2)|||
 |**`karung.in`**|Axios|No|[http://karung.in/Gyucc](http://karung.in/Gyucc) redirects to `https://drive.google.com/uc?id=0B263gKU-C09_WW5rbURLeXN5QXc&export=download`.||Passworded links are currently not supported.|
 |**`keeplinks.org`**|Puppeteer + Adblocker + Stealth|No|[https://www.keeplinks.org/p100/62b878489fbc5](https://www.keeplinks.org/p100/62b878489fbc5)||Passworded links don't need a password due to a cookie exploit.|
-|**`linkvertise.net`**|Axios|Yes|[https://linkvertise.com/425581/example1](https://linkvertise.com/425581/example1) for regular redirects, [https://link-target.net/425581/example](https://link-target.net/425581/example) for a paste|`linkvertise.com`, `up-to-down.net`, `link-to.net`, `direct-link.net`, `linkvertise.download`, `file-link.net`, `link-center.net`, `link-target.net`||
+|**`linkvertise.net`**|Axios|Yes|[https://linkvertise.com/425581/example1](https://linkvertise.com/425581/example1) for regular redirects, [https://link-target.net/425581/example](https://link-target.net/425581/example) for a paste|`linkvertise.com`, `up-to-down.net`, `link-to.net`, `direct-link.net`, `linkvertise.download`, `file-link.net`, `link-center.net`, `link-target.net`, `link-hub.net`||
 |**`link1s.com`**|Puppeteer + Adblocker + Stealth|No|||Need example link that is SFW and legal.|
 |**`lnk.parts`**|Puppeteer + Stealth|Yes|[https://lnkload.com/2z8aF](https://lnkload.com/2z8aF)|`link.tl`, `lnkload.com`||
 |**`lnk2.cc`**|Puppeteer + Ad & Tracker Blocker + Stealth|Yes|[https://lnk2.cc/wd1J1](https://lnk2.cc/wd1J1)||
@@ -37,6 +37,7 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`psa.pm`**|Axios|No|||If anyone can find a legal example of this, that'd be nice.|
 |**`rekonise.com`**|Axios|No|[https://rekonise.com/bifm-jv7k6](https://rekonise.com/bifm-jv7k6)||
 |**`sh.st`**|Axios|No|[http://ceesty.com/es47QR](http://ceesty.com/es47QR)|`ceesty.com`, `cestyy.com`, `clkme.me`, `clkmein.com`, `cllkme.com`, `corneey.com`, `destyy.com`, `festyy.com`, `gestyy.com`, `jnw0.me`, `xiw34.com`, `wiid.me`|The list to the right may not be 100% correct or complete.|
+|**`shorturllink.in`**|Axios|No|[https://urlsopen.com/DC6F](https://urlsopen.com/DC6F)|`urlsopen.com`, `blog.textpage.xyz`, `short.url2go.in`||
 |**`show.co`**|Axios|No|[https://show.co/HQrPtta](https://show.co/HQrPtta) redirects to `https://universal-bypass.org/`.||
 |**`social-unlock.com`**|Axios|No|[https://social-unlock.com/417pK](https://social-unlock.com/417pK)|||
 |**`tei.ai`**|Axios|No|[https://tei.ai/HOI4_1_11_11](https://tei.ai/HOI4_1_11_11) redirects to `https://www.mediafire.com/file/mmxskm3b1uanzfn/OG9134-HOI4FU1.rar/file`|`tii.ai`||
