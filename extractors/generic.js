@@ -87,6 +87,8 @@ module.exports = {
         method: "GET",
         url: url,
         headers: header,
+        maxContentLength: 500000,
+        maxBodyLength: 500000,
         validateStatus: function() {
           return true;
         },
