@@ -36,21 +36,23 @@ module.exports = {
 
       await p.waitForNavigation();
       await p.waitForSelector(".complete", {visible: true});
-      if (lib.config().debug == true) console.log("[aylink] Done. Opening next page...");
+      if (lib.config().debug == true) console.log("[aylink] Done. Fetching next page...");
+      url = fireWhenFound(p);
       await p.click(".complete");
       await p.bringToFront();
-      let a = giveTab(b);
       await p.click(".complete");
-      if (lib.config().debug == true) console.log("[aylink] Done. Waiting for page object...");
 
-      a = await a;
-      if (lib.config().debug == true) console.log("[aylink] Done. Extracting data...");
-      a = await a.evaluate(function() {
-        return document.body.innerHTML.split("url = '")[1]?.split("'")[0];
-      });
+      url = await url;
+      if (lib.config().debug == true) console.log("[aylink] Got next page, requesting...");
+
+      await p.goto(url, {waitUntil: "domcontentloaded"});
+      if (lib.config().debug == true) console.log("[aylink] Done. Parsing next page...");
+      let a = await p.content();
+      a = a.split(`</script>\n<script type="text/javascript">`)[1];
+      a = a.split(`let`)[1];
+      a = a.split(`url = '`)[1].split(`',`)[0];
 
       await b.close();
-
       return a;
     } catch(err) {
       if (b !== undefined) await b.close();
@@ -59,17 +61,18 @@ module.exports = {
   }
 }
 
-async function giveTab(b) {
+async function fireWhenFound(p) {
   return new Promise(function(resolve, reject) {
-    b.on("targetcreated", async function(p) {
-      if ((await p.type()) == "page") {
-        let a = await p.url();
-        a = new URL(a);
-        if (a.hostname == "bildirim.in") {
-          a = (await (await p).page());
-          resolve(a);
+    try {
+      p.on("response", async function(res) {
+        let a = new URL((await res.url()));
+        if (a.pathname == ("/links/go2") && (await (await(res.request()).method())) == "POST") {
+          let a = (await res.json());
+          resolve(a?.url)
         }
-      }
-    })
+      });
+    } catch(e) {
+      throw e;
+    }
   });
 }

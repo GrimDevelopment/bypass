@@ -71,7 +71,7 @@ async function fireWhenFound(p) {
         let a = (await res.headers());
         resolve(a?.location)
       } else {
-        if (lib.config().debug == true && a.hostname.includes("linkvertise")) console.log(`[linkvertise] Ignoring request ${(await (await(res.request()).method()))} "${(await res.url())}" from listener.`);
+        if (lib.config().debug == true && a.hostname.includes("ouo")) console.log(`[ouo] Ignoring request ${(await (await(res.request()).method()))} "${(await res.url())}" from listener.`);
       }
     });
   });

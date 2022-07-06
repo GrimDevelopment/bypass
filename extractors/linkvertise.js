@@ -81,7 +81,7 @@ module.exports = {
   
       let ck;
   
-      if (resp.data?.data.vpn == true || resp.data?.meta.require_captcha == true) {
+      if (resp.data?.data?.vpn == true || resp.data?.meta?.require_captcha == true) {
         if (lib.config().debug == true) console.log("[linkvertise] Doing CAPTCHA to validate traffic...");
   
         header["Content-Type"] = "application/json";
