@@ -153,7 +153,7 @@ module.exports = {
         }
 
         if (config.fastforward == true && opt?.allowFF !== false) {
-          await this.fastforward.send(url, f);
+          await this.fastforward.send(url, (f.destination || f));
         }
 
         if (config.db.active == true) {
@@ -274,6 +274,7 @@ module.exports = {
             method: "POST",
             url: "https://crowd.fastforward.team/crowd/query_v1",
             data: b,
+            timeout: (5 * 1000),
             validateStatus: function() {return true} // Prevent status errors
           });
 
@@ -303,6 +304,7 @@ module.exports = {
           let d = await axios({
             method: "POST",
             url: "https://crowd.fastforward.team/crowd/contribute_v1",
+            timeout: (5 * 1000),
             data: b,
             validateStatus: function() {return true} // Prevent status errors
           });
