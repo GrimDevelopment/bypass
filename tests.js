@@ -28,6 +28,7 @@ const examples = [
   { link: "https://ouo.io/2dktqo" },
   { link: "https://rekonise.com/bifm-jv7k6" },
   { extractor: "sh.st", link: "http://ceesty.com/es47QR" },
+  { extractor: "shorturllink.in", link: "https://urlsopen.com/DC6F" },
   { link: "https://show.co/HQrPtta", expected: "https://universal-bypass.org" },
   { link: "https://social-unlock.com/417pK" },
   { link: "https://tei.ai/HOI4_1_11_11", expected: "https://www.mediafire.com/file/mmxskm3b1uanzfn/OG9134-HOI4FU1.rar/file"},
