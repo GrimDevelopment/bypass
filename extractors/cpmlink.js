@@ -22,7 +22,7 @@ module.exports = {
         "Connection": "keep-alive"
       }
 
-      if (opt.referer) h.Referer = opt.referer;
+      if (opt.referer) header.Referer = opt.referer;
 
       let resp = await axios({
         method: "GET",

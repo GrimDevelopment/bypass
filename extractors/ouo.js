@@ -21,7 +21,6 @@ module.exports = {
       pup.use(stlh);
 
       // opening browser
-
       let args = (lib.config().defaults?.puppeteer || {headless: true});
       b = await pup.launch(lib.removeTor(args));
       p = await b.newPage();
