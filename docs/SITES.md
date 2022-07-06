@@ -41,6 +41,7 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`shorturllink.in`**|Axios|No|[https://urlsopen.com/DC6F](https://urlsopen.com/DC6F)|`urlsopen.com`, `blog.textpage.xyz`, `short.url2go.in`||
 |**`show.co`**|Axios|No|[https://show.co/HQrPtta](https://show.co/HQrPtta) redirects to `https://universal-bypass.org/`.||
 |**`social-unlock.com`**|Axios|No|[https://social-unlock.com/417pK](https://social-unlock.com/417pK)|||
+|**`srt.am`**|Puppeteer|No|[http://srt.am/e8kZ9m](http://srt.am/e8kZ9m) redirects to `https://www.google.com/`|`short.am`||
 |**`tei.ai`**|Axios|No|[https://tei.ai/HOI4_1_11_11](https://tei.ai/HOI4_1_11_11) redirects to `https://www.mediafire.com/file/mmxskm3b1uanzfn/OG9134-HOI4FU1.rar/file`|`tii.ai`||
 |**`thinfi.com`**|Axios|No|[https://thinfi.com/088ud](https://thinfi.com/088ud) (no password), [https://thinfi.com/088uk](https://thinfi.com/088uk) (password: `bifm`)||
 |**`try2link.com`**|Puppeteer + Adblocker|No|||Need example link that is SFW and legal.|

@@ -2,7 +2,6 @@ const lib = require("./lib");
 
 // add a new extractor? add it to the test list.
 const examples = [
-  { link: "https://1bit.space/FVJcWHr", expected: "https://mega.nz/#F!Xe4kVIII!z7WAxz65DzBhe6d1Cx_xHg" },
   { link: "http://1link.club/77679" },
   { extractor: "adf.ly", link: "http://usheethe.com/T3F5" },
   { extractor: "adlinkfly", link: "https://pdiskshortener.com/6I2CR2" },
@@ -31,6 +30,7 @@ const examples = [
   { extractor: "shorturllink.in", link: "https://urlsopen.com/DC6F" },
   { link: "https://show.co/HQrPtta", expected: "https://universal-bypass.org" },
   { link: "https://social-unlock.com/417pK" },
+  { link: "http://srt.am/e8kZ9m", expected: "https://www.google.com/" },
   { link: "https://tei.ai/HOI4_1_11_11", expected: "https://www.mediafire.com/file/mmxskm3b1uanzfn/OG9134-HOI4FU1.rar/file"},
   { extractor: "thinfi (no password)", link: "https://thinfi.com/088ud" },
   { extractor: "thinfi (passworded)", link: "https://thinfi.com/088uk", password: "bifm"},
