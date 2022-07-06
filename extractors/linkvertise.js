@@ -1,7 +1,4 @@
-const pup = require("puppeteer-extra");
-const adb = require("puppeteer-extra-plugin-adblocker");
-const cap = require("puppeteer-extra-plugin-recaptcha");
-const stl = require("puppeteer-extra-plugin-stealth");
+const axios = require("axios");
 const lib = require("../lib");
 
 module.exports = {
@@ -14,129 +11,123 @@ module.exports = {
     "linkvertise.download",
     "file-link.net",
     "link-center.net",
-    "link-target.net"
+    "link-target.net",
+    "link-hub.net"
   ],
-  requiresCaptcha: false,
-  get: async function (url, opt) {
-    let b;
-    try {
-      // this may not work for pastes, will add support for them once i come across one
+  requiresCaptcha: true,
+  get: async function(url, opt) {
+    let header = lib.config().defaults?.axios.headers;
 
-      let host = new URL(url).hostname;
-      if (host == "linkvertise.download") {
-        url = `https://linkvertise.com/${new URL(url).pathname.split("/").slice(2, 4).join("/")}`;
-        if (lib.config().debug == true) console.log(`[linkvertise] Converted linkvertise.download link to ${url}`);
-      }
-
-      pup.use(adb({
-        blockTrackers: true
-      }));
-
-      let stlh = stl();
-      stlh.enabledEvasions.delete("iframe.contentWindow");
-      pup.use(stlh);
-    
-      if (lib.config().debug == true) console.log("[linkvertise] Launching browser...");
-      let a = (lib.config().defaults?.puppeteer || {headless: true});
-      b = await pup.launch(a);
-      let p = await b.newPage();
-
-      if (lib.config().debug == true) console.log("[linkvertise] Launched. Opening page...");
-
-      await p.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1");
-      await p.goto(url);
-      await p.waitForTimeout(3000);
-
-      if ((await p.$(".captcha-content"))) {
-        if (lib.config().debug == true) console.log(`[linkvertise] CAPTCHA was found, relaunching with CAPTCHA support...`);
-        await b.close();
-
-        if (lib.config().captcha.active == false) {
-          throw "Captcha service is required for this link, but this instance doesn't support it."
-        }
-
-        pup.use(cap({
-          provider: {
-            id: lib.config().captcha.service,
-            token: lib.config().captcha.key
+    let proxy;
+    if (lib.config().defaults?.axios.proxy) {
+      if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+        const agent = require("socks-proxy-agent");
+        try { 
+          if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(proxy).port == "9050") {
+            proxy = {};
+          } else {
+            proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
           }
-        }));
-
-        let args = (lib.config().defaults?.puppeteer || {headless: true});
-        b = await pup.launch(lib.removeTor(args));
-        p = await b.newPage();
-        if (opt.referer) {
-          if (lib.config().debug == true) console.log("[linkvertise] Going to referer URL first...");
-          await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
+        } catch(err) {
+          proxy = {};
         }
-      
-        if (lib.config().debug == true) console.log("[linkvertise] Launched. Reopening page...");
-        await p.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1");
-        await p.goto(url);
-        await p.waitForTimeout(3000);
-        if (lib.config().debug == true) console.log("[linkvertise] Done. Solving CAPTCHA...");
-        await p.solveRecaptchas();
-        if (lib.config().debug == true) console.log(`[linkvertise] Solved CAPTCHA, continuing as normal...`);
       } else {
-        if (lib.config().debug == true) console.log(`[linkvertise] No CAPTCHAs, continuing as normal...`) 
+        proxy = {};
       }
-
-      if ((await p.url()) == "https://linkvertise.com/") throw "The link is dead.";
-
-      if (lib.config().debug == true) console.log("[linkvertise] Counting down...");
-      await p.waitForSelector(".lv-dark-btn");
-      let u = await follow(p, b);
-
-      await b.close();
-
-      return u;
-    } catch(err) {
-      if (b !== undefined) await b.close();
-      throw err;
     }
-  }
-}
 
-async function follow(p) {
-  p.click("lv-button > .lv-button-component.new-button-style.lv-dark-btn.ng-star-inserted");
-  if (lib.config().debug == true) console.log("[linkvertise] Clicking button...");
-  try {
-    if (lib.config().debug == true) console.log("[linkvertise] Setting up listener for network events...");
-    let a = await fireWhenFound(p);
-    if (lib.config().debug == true) console.log("[linkvertise] Closing browser...");
-    return a;
-  } catch(err) {
-    throw err;
-  }
-}
+    let id;
+    if (new URL(url).hostname == "linkvertise.download") {
+      id = new URL(url).pathname.split("/").slice(2, 4).join("/");
+    } else {
+      id = new URL(url).pathname.split("/").slice(1, 3).join("/");
+    }
 
-async function fireWhenFound(p) {
-  return new Promise(function(resolve, reject) {
-    p.on("response", async function(res) {
-      let a = new URL((await res.url()));
-      if (a.host == "publisher.linkvertise.com") {
-        if (a.pathname.startsWith("/api/v1/") && (await (await(res.request()).method())) == "POST" && a.pathname.includes("/target")) {
-          try {
-            let a = (await res?.json());
-            if (lib.config().debug == true) console.log("[linkvertise] Got URL that met requirements, parsing...");
-            if (a?.data?.target) resolve(a.data.target);
-            else reject("Redirect not found.");
-          } catch(err) {
-            console.log("[silent error] Error extracting linkvertise URL.", err.stack);
-          }
-        } else if (a.pathname.startsWith("/api/v1/") && (await (await(res.request()).method())) == "POST" && a.pathname.includes("/paste")) {
-          try {
-            let a = (await res?.json());
-            if (lib.config().debug == true) console.log("[linkvertise] Got URL that met requirements, parsing...");
-            if (a?.data?.paste) resolve(a.data.paste);
-            else reject("Redirect not found.");
-          } catch(err) {
-            console.log("[silent error] Error extracting linkvertise URL.", err.stack);
-          }
-        } else {
-          if (lib.config().debug == true && a.hostname.includes("linkvertise")) console.log(`[linkvertise] Ignoring request ${(await (await(res.request()).method()))} "${(await res.url())}" from listener.`);
-        }
-      }
+    if (lib.config().debug == true) console.log("[linkvertise] Got ID from URL", id);
+
+    header["User-Agent"] = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1";
+    header.Accept = "application/json";
+    header["Accept-Encoding"] = "gzip, deflate";
+    header["Accept-Language"] = "en-US,en;q=0.5";
+    header.Connection = "keep-alive";
+    header.Origin = "https://linkvertise.com";
+    header.Referer = "https://linkvertise.com/";
+    header["Sec-Fetch-Dest"] = "empty";
+    header["Sec-Fetch-Mode"] = "cors";
+    header["Sec-Fetch-Site"] = "same-site";
+    header["TE"] = "trailers";
+
+    if (lib.config().debug == true) console.log("[linkvertise] Getting user token...");
+
+    let resp = await axios({
+      method: "GET",
+      headers: header,
+      url: `https://publisher.linkvertise.com/api/v1/redirect/link/static/${id}?origin=&resolution=1920x960`
     });
-  });
+
+    let type;
+    if (resp.data?.data.link.target_type == "URL") {
+      type = "target";
+    } else if (resp.data?.data.link.target_type == "PASTE") {
+      type = "paste";
+    } else {
+      throw "Unknown target type.";
+    }
+
+    let rp = resp.data?.data.link.id;
+    let ut = resp.data?.user_token;
+    if (lib.config().debug == true) console.log("[linkvertise] Got user token", ut);
+
+    let ck;
+
+    if (resp.data?.data.vpn == true || resp.data?.meta.require_captcha == true) {
+      if (lib.config().debug == true) console.log("[linkvertise] Doing CAPTCHA to validate traffic...");
+
+      header["Content-Type"] = "application/json";
+
+      if (new URL(url).hostname !== "linkvertise.com") url = `https://linkvertise.com/${url.split("/").slice(3).join("/")}`;
+      let tk = await lib.solve("6LcEr_UUAAAAAHXt5wx-k9P_m8Z1JY-Ck9Mxrhxo", "recaptcha", {referer: url});
+
+      let d = JSON.stringify({
+        token: tk,
+        type: "rc"
+      });
+      header["Content-Length"] = lib.byteCount(d);
+      
+      if (lib.config().debug == true) console.log("[linkvertise] Sending CAPTCHA result to get CAPTCHA token...");
+      resp = await axios({
+        data: d,
+        method: "POST",
+        headers: header,
+        url: `https://publisher.linkvertise.com/api/v1/redirect/link/${id}/traffic-validation?X-Linkvertise-UT=${ut}`
+      });
+
+      ck = resp.data?.data.tokens.TARGET;
+      if (lib.config().debug == true) console.log("[linkvertise] Got CAPTCHA token", ck);
+    } 
+
+    let fb = {};
+
+    fb.serial = Buffer.from(JSON.stringify({
+      timestamp: new Date() * 1,
+      random: "6548307",
+      link_id: rp
+    })).toString("base64");
+
+    if (ck !== undefined) fb.token = ck;
+
+    fb = JSON.stringify(fb);
+    header["Content-Type"] = "application/json";
+    header["Content-Length"] = lib.byteCount(fb);
+
+    if (lib.config().debug == true) console.log("[linkvertise] Sending final request...");
+    resp = await axios({
+      data: fb,
+      method: "POST",
+      headers: header,
+      url: `https://publisher.linkvertise.com/api/v1/redirect/link/${id}/${type}?X-Linkvertise-UT=${ut}`
+    });
+
+    return (resp.data?.data.paste || resp.data?.data.target);
+  }
 }
