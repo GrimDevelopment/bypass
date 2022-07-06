@@ -7,10 +7,10 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 ## Adlink sites
 |Domain|Method|Needs CAPTCHA solver?|Example Links|Additional Domains|Additional Notes|
 |---|---|---|---|---|---|
-|**`1bit.space`**|Puppeteer + Adblocker + Stealth|Yes|||
+|**`1bit.space`**|Puppeteer + Adblocker + Stealth|Yes||Need a SFW and legal example |
 |**`1link.club`**|Axios|No|[http://1link.club/77679](http://1link.club/77679)|||
-|**`adf.ly`**|Axios|No|[http://usheethe.com/T3F5](http://usheethe.com/T3F5)|`usheethe.com`|There is not a complete list of domains under adf.ly's net that I could find, but there is an algorythm for finding them.|
-|**`adlinkfly`**|Puppeteer + Stealth|Sometimes, but always required|[https://pdiskshortener.com/6I2CR2](https://pdiskshortener.com/6I2CR2), [https://dz-linkk.com/N2xFP](https://dz-linkk.com/N2xFP)|`adlinkfly.mightyscripts.xyz`, `pdiskshortener.com`, `dzlinkk.com`|Like adf.ly, there is not a list of adlinkfly sites, but there is an algorithm to find them.|
+|**`adf.ly`**|Axios|No|[http://usheethe.com/T3F5](http://usheethe.com/T3F5)|`usheethe.com`|There is not a complete list of domains under adf.ly's net that I could find, but there is an algorythm for finding adf.ly links and automatically bypassing it.|
+|**`adlinkfly`**|Puppeteer + Stealth|Sometimes, but always required|[https://pdiskshortener.com/6I2CR2](https://pdiskshortener.com/6I2CR2), [https://dz-linkk.com/N2xFP](https://dz-linkk.com/N2xFP)|`adlinkfly.mightyscripts.xyz`, `pdiskshortener.com`, `dzlinkk.com`|Like adf.ly, there is not a list of adlinkfly sites, but there is an algorithm to find and bypass them.|
 |**`aylink.co`**|Puppeteer + Stealth|Yes|[https://aylink.co/xay664](https://aylink.co/xay664) redirects to `https://mega.nz/folder/hpIAnRLS#fJZX651qRZdf_DU2Y_k0kA`||
 |**`bc.vc`**|Puppeteer + Stealth|No|[https://bc.vc/vQesLIh](https://bc.vc/vQesLIh) redirects to `https://universal-bypass.org/`.||
 |**`boost.ink`**|Axios|No|[https://boost.ink/c5bba](https://boost.ink/c5bba)|`bst.gg`, `bst.wtf`, `booo.st`||
@@ -22,7 +22,8 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`droplink.co`**|Puppeteer|No|[https://droplink.co/VOpK](https://droplink.co/VOpK)|||
 |**`exe.io`**|Puppeteer + Adblock|Yes|[https://exe.io/ZaKsUgDc](https://exe.io/ZaKsUgDc)|`exey.io`||
 |**`ez4short.com`**|Puppeteer + Adblocker + Stealth|No|[https://ez4short.com/nzcU](https://ez4short.com/nzcU)|||
-|**`hrshort.com`**|Puppeteer|No|[https://open.crazyblog.in/tXDGig](https://open.crazyblog.in/tXDGig)|`crazyblog.in`, `open.crazyblog.in`, `redd.crazyblog.in`|Need a SFW and legal example for this extractor.|
+|**`gplinks.co`**|Puppeteer + Adblocker + Stealth|Yes||`gplinks.in`|Need example link that is SFW and legal.|
+|**`hrshort.com`**|Puppeteer|No|[https://open.crazyblog.in/tXDGig](https://open.crazyblog.in/tXDGig)|`crazyblog.in`, `open.crazyblog.in`, `redd.crazyblog.in`||
 |**`ity.im`**|Axios|No|[http://ity.im/1QZh2](http://ity.im/1QZh2)|||
 |**`karung.in`**|Axios|No|[http://karung.in/Gyucc](http://karung.in/Gyucc) redirects to `https://drive.google.com/uc?id=0B263gKU-C09_WW5rbURLeXN5QXc&export=download`.||Passworded links are currently not supported.|
 |**`keeplinks.org`**|Puppeteer + Adblocker + Stealth|No|[https://www.keeplinks.org/p100/62b878489fbc5](https://www.keeplinks.org/p100/62b878489fbc5)||Passworded links don't need a password due to a cookie exploit.|
@@ -42,7 +43,7 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`social-unlock.com`**|Axios|No|[https://social-unlock.com/417pK](https://social-unlock.com/417pK)|||
 |**`tei.ai`**|Axios|No|[https://tei.ai/HOI4_1_11_11](https://tei.ai/HOI4_1_11_11) redirects to `https://www.mediafire.com/file/mmxskm3b1uanzfn/OG9134-HOI4FU1.rar/file`|`tii.ai`||
 |**`thinfi.com`**|Axios|No|[https://thinfi.com/088ud](https://thinfi.com/088ud) (no password), [https://thinfi.com/088uk](https://thinfi.com/088uk) (password: `bifm`)||
-|**`try2link.com`**|Puppeteer + Adblocker|No|||If anyone can find a legal example of this, that'd be nice.|
+|**`try2link.com`**|Puppeteer + Adblocker|No|||Need example link that is SFW and legal.|
 |**`wpsafelink`**|Axios|No|[https://demo-safelink.themeson.com/template1/?f7fbb8af](https://demo-safelink.themeson.com/template1/?f7fbb8af) redirects to `https://themeson.com/safelink/`.|`demo-safelink.themeson.com`||
 |**`za.gl`**|Puppeteer + Adblocker + Stealth|No|[https://za.gl/JPk6](https://za.gl/JPk6)|`za.uy`, `zee.gl`||
 

@@ -109,6 +109,8 @@ function bypass() {
       }
     } catch (e) {
       document.title = "[Error] BIFM";
+      document.querySelector(".loader").style.display = "none";
+      document.querySelector(".result").style.display = "inline";
       let ed = document.createElement("DIV");
       ed.classList.add("error");
       let p = document.createElement("P");
@@ -124,6 +126,8 @@ function bypass() {
   xhr.onerror = function(e) {
     window.isLoading = 0;
     toggleFields();
+    document.querySelector(".loader").style.display = "none";
+    document.querySelector(".result").style.display = "inline";
     document.title = "[Error] BIFM";
     let ed = document.createElement("DIV");
     ed.classList.add("error");

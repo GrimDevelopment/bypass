@@ -10,15 +10,19 @@ module.exports = {
     let b;
     try {
       if (lib.config().debug == true) console.log("[ez4] Launching browser...");
+
       pup.use(stl());
       pup.use(adb());
+
       let args = (lib.config().defaults?.puppeteer || {headless: true});
+
       b = await pup.launch(args);
       p = await b.newPage();
       if (opt.referer) {
         if (lib.config().debug == true) console.log("[ez4] Going to referer URL first...");
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
       }
+
       await p.goto(url, {waitUntil: "networkidle2"});
       if (lib.config().debug == true) console.log("[ez4] Launched. Starting continous function...");
       let r = await cont(p);
