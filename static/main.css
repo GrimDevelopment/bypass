@@ -1,7 +1,7 @@
 @import url("/load.css");
 
 body {
-  background:#bdbdbd;
+  background: #bdbdbd;
   color: black;
   text-align: center;
   margin: 0;
@@ -9,8 +9,25 @@ body {
   text-rendering: optimizeLegibility;
 } 
 
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #282828;
+    color: white;
+  }
+}
+
 a > h2 {
   color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+  a {
+    color: white;
+  }
+
+  a > h2 {
+    color: white;
+  }
 }
 
 .top > a {
@@ -21,6 +38,13 @@ a > h2 {
   text-align: left;
   padding: 1vw 1vh;
   background: white;
+}
+
+@media (prefers-color-scheme: dark) {
+  .main {
+    color: white;
+    background: black;
+  }
 }
 
 @media (min-width: 999px) {
@@ -51,6 +75,31 @@ a > h2 {
 .success {
   background:rgb(43, 255, 43);
   color: black;
+}
+
+input,
+button {
+  padding: 4px;
+  border: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .success a {
+    color: blue;
+  }
+
+  input, 
+  button {
+    color: white;
+  }
+
+  input {
+    background: #282828;
+  }
+  
+  button {
+    background: #1f1f1f;
+  }
 }
 
 .error {
