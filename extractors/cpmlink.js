@@ -24,6 +24,24 @@ module.exports = {
 
       if (opt.referer) header.Referer = opt.referer;
 
+      let proxy;
+      if (lib.config().defaults?.axios.proxy) {
+        if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+          const agent = require("socks-proxy-agent");
+          try { 
+            if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(proxy).port == "9050") {
+              proxy = {};
+            } else {
+              proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
+            }
+          } catch(err) {
+            proxy = {};
+          }
+        } else {
+          proxy = {};
+        }
+      }
+
       let resp = await axios({
         method: "GET",
         url: url,
@@ -56,22 +74,23 @@ module.exports = {
         url: $("#skip").attr("action"),
         headers: {
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.5",
-            "Accept-Encoding": "gzip, deflate",
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-            "Content-Length": lib.byteCount(body),
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Cookie": c,
-            "Origin": "https://cpmlink.net",
-            "Pragma": "no-cache",
-            "Referer": url,
-            "Sec-Fetch-Dest": "document",
-            "Sec-Fetch-Site": "navigate",
-            "Sec-Fetch-User": "?1",
-            "Upgrade-Insecure-Requests": "1"
-        }
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+          "Accept-Language": "en-US,en;q=0.5",
+          "Accept-Encoding": "gzip, deflate",
+          "Cache-Control": "no-cache",
+          "Connection": "keep-alive",
+          "Content-Length": lib.byteCount(body),
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Cookie": c,
+          "Origin": "https://cpmlink.net",
+          "Pragma": "no-cache",
+          "Referer": url,
+          "Sec-Fetch-Dest": "document",
+          "Sec-Fetch-Site": "navigate",
+          "Sec-Fetch-User": "?1",
+          "Upgrade-Insecure-Requests": "1"
+        },
+        ...proxy
       });
       if (lib.config().debug == true) console.log("[cpmlink] Parsing solve page...");
       $ = cheerio.load(resp.data);
