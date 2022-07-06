@@ -291,7 +291,9 @@ module.exports = {
           return null;
         }
       } catch(err) {
-        throw err;
+        if (err.message?.includes("5000 ms")) {
+          console.log(`[fastforward] Timeout occured since the server took too long to respond.`)
+        } else throw err;
       }
     },
     send: async function(url, dest, igcb) {
@@ -304,7 +306,7 @@ module.exports = {
           let d = await axios({
             method: "POST",
             url: "https://crowd.fastforward.team/crowd/contribute_v1",
-            timeout: (5 * 1000),
+            timeout: (7 * 1000),
             data: b,
             validateStatus: function() {return true} // Prevent status errors
           });
@@ -318,7 +320,9 @@ module.exports = {
           }
         }
       } catch(err) {
-        throw err;
+        if (err.message?.includes("7000 ms")) {
+          console.log(`[fastforward] Timeout occured since the server took too long to respond.`)
+        } else throw err;
       }
     }
   },
