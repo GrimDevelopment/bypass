@@ -53,5 +53,5 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 
 There are some sites included in BIFM that aren't adlinks as well, and are here to save you a visit from being tracked.
 
-- Social link pages: `carrd.co`, `linktr.ee`, `bio.link`
+- Social link pages: `carrd.co`, `linktr.ee`, `msha.ke`
 - General URL Shortener: `bit.ly`, `tinyurl.com`

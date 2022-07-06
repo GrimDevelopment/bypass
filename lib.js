@@ -466,6 +466,26 @@ module.exports = {
         if (config.debug == true) console.log("[cloudflare] Was a normal CF redirect, sending back original page object...");
         return p;
       }
+    },
+    email: function(data) {
+      if (!data.includes("/cdn-cgi/l/email-protection#")) data = `/cdn-cgi/l/email-protection#${data}`;
+      let a = data;
+      let s = data.indexOf(`/cdn-cgi/l/email-protection`);
+      let m = data.length;
+
+      if (a && s > -1 && m > 28) {
+        var j = 28 + s;
+        s = '';
+        if (j < m) {
+          r = '0x' + a.substr(j, 2) | 0;
+          for (j += 2; j < m && a.charAt(j) != 'X'; j += 2) s += '%' + ('0' + ('0x' + a.substr(j, 2) ^ r).toString(16)).slice(-2);
+          j++;
+          s = decodeURIComponent(s) + a.substr(j, m - j);
+        }
+        return s;
+      } else {
+        return null;
+      }
     }
   }
 }
