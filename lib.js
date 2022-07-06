@@ -291,8 +291,9 @@ module.exports = {
           return null;
         }
       } catch(err) {
-        if (err.message?.includes("5000 ms")) {
-          console.log(`[fastforward] Timeout occured since the server took too long to respond.`)
+        if (err.message?.includes("timeout")) {
+          console.log(`[fastforward] Timeout occured since the server took too long to respond.`);
+          return null;
         } else throw err;
       }
     },
@@ -320,8 +321,9 @@ module.exports = {
           }
         }
       } catch(err) {
-        if (err.message?.includes("7000 ms")) {
-          console.log(`[fastforward] Timeout occured since the server took too long to respond.`)
+        if (err.message?.includes("timeout")) {
+          console.log(`[fastforward] Timeout occured since the server took too long to respond.`);
+          return null;
         } else throw err;
       }
     }
