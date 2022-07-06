@@ -7,7 +7,7 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 ## Adlink sites
 |Domain|Method|Needs CAPTCHA solver?|Example Links|Additional Domains|Additional Notes|
 |---|---|---|---|---|---|
-|**`1bit.space`**|Puppeteer + Adblocker + Stealth|Yes|[https://1bit.space/FVJcWHr](https://1bit.space/FVJcWHr) redirects to ``https://universal-bypass.org/``.||
+|**`1bit.space`**|Puppeteer + Adblocker + Stealth|Yes|||
 |**`1link.club`**|Axios|No|[http://1link.club/77679](http://1link.club/77679)|||
 |**`adf.ly`**|Axios|No|[http://usheethe.com/T3F5](http://usheethe.com/T3F5)|`usheethe.com`|There is not a complete list of domains under adf.ly's net that I could find, but there is an algorythm for finding them.|
 |**`adlinkfly`**|Puppeteer + Stealth|Sometimes, but always required|[https://pdiskshortener.com/6I2CR2](https://pdiskshortener.com/6I2CR2), [https://dz-linkk.com/N2xFP](https://dz-linkk.com/N2xFP)|`adlinkfly.mightyscripts.xyz`, `pdiskshortener.com`, `dzlinkk.com`|Like adf.ly, there is not a list of adlinkfly sites, but there is an algorithm to find them.|

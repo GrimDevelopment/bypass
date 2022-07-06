@@ -46,7 +46,7 @@ module.exports = {
       await p.solveRecaptchas();
       await p.waitForTimeout(500);
       await p.click(".button-element-verification");
-      if (lib.config().debug == true) console.log("[1bitspace] Solved CAPTCHA. Counting down (1/2)...");
+      if (lib.config().debug == true) console.log("[1bitspace] Solved CAPTCHA. Counting down...");
 
       // second page
       await p.waitForSelector(".button-element-redirect:not([disabled])");
@@ -55,15 +55,15 @@ module.exports = {
       await p.waitForNavigation();
 
       // third page
-      if (lib.config().debug == true) console.log("[1bitspace] Loaded. Counting down (2)...");
-      await p.waitForSelector("#continue-button:not([disabled])");
-      if (lib.config().debug == true) console.log("[1bitspace] Done. Loading final page...");
-      await p.click("#continue-button:not([disabled])");
-      await p.waitForNavigation();
-
+      if (lib.config().debug == true) console.log("[1bitspace] Loaded. Parsing URL...");
       let u = await p.url();
+      u = u.split("api/tokenURL/")[1].split("/")[0];
+      u = u.split("").reverse().join("");
+      u = Buffer.from(u, "base64").toString("ascii");
+      u = JSON.parse(u);
+      u = u[1];
 
-      if (lib.config().debug == true) console.log("[1bitspace] Loaded. Closing browser...");
+      if (lib.config().debug == true) console.log("[1bitspace] Done. Closing browser...");
       await b.close();
 
       return u;
