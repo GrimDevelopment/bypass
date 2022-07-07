@@ -152,7 +152,20 @@ module.exports = {
       // generic HTTP redirects, put any non-specific (like adlinkfly-type extractors) sites below this
       if (lib.config().debug == true) console.log("[generic] Done. Checking for HTTP redirects...");
       if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
-        return resp.request.socket._httpMessage._redirectable._currentUrl;
+        if (lib.isUrl(resp.request.socket._httpMessage._redirectable._currentUrl)) {
+          return resp.request.socket._httpMessage._redirectable._currentUrl;
+        } else if (resp.request.socket._httpMessage._redirectable._currentUrl.startsWith("/")) {
+          return `${url.split("/").slice(0, 3)}${resp.request.socket._httpMessage._redirectable._currentUrl}`;
+        }
+      }
+
+      // HTTP redirects, volume 2
+      if (resp.headers.refresh) {
+        if (lib.isUrl(resp.headers.refresh.split("; url=").slice(1).join("; url="))) {
+          return resp.headers.refresh.split("; url=").slice(1).join("; url=");
+        } else if (resp.headers.refresh.startsWith("/")) {
+          return `${url.split("/").slice(0, 3)}${resp.headers.refresh.slice(1).join("; url=")}`;
+        }
       }
 
       let $ = cheerio.load(resp.data);

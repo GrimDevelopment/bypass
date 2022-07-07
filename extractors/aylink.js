@@ -72,7 +72,7 @@ async function fireWhenFound(p) {
         }
       });
     } catch(e) {
-      throw e;
+      reject(e);
     }
   });
 }

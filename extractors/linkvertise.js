@@ -44,7 +44,7 @@ module.exports = {
         id = new URL(url).pathname.split("/").slice(1, 3).join("/");
       }
   
-      if (lib.config().debug == true) console.log("[linkvertise] Got ID from URL", id);
+      if (lib.config().debug == true) console.log("[linkvertise] Got ID from URL:", id);
   
       header["User-Agent"] = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1";
       header.Accept = "application/json";
@@ -77,35 +77,34 @@ module.exports = {
   
       let rp = resp.data?.data.link.id;
       let ut = resp.data?.user_token;
-      if (lib.config().debug == true) console.log("[linkvertise] Got user token", ut);
+      if (lib.config().debug == true) console.log("[linkvertise] Got user token:", ut);
   
       let ck;
   
-      if (resp.data?.data?.vpn == true || resp.data?.meta?.require_captcha == true) {
-        if (lib.config().debug == true) console.log("[linkvertise] Doing CAPTCHA to validate traffic...");
+      if (lib.config().debug == true) console.log("[linkvertise] Doing CAPTCHA to validate traffic...");
   
-        header["Content-Type"] = "application/json";
+      header["Content-Type"] = "application/json";
   
-        if (new URL(url).hostname !== "linkvertise.com") url = `https://linkvertise.com/${url.split("/").slice(3).join("/")}`;
-        let tk = await lib.solve("6LcEr_UUAAAAAHXt5wx-k9P_m8Z1JY-Ck9Mxrhxo", "recaptcha", {referer: url});
+      if (new URL(url).hostname !== "linkvertise.com") url = `https://linkvertise.com/${url.split("/").slice(3).join("/")}`;
+      let tk = await lib.solve("6LcEr_UUAAAAAHXt5wx-k9P_m8Z1JY-Ck9Mxrhxo", "recaptcha", {referer: url});
   
-        let d = JSON.stringify({
-          token: tk,
-          type: "rc"
-        });
-        header["Content-Length"] = lib.byteCount(d);
+      let d = JSON.stringify({
+        token: tk,
+        type: "rc"
+      });
+
+      header["Content-Length"] = lib.byteCount(d);
         
-        if (lib.config().debug == true) console.log("[linkvertise] Sending CAPTCHA result to get CAPTCHA token...");
-        resp = await axios({
-          data: d,
-          method: "POST",
-          headers: header,
-          url: `https://publisher.linkvertise.com/api/v1/redirect/link/${id}/traffic-validation?X-Linkvertise-UT=${ut}`
-        });
-  
-        ck = resp.data?.data.tokens.TARGET;
-        if (lib.config().debug == true) console.log("[linkvertise] Got CAPTCHA token", ck);
-      } 
+      if (lib.config().debug == true) console.log("[linkvertise] Sending CAPTCHA result to get CAPTCHA token...");
+      resp = await axios({
+        data: d,
+        method: "POST",
+        headers: header,
+        url: `https://publisher.linkvertise.com/api/v1/redirect/link/${id}/traffic-validation?X-Linkvertise-UT=${ut}`        
+      });
+
+      ck = resp.data?.data.tokens.TARGET;
+      if (lib.config().debug == true) console.log("[linkvertise] Got CAPTCHA token: ", ck);
   
       let fb = {};
   
