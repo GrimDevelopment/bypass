@@ -53,22 +53,43 @@ async function cont(p, url, b) {
       });
       await p.waitForNavigation();
       return (await cont(p, url, b));
-    } else if ((await p.$("#invisibleCaptchaShortlink"))) {
+    } else if ((await p.$(".btn-captcha"))) {
       if (lib.config().debug == true) console.log("[exeio] Retrieving sitekey...");
-      let sk = await p.evaluate(function() {
-        return document.querySelector("iframe[title='recaptcha challenge expires in two minutes']").src.split("k=")[1].split("&")[0]
+
+      let type = await p.evaluate(function() {
+        if (document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")) return "recaptcha";
+        else if (document.querySelector(".h-captcha")) return "hcaptcha";
+        else return null;
       });
+
+      if (type == null) throw "Could not find CAPTCHA type.";
+      if (lib.config().debug == true) console.log("[exeio] Got CAPTCHA type:", type);
+
+      let sk = await p.evaluate(function() {
+        return (
+          document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")?.src.split("k=")[1].split("&")[0] ||
+          document.querySelector(".h-captcha").getAttribute("data-sitekey")
+        );
+      });
+      
+      if (lib.config().debug == true) console.log("[exeio] Got sitekey:", sk);
+
       if (lib.config().debug == true) console.log("[exeio] Retrieved. Solving CAPTCHA...");
-      let c = await lib.solve(sk, "recaptcha", {referer: (await p.url())});
+      let c = await lib.solve(sk, type, {referer: (await p.url())});
+
       if (lib.config().debug == true) console.log("[exeio] Solved CAPTCHA. Enterring solution and submitting form...");
       await p.evaluate(`document.querySelector("[name='g-recaptcha-response']").value = "${c}";`);
+      if (type == "hcaptcha") await p.evaluate(`document.querySelector("[name='h-captcha-response']").value = "${c}";`);
+
       p.on("dialog", function(d) {
         if (lib.config().debug == true) console.log("[exeio] Recieved a dialog, auto-accepting.");
         d.accept();
       })
+
       await p.evaluate(function() {
         document.querySelector("form").submit();
       });
+
       if (lib.config().debug == true) console.log("[exeio] Submitted. Waiting...");
       await p.waitForNavigation();
       return (await cont(p, url, b));
