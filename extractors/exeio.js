@@ -3,7 +3,7 @@ const adb = require("puppeteer-extra-plugin-adblocker");
 const lib = require("../lib")
 
 module.exports = {
-  hostnames: ["exe.io", "exey.io"],
+  hostnames: ["exe.io", "exey.io", "exe.app"],
   requiresCaptcha: true,
   get: async function(url, opt) {
     let b;

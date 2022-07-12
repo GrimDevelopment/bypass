@@ -199,6 +199,13 @@ module.exports = {
         return (await dlp.get(url, opt));
       }
 
+      if (lib.config().debug == true) console.log("[generic] Done. Checking for a long WPSafelink bypass...");
+      if ($("body > form#landing").length == 1) {
+        if (lib.config().debug == true) console.log("[generic] Link is a long WPSafelink, switching to WPSafelink extractor...");
+        const lwps = require("./longwpsafe"); 
+        return (await lwps.get(url, opt));
+      }
+
       throw "Redirect not found.";
     } catch(err) {
       throw err;
