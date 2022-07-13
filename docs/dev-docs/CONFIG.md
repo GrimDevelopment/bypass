@@ -24,8 +24,12 @@ This is a quick start guide on configuring your BIFM server.
   "defaults": { // defaults for scrapers
     "axios": { // axios-type scrapers
       "headers": {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101 Firefox/102.0", // the default user agent
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" // accept header
+        // all headers sent (by default) in axios
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101 Firefox/102.0", // default user agent, currently firefox 102.0 on linux
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", // default accept header
+        "Accept-Encoding": "gzip, deflate", // default accept encoding
+        "Connection": "keep-alive", // default connection header
+        "Upgrade-Insecure-Requests": "1" 
       }
     },
     "puppeteer": { // puppeteer-type scrapers, here are the default launching headers.
