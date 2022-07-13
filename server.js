@@ -82,5 +82,5 @@ app.get("/api/bypass", async function(req, res) {
 });
 
 app.get("/", async function(req, res) {
-  res.render("home", {config: (await lib.config()), count: (await lib.cacheCount()), alert: lib.config().alert});
+  res.render("home", {config: (await lib.config()), count: (await lib.cacheCount()).toLocaleString(), alert: lib.config().alert});
 });
