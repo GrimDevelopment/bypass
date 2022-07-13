@@ -54,3 +54,34 @@ An errored response would look like this.
 }
 ```
 </details>
+
+<details>
+  <summary>
+    <code>GET /api/count</code> - Get the count of cached links
+  </summary>
+
+### Parameters
+
+There are none.
+
+### Responses
+
+A successful response from a server with a cache would look like this.
+
+```json
+{
+  "success": true, // Determines success of request.
+  "count": 100 // The number of destinations in the cache.
+}
+```
+
+If you server has no cache, or has nothing in the cache, a response would look like this.
+
+```json
+{
+  "success": true, // Determines success of request.
+  "count": 0 // The number of destinations in the cache.
+}
+```
+
+</details>

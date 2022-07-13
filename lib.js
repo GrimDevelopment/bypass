@@ -489,9 +489,9 @@ module.exports = {
     }
   },
   cacheCount: async function() {
+    if (config.db?.active == false) return 0;
     if (links == undefined) await waitUntilDbConnected();
-    c = (await (await links.find({})).toArray()).length; 
-    return c;
+    return (((await (await links.find({})).toArray()).length) || 0);
   }
 }
 
