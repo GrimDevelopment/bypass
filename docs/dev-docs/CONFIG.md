@@ -24,7 +24,7 @@ This is a quick start guide on configuring your BIFM server.
   "defaults": { // defaults for scrapers
     "axios": { // axios-type scrapers
       "headers": {
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0", // the default user agent
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101 Firefox/102.0", // the default user agent
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" // accept header
       }
     },
