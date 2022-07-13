@@ -487,6 +487,11 @@ module.exports = {
         return null;
       }
     }
+  },
+  cacheCount: async function() {
+    if (links == undefined) await waitUntilDbConnected();
+    c = (await (await links.find({})).toArray()).length; 
+    return c;
   }
 }
 

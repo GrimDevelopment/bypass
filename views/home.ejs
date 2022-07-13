@@ -70,7 +70,7 @@
       </div>
       <div class="info">
         <p>This instance <i><% if (config.captcha.active) { %> does <% } else { %> does not <% } %></i>support solving CAPTCHAs.</p>
-        <p>This instance <i><% if (config.db.active) { %> does <% } else { %> does not <% } %> have</i> a cache.</p>
+        <p>This instance <i><% if (config.db.active) { %> does <% } else { %> does not <% } %> have</i> a cache<% if (count) { %>, with <i><%= count %></i> destinations cached<% } %>.</p>
         <p>This instance <i><% if (config.fastforward) { %> supports <% } else { %> doesn't support <% } %></i>  interacting with FastForward.</p>
         <p>This instance <i>has debug mode <% if (config.debug) { %>  on<% } else { %> off<% } %></i>.</p>
       </div>
