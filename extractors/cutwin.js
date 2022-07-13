@@ -5,7 +5,7 @@ const cap = require("puppeteer-extra-plugin-recaptcha");
 const lib = require("../lib");
 
 module.exports = {
-  hostnames: ["cutw.in"],
+  hostnames: ["cutw.in", "tmearn.com"],
   get: async function(url, opt) {
     let b;
     try {

@@ -130,6 +130,15 @@ module.exports = {
   
       return (resp.data?.data.paste || resp.data?.data.target);
     } catch(err) {
+      if (err.code.toLowerCase().includes("econnreset") && opt.retried !== 1) {
+        if (lib.config().debug == true) console.log("[linkvertise] Retrying request in 30 seconds, as it recieved a connection reset error...");
+        await new Promise(resolve => setTimeout(resolve, 30000));
+        opt.retried = 1;
+        return (await this.get(url, opt)); 
+      } else if (opt.retried == 1) {
+        throw "Linkvertise has rate limited us, try again in a moment."
+      }
+      console.log(err.code)
       throw err;
     }
   }
