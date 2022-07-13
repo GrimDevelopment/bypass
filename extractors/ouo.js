@@ -1,78 +1,78 @@
-const pup = require("puppeteer-extra");
+const axios = require("axios");
+const cheerio = require("cheerio");
+const scp = require("set-cookie-parser");
 const lib = require("../lib");
-const cap = require("puppeteer-extra-plugin-recaptcha");
-const stl = require("puppeteer-extra-plugin-stealth");
 
 module.exports = {
   hostnames: ["ouo.press", "ouo.io"],
   requiresCaptcha: false,
   get: async function(url, opt) {
-    let b;
     try {
-      let u = new URL(url);
-      if (u.searchParams.get("s")) {
-        if (lib.config().debug == true) console.log("[ouo] Found API information, sending URL...");
-        return decodeURIComponent(u.searchParams.get("s"));
-      }
-      
-      // setting up plugins
-      let stlh = stl();
-      stlh.enabledEvasions.delete("iframe.contentWindow");
-      pup.use(stlh);
+      if (lib.config().debug == true) console.log("[ouo] Requesting page...");
+      let header = lib.config().defaults?.axios.headers;
+      if (opt.referer) header.Referer = opt.referer;
 
-      // opening browser
-      let args = (lib.config().defaults?.puppeteer || {headless: true});
-      b = await pup.launch(lib.removeTor(args));
-      p = await b.newPage();
-      if (opt.referer) {
-        if (lib.config().debug == true) console.log("[ouo] Going to referer URL first...");
-        await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
-      }
-      await p.goto(url);
-
-      if (lib.config().debug == true) console.log("[ouo] Launched. Detecting if the site is protected via Cloudflare...");
-      let cf = await lib.cloudflare.check(p);
-      if (cf == true) {
-        if (lib.config().debug == true) console.log("[ouo] ouo is currently protected by Cloudflare, bypassing...");
-        p = await lib.cloudflare.solve(p);
-      } 
-
-      // 2nd eval code sourced from https://github.com/FastForwardTeam/FastForward/blob/main/src/js/injection_script.js#L1095
-
-      if (lib.config().debug == true) console.log("[ouo] Auto-submitting form to skip CAPTCHA...");
-      await p.evaluate(function() {
-        if (location.pathname.includes("/go") || location.pathname.includes("/fbc")) {
-          document.querySelector("form").submit();
+      let proxy;
+      if (lib.config().defaults?.axios.proxy) {
+        if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+          const agent = require("socks-proxy-agent");
+          let prox = `socks5://${lib.config().defaults?.axios.proxy?.host}:${lib.config().defaults?.axios.proxy?.port}`;
+          proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
         } else {
-          if (document.querySelector("form#form-captcha")) {
-            let f = document.querySelector("form#form-captcha");
-            f.action = "/xreallcygo" + location.pathname;
-            f.submit();
-          }
+          proxy = {};
         }
+      }
+
+      let resp = await axios({
+        method: "GET",
+        url: url,
+        headers: header,
+        ...proxy
       });
-      
-      let r = await fireWhenFound(p);
-      await b.close();
-      
-      return r;
+
+      if (lib.config().debug == true) console.log("[ouo] Got page, parsing page...");
+      let $ = cheerio.load(resp.data);
+
+      let post = $("form[method='POST']").attr("action");
+      let tk = $("input[name='_token']").attr("value");
+      let cookie = lib.cookieString(scp.parse(resp.headers["set-cookie"]));
+      let body = `_token=${tk}&x-token=&v-token=bx`;
+
+      if (lib.config().debug == true) console.log("[ouo] Done, preparing headers for next request...");
+      header["Cookie"] = cookie;
+      header["Content-Type"] = "application/x-www-form-urlencoded";
+      header["Content-Length"] = lib.byteCount(body);
+      header["Referer"] = url;
+      header["Sec-Fetch-Dest"] = "document";
+      header["Sec-Fetch-Mode"] = "navigate";
+      header["Sec-Fetch-Site"] = "same-origin";
+      header["TE"] = "trailers";
+
+      if (lib.config().debug == true) console.log("[ouo] Done, sending request...");
+      try {
+        resp = await axios({
+          method: "POST",
+          data: body,
+          url: post.replace("/go", "/xreallcygo"),
+          headers: header,
+          maxRedirects: 0,
+          ...proxy
+        });
+        if (resp.data) {
+          if (lib.config().debug == true) console.log("[ouo] CAPTCHA-less bypass failed, trying Puppeteer bypass...");
+          return (await (require("./ouo.puppeteer").get(url, opt)));
+        }
+      } catch(err) {
+        if (err.response?.headers?.location) return err.response.headers.location;
+        else if (err.message.includes("status code")) {
+          if (lib.config().debug == true) console.log("[ouo] CAPTCHA-less bypass failed, trying Puppeteer bypass...");
+          return (await (require("./ouo.puppeteer").get(url, opt)));
+        } else throw err;
+      }
+
     } catch(err) {
-      if (b !== undefined) await b.close();
+      if (err.response) console.log(err.response)
       throw err;
     }
   }
-}
-
-async function fireWhenFound(p) {
-  return new Promise(function(resolve, reject) {
-    p.on("response", async function(res) {
-      let a = new URL((await res.url()));
-      if (a.pathname.startsWith("/xreallcygo") && (await (await(res.request()).method())) == "POST") {
-        let a = (await res.headers());
-        resolve(a?.location)
-      } else {
-        if (lib.config().debug == true && a.hostname.includes("ouo")) console.log(`[ouo] Ignoring request ${(await (await(res.request()).method()))} "${(await res.url())}" from listener.`);
-      }
-    });
-  });
 }
