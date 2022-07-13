@@ -19,6 +19,7 @@ module.exports = {
       await p.goto(url, {waitUntil: "networkidle2"});
 
       let u = await cont(p);
+      await b.close();
       return u;
     } catch(err) {
       throw err;

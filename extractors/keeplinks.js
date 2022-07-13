@@ -46,6 +46,8 @@ module.exports = {
         return a;
       });
 
+      await b.close();
+      
       if (r.length > 1) {
         return {destinations: r}
       } else {

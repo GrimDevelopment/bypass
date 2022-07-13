@@ -50,6 +50,8 @@ module.exports = {
         return document.body.innerHTML.split(`$('.get-link').html('<a  href="`)[1].split(`">`)[0];
       });
 
+      await b.close();
+
       return u;
     } catch(err) {
       if (b !== undefined) await b.close();

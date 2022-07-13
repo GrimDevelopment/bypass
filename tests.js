@@ -35,6 +35,7 @@ const examples = [
   { extractor: "thinfi (no password)", link: "https://thinfi.com/088ud" },
   { extractor: "thinfi (passworded)", link: "https://thinfi.com/088uk", password: "bifm"},
   { extractor: "WPSafelink", link: "https://demo-safelink.themeson.com/template1/?f7fbb8af", expected: "https://themeson.com/safelink/" },
+  { extractor: "Longer WPSafelink", link: "https://pdiskshortener.in/svJ1", expected: "https://1.htlinks.in/svJ1" },
   { link: "https://za.gl/JPk6" }
 ];
 
