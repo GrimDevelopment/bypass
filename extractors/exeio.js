@@ -1,14 +1,16 @@
 const pup = require("puppeteer-extra");
 const adb = require("puppeteer-extra-plugin-adblocker");
+const stl = require("puppeteer-extra-plugin-stealth");
 const lib = require("../lib")
 
 module.exports = {
-  hostnames: ["exe.io", "exey.io", "exe.app"],
+  hostnames: ["exe.io", "exey.io", "exe.app", "fc-lc.com", "fc.lc"],
   requiresCaptcha: true,
   get: async function(url, opt) {
     let b;
     try {
       pup.use(adb());
+      pup.use(stl());
 
       if (lib.config().captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."
@@ -26,6 +28,7 @@ module.exports = {
 
       if (!(await p.url()).includes("exey.io")) {
         if (lib.config().debug == true) console.log("[exeio] Launched. Skipping first page...");
+        if ((await p.$(".btn.btn-primary"))) await p.click(".btn.btn-primary");
         await p.waitForNavigation();
       }
 
@@ -68,7 +71,7 @@ async function cont(p, url, b) {
       let sk = await p.evaluate(function() {
         return (
           document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")?.src.split("k=")[1].split("&")[0] ||
-          document.querySelector(".h-captcha").getAttribute("data-sitekey")
+          document.querySelector(".h-captcha")?.getAttribute("data-sitekey")
         );
       });
       
@@ -100,6 +103,14 @@ async function cont(p, url, b) {
         return document.querySelector(".procced > .btn.get-link.text-white").href
       });
       return r;
+    } else if ((await p.$("#content > div[style]"))) {
+      if (lib.config().debug == true) console.log("[exeio] Counting down...");
+      await p.waitForSelector("#surl:not(.disabled)");
+      let r = await p.evaluate(function() {
+        return document.querySelector("#surl").href
+      });
+      return r;
+      // #surl
     } else {
       throw "The exe.io link is dead.";
     }
@@ -107,3 +118,4 @@ async function cont(p, url, b) {
     throw err;
   }
 }
+

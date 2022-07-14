@@ -80,7 +80,7 @@ async function cont(p, url, cfc) {
 
   if (lib.config().debug == true) console.log("[adlinkfly] Attempting to find CAPTCHA...");
   let isCaptcha = await p.evaluate(function () {
-    if (document.querySelector("#link-view > p")?.innerHTML?.includes("Please check the captcha")) return true;
+    if (document.querySelector("#link-view p")?.innerHTML?.includes("Please check the captcha")) return true;
     else return false;
   });
 
@@ -110,7 +110,7 @@ async function cont(p, url, cfc) {
 
   if ((await p.$("#countdown"))) {
     if (lib.config().debug == true) console.log("[adlinkfly] Retreiving link...");
-    await p.waitForSelector(".btn-success.btn-lg:not(.disabled):not([disabled]):not([href='javascript: void(0)'])");
+    await p.waitForSelector(".btn-success.btn-lg:not(.disabled):not([disabled]):not([href='javascript: void(0)']):not([href='" + (await p.url()) + "'])");
     let r = await p.evaluate(function() {return document.querySelector(".btn-success").href});
     
     return r;

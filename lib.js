@@ -104,7 +104,7 @@ module.exports = {
         }
       } 
       
-      f = await extractor.get(url, opt);
+      f = await extractor.get(this.fixSubdomain(url), opt);
 
       if (config.debug == true) console.log(`[extract] Finished "${url}", ${JSON.stringify(opt)} [Solution: ${(JSON.stringify(f) || f)}]`);
 
@@ -492,6 +492,35 @@ module.exports = {
     if (config.db?.active == false) return 0;
     if (links == undefined) await waitUntilDbConnected();
     return (((await (await links.find({})).toArray()).length) || 0);
+  },
+  fixSubdomain: function(url) {
+
+    // function meant to be for sites that have you visit multiple different domains
+
+    let h = new URL(url).hostname;
+    switch(h) {
+      case "go.birdurls.com":
+      case "birdurls.com":
+        return `https://birdurls.com/${url.split("/").slice(3).join("/")}`;
+      
+      case "owllink.net":
+      case "go.owllink.net":
+        return `https://owllink.net/${url.split("/").slice(3).join("/")}`;
+
+      case "crazyblog.in":
+      case "open.crazyblog.in":
+      case "redd.crazyblog.in":
+        url = url.replace("open.crazyblog.in", "redd.crazyblog.in");
+        url = url.replace("//crazyblog.in", "//redd.crazyblog.in");
+      return url;
+
+      case "medipost.org":
+      case "links.medipost.org":
+      case "usalink.io":
+        return `https://links.medipost.org/${url.split("/").slice(3).join("/")}`
+
+      default: return url;
+    }
   }
 }
 

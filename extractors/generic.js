@@ -66,6 +66,12 @@ module.exports = {
         } else if (lib.isUrl(Buffer.from(u.searchParams.get("k"), "base64").toString("ascii"))) {
           return (Buffer.from(u.searchParams.get("k"), "base64").toString("ascii"));
         }
+      } else if (u.searchParams.get("file")) {
+        if (lib.isUrl(u.searchParams.get("file"))) {
+          return u.searchParams.get("file");
+        } else if (lib.isUrl(Buffer.from(u.searchParams.get("file"), "base64").toString("ascii"))) {
+          return (Buffer.from(u.searchParams.get("file"), "base64").toString("ascii"));
+        }
       }
 
       if (lib.config().debug == true) console.log("[generic] Requesting page...");
@@ -87,8 +93,8 @@ module.exports = {
         method: "GET",
         url: url,
         headers: header,
-        maxContentLength: 500000,
-        maxBodyLength: 500000,
+        maxContentLength: 5000000,
+        maxBodyLength: 5000000,
         validateStatus: function() {
           return true;
         },
@@ -185,7 +191,7 @@ module.exports = {
 
       // adlinkfly sites
       if (lib.config().debug == true) console.log("[generic] Done. Checking if link is adlinkfly link...");
-      if ($("body .container form > div[style='display:none;'] > *[name='_method']").length > 0) {
+      if ($("form > div[style='display:none;'] > *[name='_method']").length > 0 || $("form[action='https://techydino.net/golink.php']").length > 0) {
         if (lib.config().debug == true) console.log("[generic] Link is an adlinkfly link, switching to adlinkfly extractor...");
         const afl = require("./adlinkfly"); 
         return (await afl.get(url, opt));
