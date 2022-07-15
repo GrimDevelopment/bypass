@@ -147,7 +147,7 @@ function formatExtra(data) {
 
   if (data["dateSolved"] && data["dateSolved"] !== "unknown") {
     let d = new Date(parseInt(data["dateSolved"]));
-    d = d.toTimeString();
+    d = d.toUTCString();
     d = d.toLowerCase();
     a = `${a} generated on ${d}`;
   } else {
