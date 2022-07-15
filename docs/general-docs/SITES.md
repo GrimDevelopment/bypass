@@ -22,6 +22,7 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`droplink.co`**|Puppeteer|No|[https://droplink.co/VOpK](https://droplink.co/VOpK)|||
 |**`exe.io`**|Puppeteer + Adblock|Yes|[https://exe.io/ZaKsUgDc](https://exe.io/ZaKsUgDc)|`exey.io`||
 |**`ez4short.com`**|Puppeteer + Adblocker + Stealth|No|[https://ez4short.com/nzcU](https://ez4short.com/nzcU)|||
+|**`fc.lc`**|Puppeteer + Adblocker + Stealth|No|[https://fc-lc.com/mWGCzBwu](https://fc-lc.com/mWGCzBwu)|`fc-lc.com`|Not officially a seperate extractor, this uses the `exeio` extractor.|
 |**`gplinks.co`**|Puppeteer + Adblocker + Stealth|Yes||`gplinks.in`|Need example link that is SFW and legal.|
 |**`hrshort.com`**|Puppeteer|No|[https://open.crazyblog.in/tXDGig](https://open.crazyblog.in/tXDGig)|`crazyblog.in`, `open.crazyblog.in`, `redd.crazyblog.in`||
 |**`ity.im`**|Axios|No|[http://ity.im/1QZh2](http://ity.im/1QZh2)|||
