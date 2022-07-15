@@ -26,8 +26,26 @@ module.exports = {
       }
       await p.goto(url);
 
-      if (lib.config().debug == true) console.log("[aylink] Launched. Solving CAPTCHA...");
-      await p.evaluate(function() {window.stop()});
+      let a = await cont(p);
+      
+      await b.close();
+      return a;
+    } catch(err) {
+      if (b !== undefined) await b.close();
+      throw err;
+    }
+  }
+}
+
+async function cont(p) {
+  try {
+    await p.evaluate(function() {
+      if (document.querySelector(".sweet-alert")) document.querySelector(".sweet-alert").remove();
+    });
+
+    if (lib.config().debug == true) console.log("[aylink] Launched. Solving CAPTCHA...");
+    await p.evaluate(function() {window.stop()});
+    if ((await p.$("[name='g-recaptcha-response']"))) {
       let sk = await p.evaluate(function() {return document.querySelector(".g-recaptcha").getAttribute("data-sitekey")});
       let c = await lib.solve(sk, "recaptcha", {referer: (await p.url())});
       await p.evaluate(`document.querySelector("[name='g-recaptcha-response']").value = "${c}";`);
@@ -35,6 +53,8 @@ module.exports = {
       if (lib.config().debug == true) console.log("[aylink] Solved CAPTCHA. Counting down...");
 
       await p.waitForNavigation();
+      return (await cont(p));
+    } else if ((await p.$(".complete"))) {
       await p.waitForSelector(".complete", {visible: true});
       if (lib.config().debug == true) console.log("[aylink] Done. Fetching next page...");
       url = fireWhenFound(p);
@@ -51,13 +71,10 @@ module.exports = {
       a = a.split(`</script>\n<script type="text/javascript">`)[1];
       a = a.split(`let`)[1];
       a = a.split(`url = '`)[1].split(`',`)[0];
-
-      await b.close();
       return a;
-    } catch(err) {
-      if (b !== undefined) await b.close();
-      throw err;
     }
+  } catch(err) {
+    throw err;
   }
 }
 

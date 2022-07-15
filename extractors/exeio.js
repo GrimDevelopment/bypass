@@ -24,52 +24,55 @@ module.exports = {
         if (lib.config().debug == true) console.log("[exeio] Going to referer URL first...");
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
       }
-      await p.goto(url);
+      await p.goto(url, {waitUntil: "networkidle0"});
 
       if (!(await p.url()).includes("exey.io")) {
         if (lib.config().debug == true) console.log("[exeio] Launched. Skipping first page...");
-        if ((await p.$(".btn.btn-primary"))) {
-          await p.click(".btn.btn-primary");
-          try {
-            await p.waitForNavigation({timeout: 5000});
-          } catch(err) {
-            if ((await p.$(".catpcha-page"))) {
-              if (lib.config().debug == true) console.log("[exeio] First page has CAPTCHA, attempting to solve...");
-
-              let type = await p.evaluate(function() {
-                if (document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")) return "recaptcha";
-                else if (document.querySelector(".h-captcha")) return "hcaptcha";
-                else return null;
-              });
-        
-              if (type == null) throw "Could not find CAPTCHA type.";
-              if (lib.config().debug == true) console.log("[exeio] Got CAPTCHA type:", type);
-        
-              let sk = await p.evaluate(function() {
-                return (
-                  document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")?.src.split("k=")[1].split("&")[0] ||
-                  document.querySelector(".h-captcha")?.getAttribute("data-sitekey")
-                );
-              });
-              
-              if (lib.config().debug == true) console.log("[exeio] Got sitekey:", sk);
-        
-              if (lib.config().debug == true) console.log("[exeio] Retrieved. Solving CAPTCHA...");
-              let c = await lib.solve(sk, type, {referer: (await p.url())});
-        
-              if (lib.config().debug == true) console.log("[exeio] Solved CAPTCHA. Enterring solution and submitting form...");
-              await p.evaluate(`document.querySelector("[name='g-recaptcha-response']").value = "${c}";`);
-              if (type == "hcaptcha") await p.evaluate(`document.querySelector("[name='h-captcha-response']").value = "${c}";`);        
-              await p.evaluate(function() {
-                document.querySelector("form").submit();
-              });
-              await p.waitForNavigation();
-            } else {
-              throw err;
+        try {
+          if ((await p.$(".btn.btn-primary"))) {
+            await p.click(".btn.btn-primary");
+            try {
+              await p.waitForNavigation({timeout: 10000});
+            } catch(err) {
+              if (err.message.includes("Navigation timeout of")) {
+                if (lib.config().debug == true) console.log("[exeio] First page has CAPTCHA, attempting to solve...");
+  
+                let type = await p.evaluate(function() {
+                  if (document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")) return "recaptcha";
+                  else if (document.querySelector(".h-captcha")) return "hcaptcha";
+                  else return null;
+                });
+          
+                if (type == null) throw "Could not find CAPTCHA type.";
+                if (lib.config().debug == true) console.log("[exeio] Got CAPTCHA type:", type);
+          
+                let sk = await p.evaluate(function() {
+                  return (
+                    document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")?.src.split("k=")[1].split("&")[0] ||
+                    document.querySelector(".h-captcha")?.getAttribute("data-sitekey")
+                  );
+                });
+                
+                if (lib.config().debug == true) console.log("[exeio] Got sitekey:", sk);
+          
+                if (lib.config().debug == true) console.log("[exeio] Retrieved. Solving CAPTCHA...");
+                let c = await lib.solve(sk, type, {referer: (await p.url())});
+          
+                if (lib.config().debug == true) console.log("[exeio] Solved CAPTCHA. Enterring solution and submitting form...");
+                await p.evaluate(`document.querySelector("[name='g-recaptcha-response']").value = "${c}";`);
+                if (type == "hcaptcha") await p.evaluate(`document.querySelector("[name='h-captcha-response']").value = "${c}";`);        
+                await p.evaluate(function() {
+                  document.querySelector("form").submit();
+                });
+                await p.waitForNavigation();
+              } else {
+                if (err.message !== "Execution context was destroyed, most likely because of a navigation.") throw err;
+              }
             }
-          }
-        } else await p.waitForNavigation();
-        
+          } else await p.waitForNavigation();
+        } catch(err) {
+          if (err.message !== "Execution context was destroyed, most likely because of a navigation.") throw err;
+        }
       }
 
       if (lib.config().debug == true) console.log("[exeio] Starting continous function...");
