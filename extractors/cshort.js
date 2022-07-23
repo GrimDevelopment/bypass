@@ -1,4 +1,4 @@
-const axios = require("axios");
+const got = require("got");
 const scp = require("set-cookie-parser");
 const lib = require("../lib");
 
@@ -21,8 +21,8 @@ module.exports = {
       if (opt.referer) header.Referer = opt.referer;
 
       let proxy;
-      if (lib.config().defaults?.axios.proxy) {
-        if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+      if (lib.config().defaults?.got.proxy) {
+        if (lib.config().defaults?.got.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
           try { 
             if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(proxy).port == "9050") {
@@ -38,7 +38,7 @@ module.exports = {
         }
       }
 
-      let resp = await axios({
+      let resp = await got({
         method: "GET",
         url: url,
         headers: header,
@@ -46,7 +46,7 @@ module.exports = {
       });
   
       if (lib.config().debug == true) console.log("[cshort] Getting next page URL (1/2)...");
-      let r = resp.data.split(`function redirect() {`)[1].split(`}`)[0].split(`\n`);
+      let r = resp.body.split(`function redirect() {`)[1].split(`}`)[0].split(`\n`);
       let h;
       let c = `${lib.cookieString(scp(resp.headers["set-cookie"]))}; aid=${encodeURIComponent(JSON.stringify([new URL(url).pathname.substring(1)]))}`;
   
@@ -61,12 +61,11 @@ module.exports = {
       await new Promise(resolve => setTimeout(resolve, 10000)); // can't bypass the wait, unfortunately
   
       if (lib.config().debug == true) console.log("[cshort] Requesting next page URL...");
-      resp = await axios({
+      resp = await got({
         method: "GET",
+        throwHttpErrors: false,
+        followRedirect: false,
         url: `${url}?u=${h}`,
-        validateStatus: function() {
-          return true;
-        },
         headers: {
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
           "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -86,8 +85,8 @@ module.exports = {
         }
       });
   
-      if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
-        return resp.request.socket._httpMessage._redirectable._currentUrl;
+      if (resp?.headers?.location !== url) {
+        return resp.headers.location;
       } else {
         throw "Redirect didn't occur when it was supposed to.";
       }

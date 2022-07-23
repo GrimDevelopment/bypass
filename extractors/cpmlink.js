@@ -1,4 +1,4 @@
-const axios = require("axios");
+const got = require("got");
 const cheerio = require("cheerio");
 const scp = require("set-cookie-parser");
 const lib = require("../lib");
@@ -25,8 +25,8 @@ module.exports = {
       if (opt.referer) header.Referer = opt.referer;
 
       let proxy;
-      if (lib.config().defaults?.axios.proxy) {
-        if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+      if (lib.config().defaults?.got.proxy) {
+        if (lib.config().defaults?.got.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
           try { 
             if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(proxy).port == "9050") {
@@ -42,7 +42,7 @@ module.exports = {
         }
       }
 
-      let resp = await axios({
+      let resp = await got({
         method: "GET",
         url: url,
         headers: header,
@@ -50,7 +50,7 @@ module.exports = {
       });
 
       if (lib.config().debug == true) console.log("[cpmlink] Got page. Parsing page...");
-      let $ = cheerio.load(resp.data);
+      let $ = cheerio.load(resp.body);
       let k = $("#skip [name=key]").val();
       let t = $("#skip [name=time]").val();
       let r = $("#skip [name=ref]").val();
@@ -68,9 +68,9 @@ module.exports = {
       let body = `key=${k}&time=${t}&ref=${r}&s_width=${w}&s_height=${h}&g-recaptcha-response=${cap}`;
 
       if (lib.config().debug == true) console.log("[cpmlink] Requesting solve page...");
-      resp = await axios({
+      resp = await got({
         method: "POST",
-        data: body,
+        body: body,
         url: $("#skip").attr("action"),
         headers: {
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
@@ -93,7 +93,7 @@ module.exports = {
         ...proxy
       });
       if (lib.config().debug == true) console.log("[cpmlink] Parsing solve page...");
-      $ = cheerio.load(resp.data);
+      $ = cheerio.load(resp.body);
       return $("#continue a").attr("href");
     } catch(err) {
       throw err;

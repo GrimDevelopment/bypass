@@ -1,4 +1,4 @@
-const axios = require("axios");
+const got = require("got");
 const cheerio = require("cheerio");
 const lib = require("../lib");
 
@@ -7,12 +7,12 @@ module.exports = {
   requiresCaptcha: false,
   get: async function(url, opt) {
     try {
-      let header = lib.config().defaults?.axios.headers;
+      let header = lib.config().defaults?.got.headers;
       if (opt.referer) header.Referer = opt.referer; 
 
       let proxy;
-      if (lib.config().defaults?.axios.proxy) {
-        if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+      if (lib.config().defaults?.got.proxy) {
+        if (lib.config().defaults?.got.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
           try { 
             if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(proxy).port == "9050") {
@@ -29,7 +29,7 @@ module.exports = {
       }
 
       if (lib.config().debug == true) console.log("[ityim] Requesting page...");
-      let resp = await axios({
+      let resp = await got({
         method: "GET",
         url: url,
         headers: header,
@@ -37,7 +37,7 @@ module.exports = {
       });
   
       if (lib.config().debug == true) console.log("[ityim] Got page. Parsing page...");
-      let $ = cheerio.load(resp.data);
+      let $ = cheerio.load(resp.body);
   
       return $(".col-xs-6.col-md-4.vertical_center:not(#logo_div) a").attr("href");
     } catch(err) {

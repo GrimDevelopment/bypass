@@ -1,4 +1,4 @@
-const axios = require("axios");
+const got = require("got");
 const lib = require("../lib");
 
 module.exports = {
@@ -17,11 +17,11 @@ module.exports = {
   requiresCaptcha: true,
   get: async function(url, opt) {
     try {
-      let header = lib.config().defaults?.axios.headers;
+      let header = lib.config().defaults?.got.headers;
 
       let proxy;
-      if (lib.config().defaults?.axios.proxy) {
-        if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+      if (lib.config().defaults?.got.proxy) {
+        if (lib.config().defaults?.got.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
           try { 
             if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(proxy).port == "9050") {
@@ -60,23 +60,23 @@ module.exports = {
   
       if (lib.config().debug == true) console.log("[linkvertise] Getting user token...");
   
-      let resp = await axios({
+      let resp = await got({
         method: "GET",
         headers: header,
         url: `https://publisher.linkvertise.com/api/v1/redirect/link/static/${id}?origin=&resolution=1920x960`
       });
   
       let type;
-      if (resp.data?.data.link.target_type == "URL") {
+      if (resp.body?.data.link.target_type == "URL") {
         type = "target";
-      } else if (resp.data?.data.link.target_type == "PASTE") {
+      } else if (resp.body?.data.link.target_type == "PASTE") {
         type = "paste";
       } else {
         throw "Unknown target type.";
       }
   
-      let rp = resp.data?.data.link.id;
-      let ut = resp.data?.user_token;
+      let rp = resp.body?.data.link.id;
+      let ut = resp.body?.user_token;
       if (lib.config().debug == true) console.log("[linkvertise] Got user token:", ut);
   
       let ck;
@@ -96,14 +96,14 @@ module.exports = {
       header["Content-Length"] = lib.byteCount(d);
         
       if (lib.config().debug == true) console.log("[linkvertise] Sending CAPTCHA result to get CAPTCHA token...");
-      resp = await axios({
-        data: d,
+      resp = await got({
+        body: d,
         method: "POST",
         headers: header,
         url: `https://publisher.linkvertise.com/api/v1/redirect/link/${id}/traffic-validation?X-Linkvertise-UT=${ut}`        
       });
 
-      ck = resp.data?.data.tokens.TARGET;
+      ck = resp.body?.data.tokens.TARGET;
       if (lib.config().debug == true) console.log("[linkvertise] Got CAPTCHA token: ", ck);
   
       let fb = {};
@@ -121,14 +121,14 @@ module.exports = {
       header["Content-Length"] = lib.byteCount(fb);
   
       if (lib.config().debug == true) console.log("[linkvertise] Sending final request...");
-      resp = await axios({
-        data: fb,
+      resp = await got({
+        body: fb,
         method: "POST",
         headers: header,
         url: `https://publisher.linkvertise.com/api/v1/redirect/link/${id}/${type}?X-Linkvertise-UT=${ut}`
       });
   
-      return (resp.data?.data.paste || resp.data?.data.target);
+      return (resp.body?.data.paste || resp.body?.data.target);
     } catch(err) {
       if (err.code.toLowerCase().includes("econnreset") && opt.retried !== 1) {
         if (lib.config().debug == true) console.log("[linkvertise] Retrying request in 30 seconds, as it recieved a connection reset error...");

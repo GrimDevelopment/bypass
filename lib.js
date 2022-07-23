@@ -35,7 +35,7 @@ if (!fs.existsSync("./config.json")) {
 
 const config = require("./config.json");
 const two = require("2captcha");
-const axios = require("axios");
+const got = require("got");
 const {MongoClient} = require("mongodb");
 let client, db, links;
 
@@ -270,12 +270,12 @@ module.exports = {
           let b = `domain=${new URL(url).hostname}&path=${new URL(url).pathname.substring(1)}${new URL(url).search}`;
           if (config.debug == true) console.log(`[fastforward] Made body content: `, b);
           if (config.debug == true) console.log("[fastforward] Checking FastForward crowd bypass...");
-          let d = await axios({
+          let d = await got({
             method: "POST",
             url: "https://crowd.fastforward.team/crowd/query_v1",
-            data: b,
+            body: b,
             timeout: (5 * 1000),
-            validateStatus: function() {return true} // Prevent status errors
+            throwHttpErrors: false, // Prevent status errors
           });
 
           if (config.debug == true) console.log("[fastforward] Recieved response", d.status, d.data);
@@ -304,12 +304,12 @@ module.exports = {
           if (config.debug == true) console.log(`[fastforward] Made body content: `, b);
           if (config.debug == true) console.log("[fastforward] Sending to FastForward crowd bypass...");
 
-          let d = await axios({
+          let d = await got({
             method: "POST",
             url: "https://crowd.fastforward.team/crowd/contribute_v1",
             timeout: (7 * 1000),
-            data: b,
-            validateStatus: function() {return true} // Prevent status errors
+            body: b,
+            throwHttpErrors: false // Prevent status errors
           });
 
           if (config.debug == true) console.log("[fastforward] Recieved response", d.status, d.data);

@@ -13,11 +13,14 @@ module.exports = {
 
       let args = (lib.config().defaults?.puppeteer || {headless: true});
 
+      if (lib.config().debug == true) console.log("[longwp] Launching browser...");
       b = await pup.launch(args);
       let p = await b.newPage();
 
+      if (lib.config().debug == true) console.log("[longwp] Done, opening page...");
       await p.goto(url, {waitUntil: "networkidle2"});
 
+      if (lib.config().debug == true) console.log("[longwp] Done, starting continous function...");
       let u = await cont(p);
       await b.close();
       return u;
@@ -30,6 +33,7 @@ module.exports = {
 async function cont(p) {
   try {
     if ((await p.$("#wpsafelink-landing"))) {
+      if (lib.config().debug == true) console.log("[longwpsafe] Handling landing page...");
       if (lib.config().debug == true) console.log("[longwpsafe] Found landing page, parsing...");
       await p.evaluate(function() {
         document.querySelector("#wpsafelink-landing").submit(); 
@@ -45,7 +49,7 @@ async function cont(p) {
       j = (j.safelink || j.second_safelink_url);
       return j;
     } else {
-      if (lib.config().debug == true) console.log("[longwpsafe] Nothing found, waiting...");
+      if (lib.config().debug == true) console.log("[longwp] Nothing found, waiting...");
       await p.waitForNavigation();
       return (await cont(p));
     }

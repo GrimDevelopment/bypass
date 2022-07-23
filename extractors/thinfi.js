@@ -1,4 +1,4 @@
-const axios = require("axios");
+const got = require("got");
 const cheerio = require("cheerio");
 const lib = require("../lib");
 
@@ -9,16 +9,16 @@ module.exports = {
     try {
       let resp; 
 
-      let h = lib.config().defaults?.axios.headers;
+      let h = lib.config().defaults?.got.headers;
       if (opt.referer) {
         h.Referer = opt.referer;
       }
 
       let proxy;
-      if (lib.config().defaults?.axios.proxy) {
-        if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+      if (lib.config().defaults?.got.proxy) {
+        if (lib.config().defaults?.got.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
-          let prox = `socks5://${lib.config().defaults?.axios.proxy?.host}:${lib.config().defaults?.axios.proxy?.port}`;
+          let prox = `socks5://${lib.config().defaults?.got.proxy?.host}:${lib.config().defaults?.got.proxy?.port}`;
           proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
         } else {
           proxy = {};
@@ -27,40 +27,39 @@ module.exports = {
 
       if (opt.password) {
         if (lib.config().debug == true) console.log("[thinfi] Password was sent in request, sending password request...");
-        resp = await axios({
+        resp = await got({
           method: "POST",
           url: url,
-          data: `password=${encodeURIComponent(opt.password)}`,
+          body: `password=${encodeURIComponent(opt.password)}`,
           headers: h,
-          validateStatus: function(stat) {
-            if (stat == 500 || stat == 200) return true;
-          },
+          throwHttpErrors: false,
           ...proxy
         });
       } else {
         if (lib.config().debug == true) console.log("[thinfi] No password was sent, sending regular request...");
-        resp = await axios({
+        resp = await got({
           method: "GET",
           url: url,
           headers: h,
-          validateStatus: function(stat) {
-            if (stat == 500 || stat == 200) return true;
-          },
+          throwHttpErrors: false,
           ...proxy
         });
       }
 
       if (lib.config().debug == true) console.log("[thinfi] Got page, parsing page...");
-      let $ = cheerio.load(resp.data);
+      let $ = cheerio.load(resp.body);
     
       if ($("body > main > section > p > a").length == 1) {
         return $("body > main > section > p > a").attr("href");
       } else {
-        if (resp.data == "") {
+        if (resp.body == "") {
           if (lib.config().debug == true) console.log("[thinfi] Got rate-limited, waiting 6 seconds to retry...");
           await new Promise(resolve => setTimeout(resolve, 6000)); // waiting 6 seconds to retry...
           return (await this.get(url, opt));
-        } else if ($("body > main > section > h2 > a").attr("href") == url) throw "Password is incorrect."
+        } else if ($("body > main > section > h2 > a").attr("href") == url) {
+          console.log(resp)
+          throw "Password is incorrect."
+        }
         throw "Thinfi has changed their website. Please update this extractor."
       }
     } catch(err) {

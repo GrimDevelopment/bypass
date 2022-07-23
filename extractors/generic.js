@@ -1,4 +1,4 @@
-const axios = require("axios");
+const got = require("got");
 const cheerio = require("cheerio");
 const lib = require("../lib");
 
@@ -75,39 +75,36 @@ module.exports = {
       }
 
       if (lib.config().debug == true) console.log("[generic] Requesting page...");
-      let header = lib.config().defaults?.axios.headers;
+      let header = lib.config().defaults?.got.headers;
       if (opt.referer) header.Referer = opt.referer;
 
       let proxy;
-      if (lib.config().defaults?.axios.proxy) {
-        if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+      if (lib.config().defaults?.got.proxy) {
+        if (lib.config().defaults?.got.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
-          let prox = `socks5://${lib.config().defaults?.axios.proxy?.host}:${lib.config().defaults?.axios.proxy?.port}`;
+          let prox = `socks5://${lib.config().defaults?.got.proxy?.host}:${lib.config().defaults?.got.proxy?.port}`;
           proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
         } else {
           proxy = {};
         }
       }
 
-      let resp = await axios({
+      let resp = await got({
         method: "GET",
         url: url,
         headers: header,
-        maxContentLength: 5000000,
-        maxBodyLength: 5000000,
-        validateStatus: function() {
-          return true;
-        },
+        throwHttpErrors: false,
+        followRedirect: false,
         ...proxy
       });
 
       // adf.ly detection
       // i don't remember the origin of this script unfortunately so uh can't credit this
       if (lib.config().debug == true) console.log("[generic] Got page. Checking for indicators that this is an adf.ly link..."); 
-      if (resp.data.includes(`var ysmm = `)) {
+      if (resp.body.includes(`var ysmm = `)) {
         let a, m, I = "",
           X = "",
-        r = resp.data.split(`var ysmm = `)[1].split('\'')[1];
+        r = resp.body.split(`var ysmm = `)[1].split('\'')[1];
         for (m = 0; m < r.length; m++) {
           if (m % 2 == 0) {
             I += r.charAt(m);
@@ -145,23 +142,23 @@ module.exports = {
 
       // generic HTML redirect
       if (lib.config().debug == true) console.log("[generic] Done. Checking for HTML redirects..."); 
-      if (resp.data.includes(`content="0;URL=`)) {
-        return resp.data.split(`content="0;URL=`)[1].split(`"`)[0];
+      if (resp.body.includes(`content="0;URL=`)) {
+        return resp.body.split(`content="0;URL=`)[1].split(`"`)[0];
       }
 
       // generic countdown sites
       if (lib.config().debug == true) console.log("[generic] Done. Checking for general countdown sites...");
-      if (resp.data.split("$('.skip-btn').attr('href','").length > 1) {
-        return resp.data.split("$('.skip-btn').attr('href','")[1].split("')")[0];
+      if (resp.body.split("$('.skip-btn').attr('href','").length > 1) {
+        return resp.body.split("$('.skip-btn').attr('href','")[1].split("')")[0];
       }
 
       // generic HTTP redirects, put any non-specific (like adlinkfly-type extractors) sites below this
       if (lib.config().debug == true) console.log("[generic] Done. Checking for HTTP redirects...");
-      if (resp.request.socket._httpMessage._redirectable._currentUrl !== url) {
-        if (lib.isUrl(resp.request.socket._httpMessage._redirectable._currentUrl)) {
-          return resp.request.socket._httpMessage._redirectable._currentUrl;
-        } else if (resp.request.socket._httpMessage._redirectable._currentUrl.startsWith("/")) {
-          return `${url.split("/").slice(0, 3)}${resp.request.socket._httpMessage._redirectable._currentUrl}`;
+      if (resp.headers?.location == undefined) {
+        if (lib.isUrl(resp.headers?.location)) {
+          return resp.headers?.location;
+        } else if (resp.headers?.location?.startsWith("/")) {
+          return `${url.split("/").slice(0, 3)}${resp.headers?.location}`;
         }
       }
 
@@ -174,7 +171,7 @@ module.exports = {
         }
       }
 
-      let $ = cheerio.load(resp.data);
+      let $ = cheerio.load(resp.body);
 
       // wpsafe-link protectors
       if (lib.config().debug == true) console.log("[generic] Done. Checking for wpsafelink indicators..."); 

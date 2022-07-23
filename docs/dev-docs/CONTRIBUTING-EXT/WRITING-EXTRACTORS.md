@@ -16,14 +16,14 @@ For example, if your module was going to be for a website called `link.com`, nam
 
 ## Choosing extractor type
 
-When in doubt, use `axios` & `cheerio` over `puppeteer`. Puppeteer can be very useful for getting around sites that use CAPTCHAs or already have bypasses in [FastForward](https://fastforward.team), but Puppeteer can take up resources very quickly, as it's an entire browser window (hidden, of course) just to scrape a webpage.
+When in doubt, use `got` & `cheerio` over `puppeteer`. Puppeteer can be very useful for getting around sites that use CAPTCHAs or already have bypasses in [FastForward](https://fastforward.team), but Puppeteer can take up resources very quickly, as it's an entire browser window (hidden, of course) just to scrape a webpage.
 
-### Axios + Cheerio
+### Got + Cheerio
 
 Copy and paste this template into your extractor.
 
 ```js
-const axios = require("axios");
+const got = require("got");
 const cheerio = require("cheerio");
 const lib = require("../lib");
 
@@ -32,7 +32,7 @@ module.exports = {
   requiresCaptcha: false,
   get: async function(url, opt) {
     if (lib.config().debug == true) console.log("[scraper] Requesting page...");
-    let resp = await axios({
+    let resp = await got({
       method: "GET",
       url: url,
       headers: {
@@ -42,12 +42,12 @@ module.exports = {
     });
 
     if (lib.config().debug == true) console.log("[scraper] Got page. Parsing page...");
-    let $ = cheerio.load(resp.data);
+    let $ = cheerio.load(resp.body);
 
-    // do stuff with resp.data here
+    // do stuff with resp.body here
     // or cheerio via $
 
-    let r = resp.data.split("whatever")[2]; // whatever your end result is, dont use this obviously though, it's an example
+    let r = resp.body.split("whatever")[2]; // whatever your end result is, dont use this obviously though, it's an example
     return r;
   }
 };

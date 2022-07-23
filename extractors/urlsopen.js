@@ -1,4 +1,4 @@
-const axios = require("axios");
+const got = require("got");
 const lib = require("../lib");
 
 module.exports = {
@@ -15,18 +15,18 @@ module.exports = {
         if (lib.config().debug == true) console.log("[urlsopen] Converted to", url);
       }
   
-      let h = lib.config().defaults?.axios.headers;
+      let h = lib.config().defaults?.got.headers;
   
       if (lib.config().debug == true) console.log("[urlsopen] Requesting final page...");
-      let resp = await axios({
+      let resp = await got({
         method: "GET",
         headers: h,
         url: url
       });
   
       if (lib.config().debug == true) console.log("[urlsopen] Parsing final page...");
-      if (resp.data.split(`playit://playerv2/video?url=`).length > 1) {
-        return decodeURIComponent(resp.data.split(`playit://playerv2/video?url=`)[1].split(`'>`)[0]);
+      if (resp.body.split(`playit://playerv2/video?url=`).length > 1) {
+        return decodeURIComponent(resp.body.split(`playit://playerv2/video?url=`)[1].split(`'>`)[0]);
       } else {
         throw "Unable to find link.";
       }

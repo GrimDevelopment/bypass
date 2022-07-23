@@ -22,9 +22,9 @@ This is a quick start guide on configuring your BIFM server.
   "fastforward": true, // accepted values: true, false
   "alert": "", // any string that isn't ""
   "defaults": { // defaults for scrapers
-    "axios": { // axios-type scrapers
+    "got": { // got-type scrapers
       "headers": {
-        // all headers sent (by default) in axios
+        // all headers sent (by default) in got
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101 Firefox/102.0", // default user agent, currently firefox 102.0 on linux
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", // default accept header
         "Accept-Encoding": "gzip, deflate", // default accept encoding

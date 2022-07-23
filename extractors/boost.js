@@ -1,4 +1,4 @@
-const axios = require("axios");
+const got = require("got");
 const cheerio = require("cheerio");
 const lib = require("../lib");
 
@@ -7,14 +7,14 @@ module.exports = {
   requiresCaptcha: false,
   get: async function(url, opt) {
     try {
-      let h = lib.config().defaults?.axios.headers;
+      let h = lib.config().defaults?.got.headers;
       if (opt.referer) {
         h.Referer = opt.referer;
       }
 
       let proxy;
-      if (lib.config().defaults?.axios.proxy) {
-        if (lib.config().defaults?.axios.proxy?.type == "socks5") {
+      if (lib.config().defaults?.got.proxy) {
+        if (lib.config().defaults?.got.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
           try { 
             if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(proxy).port == "9050") {
@@ -31,14 +31,14 @@ module.exports = {
       }
 
       if (lib.config().debug == true) console.log("[boost] Requesting page...");
-      let resp = await axios({
+      let resp = await got({
         method: "GET",
         url: url,
         headers: h,
         ...proxy
       });
   
-      let $ = cheerio.load(resp.data);
+      let $ = cheerio.load(resp.body);
   
       // below isn't necessary, really but it's future proofing the script.
       // it's going to look for the unlock script, get it and find the attribute that contains the script
@@ -52,7 +52,11 @@ module.exports = {
           if ($("script")[a].attribs && $("script")[a].attribs.src && $("script")[a].attribs.src.includes("unlock")) {
             scr = $("script")[a].attribs;
             if (lib.config().debug == true) console.log("[boost] Found unlock.js script. Requesting...");
-            let b = (await axios({url: `https://boost.ink${scr["src"]}`, ...proxy})).data;
+            let b = (await got(
+              {
+                url: `https://boost.ink${scr["src"]}`, 
+                ...proxy
+              })).body;
             if (lib.config().debug == true) console.log("[boost] Got script. Searching for attribute needed to decode...");
             attr = b.split(`dest=`)[1].split(`currentScript.getAttribute("`)[1].split(`"`)[0];
           }
