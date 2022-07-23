@@ -63,6 +63,7 @@ module.exports = {
 
       if (lib.config().debug == true) console.log("[dlp] Sent body data. Parsing response...");
       $ = cheerio.load(resp.body);
+      console.log(resp.body)
       let links = [];
 
       await ($("#wrapper > #content > center a").each(function(a) {
@@ -103,13 +104,13 @@ async function fetchCaptcha(url, ref, h) {
   h["TE"] = "Trailers";
 
   let resp = await got({
-    responseType: "arraybuffer",
     method: "GET",
     headers: h,
     url: url
   });
 
   if (lib.config().debug == true) console.log(`[dlp] Got CAPTCHA, content type `, resp.headers["content-type"]);
-
-  return `body:${resp.headers["content-type"]};base64,${Buffer.from(resp.body).toString("base64")}`;
+  let img = Buffer.from(resp.rawBody).toString("base64")
+  
+  return `data:${resp.headers["content-type"]};base64,${img}`;
 }
