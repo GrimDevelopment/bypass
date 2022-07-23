@@ -321,7 +321,7 @@ module.exports = {
           }
         }
       } catch(err) {
-        if (err.message?.includes("timeout")) {
+        if (err.message?.toLowerCase()?.includes("timeout")) {
           console.log(`[fastforward] Timeout occured since the server took too long to respond.`);
           return null;
         } else throw err;
