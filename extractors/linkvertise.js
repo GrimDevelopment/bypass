@@ -66,6 +66,7 @@ module.exports = {
         url: `https://publisher.linkvertise.com/api/v1/redirect/link/static/${id}?origin=&resolution=1920x960`
       });
   
+      resp.body = JSON.parse(resp.body);
       let type;
       if (resp.body?.data.link.target_type == "URL") {
         type = "target";
@@ -103,6 +104,7 @@ module.exports = {
         url: `https://publisher.linkvertise.com/api/v1/redirect/link/${id}/traffic-validation?X-Linkvertise-UT=${ut}`        
       });
 
+      resp.body = JSON.parse(resp.body);
       ck = resp.body?.data.tokens.TARGET;
       if (lib.config().debug == true) console.log("[linkvertise] Got CAPTCHA token: ", ck);
   
@@ -128,6 +130,7 @@ module.exports = {
         url: `https://publisher.linkvertise.com/api/v1/redirect/link/${id}/${type}?X-Linkvertise-UT=${ut}`
       });
   
+      resp.body = JSON.parse(resp.body);
       return (resp.body?.data.paste || resp.body?.data.target);
     } catch(err) {
       throw err;
