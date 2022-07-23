@@ -53,8 +53,8 @@ This is a quick start guide on configuring your BIFM server.
 - `debug` determines the status of the server, whether or not it's in debug mode. 
 - `fastforward` deteremines if FastForward's Crowd Bypass server queries are allowed from your server.
 - `alert` is text that is displayed on your server's homepage.
-- `defaults` is an object containing default information for scrapers, like launching arguments for puppeteer or headers for Axios.
-  - `axios` is an object of the axios-type scrapers, setting defaults such as headers for each request.
+- `defaults` is an object containing default information for scrapers, like launching arguments for puppeteer or headers for Got.
+  - `got` is an object of the got-type scrapers, setting defaults such as headers for each request.
   - `puppeteer` is the `.launch()` object for `puppeteer-extra`. Allows disabling 
 
 ### Debug mode
