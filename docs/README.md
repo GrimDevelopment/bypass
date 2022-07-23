@@ -6,7 +6,6 @@ Welcome to BIFM's documentation. This is where you can find out how to get the b
 
 - [**Supported Sites**](./general-docs/SITES.md) - Sites that are supported by BIFM.
 - [**Public Instances**](./general-docs/INSTANCE.md) - All instances that the general public can access.
-- [**Differences between BIFM and it's previous iteration**](./general-docs/DIFFERENCES.md) - To determine which version will help you the most.
 
 ## Developer Use
 
