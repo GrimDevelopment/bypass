@@ -62,6 +62,9 @@ app.get("/api/bypass", async function(req, res) {
     if (lib.config().debug == true) console.log("[http] Recieved error. Displayed below:");
     if (typeof err == "string") {
       console.log(req.url, err)
+      if (err.split(lib.config().captcha?.key).length > 1 && lib.config().captcha?.key?.length > 0) {
+        err = err.split(lib.config().captcha?.key).join("[REDACTED]");
+      }
       res.send({
         success: false,
         error: err,
@@ -69,6 +72,9 @@ app.get("/api/bypass", async function(req, res) {
       });
     } else {
       let e = (err.message || err.code);
+      if (e.split(lib.config().captcha?.key).length > 1 && lib.config().captcha?.key?.length > 0) {
+        e = e.split(lib.config().captcha?.key).join("[REDACTED]");
+      }
 
       console.log(req.url, err.stack);
 
