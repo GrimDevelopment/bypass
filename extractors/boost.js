@@ -56,7 +56,8 @@ module.exports = {
               {
                 url: `https://boost.ink${scr["src"]}`, 
                 ...proxy
-              })).body;
+              }
+            )).body;
             if (lib.config().debug == true) console.log("[boost] Got script. Searching for attribute needed to decode...");
             attr = b.split(`dest=`)[1].split(`currentScript.getAttribute("`)[1].split(`"`)[0];
           }
