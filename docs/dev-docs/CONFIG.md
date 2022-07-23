@@ -55,7 +55,7 @@ This is a quick start guide on configuring your BIFM server.
 - `alert` is text that is displayed on your server's homepage.
 - `defaults` is an object containing default information for scrapers, like launching arguments for puppeteer or headers for Got.
   - `got` is an object of the got-type scrapers, setting defaults such as headers for each request.
-  - `puppeteer` is the `.launch()` object for `puppeteer-extra`. Allows disabling 
+  - `puppeteer` is the `.launch()` object for `puppeteer-extra`. Allows disabling headless mode, adding arguments, and other stuff.
 
 ### Debug mode
 
