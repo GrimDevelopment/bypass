@@ -11,16 +11,16 @@ module.exports = {
       if (!u.pathname.startsWith("/download") || !u.searchParams.get("key") || !u.searchParams.get("id")) throw "Invalid olamovies link.";
 
       if (lib.config().debug == true) console.log("[ola] Requesting page...");
-      let h = (lib.config().defaults.got.headers || lib.config().defaults.axios.headers || {});
+      let h = (lib.config().defaults?.got?.headers || lib.config().defaults?.axios?.headers || {});
       if (opt.referer) {
         h.Referer = opt.referer;
       }
 
       let proxy;
-      if (lib.config().defaults?.got.proxy) {
-        if (lib.config().defaults?.got.proxy?.type == "socks5") {
+      if (lib.config().defaults?.got?.proxy) {
+        if (lib.config().defaults?.got?.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
-          let prox = `socks5://${lib.config().defaults?.got.proxy?.host}:${lib.config().defaults?.got.proxy?.port}`;
+          let prox = `socks5://${lib.config().defaults?.got?.proxy?.host}:${lib.config().defaults?.got?.proxy?.port}`;
           proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
         } else {
           proxy = {};

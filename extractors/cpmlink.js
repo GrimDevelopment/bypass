@@ -25,8 +25,8 @@ module.exports = {
       if (opt.referer) header.Referer = opt.referer;
 
       let proxy;
-      if (lib.config().defaults?.got.proxy) {
-        if (lib.config().defaults?.got.proxy?.type == "socks5") {
+      if (lib.config().defaults?.got?.proxy) {
+        if (lib.config().defaults?.got?.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
           try { 
             if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(proxy).port == "9050") {
