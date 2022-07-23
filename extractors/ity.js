@@ -7,7 +7,7 @@ module.exports = {
   requiresCaptcha: false,
   get: async function(url, opt) {
     try {
-      let header = lib.config().defaults?.got.headers;
+      let header = (lib.config().defaults?.got.headers || lib.config().defaults?.axios.headers);
       if (opt.referer) header.Referer = opt.referer; 
 
       let proxy;

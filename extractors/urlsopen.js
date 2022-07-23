@@ -15,7 +15,7 @@ module.exports = {
         if (lib.config().debug == true) console.log("[urlsopen] Converted to", url);
       }
   
-      let h = lib.config().defaults?.got.headers;
+      let h = (lib.config().defaults?.got.headers || lib.config().defaults?.axios.headers);
   
       if (lib.config().debug == true) console.log("[urlsopen] Requesting final page...");
       let resp = await got({

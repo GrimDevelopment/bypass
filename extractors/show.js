@@ -9,7 +9,7 @@ module.exports = {
     try {
       if (lib.config().debug == true) console.log("[show] Requesting page...");
       
-      let h = lib.config().defaults?.got.headers;
+      let h = (lib.config().defaults?.got.headers || lib.config().defaults?.axios.headers);
       if (opt.referer) {
         h.Referer = opt.referer;
       }

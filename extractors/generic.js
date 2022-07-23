@@ -75,7 +75,7 @@ module.exports = {
       }
 
       if (lib.config().debug == true) console.log("[generic] Requesting page...");
-      let header = lib.config().defaults?.got.headers;
+      let header = (lib.config().defaults?.got.headers || lib.config().defaults?.axios.headers);
       if (opt.referer) header.Referer = opt.referer;
 
       let proxy;
