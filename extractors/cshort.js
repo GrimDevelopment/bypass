@@ -42,6 +42,7 @@ module.exports = {
         method: "GET",
         url: url,
         headers: header,
+        timeout: (10 * 1000),
         ...proxy
       });
   
@@ -82,7 +83,8 @@ module.exports = {
           "Sec-Fetch-Site": "cross-site",
           "Sec-Fetch-User": "?1",
           "Upgrade-Insecure-Requests": "1"
-        }
+        },
+        timeout: (10 * 1000)
       });
   
       if (resp?.headers?.location !== url) {
