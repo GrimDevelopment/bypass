@@ -93,52 +93,65 @@ module.exports = {
         method: "GET",
         url: url,
         headers: header,
-        throwHttpErrors: false,
         followRedirect: false,
+        throwHttpErrors: false,
         ...proxy
       });
 
       // adf.ly detection
       // i don't remember the origin of this script unfortunately so uh can't credit this
       if (lib.config().debug == true) console.log("[generic] Got page. Checking for indicators that this is an adf.ly link..."); 
-      if (resp.body.includes(`var ysmm = `)) {
-        let a, m, I = "",
-          X = "",
-        r = resp.body.split(`var ysmm = `)[1].split('\'')[1];
-        for (m = 0; m < r.length; m++) {
-          if (m % 2 == 0) {
-            I += r.charAt(m);
-          } else {
-            X = r.charAt(m) + X;
+      if (resp.headers?.["set-cookie"]?.[0].startsWith("FLYSESSID")) {
+        if (lib.config().debug == true) console.log("[adfly] Re-requesting and extracting URL...");
+
+        resp = await got({
+          method: "GET",
+          url: url,
+          headers: header,
+          throwHttpErrors: false,
+          ...proxy
+        });
+
+        if (resp.body.includes(`var ysmm = `)) {
+          let a, m, I = "",
+            X = "",
+          r = resp.body.split(`var ysmm = `)[1].split('\'')[1];
+          for (m = 0; m < r.length; m++) {
+            if (m % 2 == 0) {
+              I += r.charAt(m);
+            } else {
+              X = r.charAt(m) + X;
+            }
           }
-        }
-        r = I + X;
-        a = r.split("");
-        for (m = 0; m < a.length; m++) {
-          if (!isNaN(a[m])) {
-            for (var R = m + 1; R < a.length; R++) {
-              if (!isNaN(a[R])) {
-                let S = a[m] ^ a[R]
-                if (S < 10) {
-                  a[m] = S
+          r = I + X;
+          a = r.split("");
+          for (m = 0; m < a.length; m++) {
+            if (!isNaN(a[m])) {
+              for (var R = m + 1; R < a.length; R++) {
+                if (!isNaN(a[R])) {
+                  let S = a[m] ^ a[R]
+                  if (S < 10) {
+                    a[m] = S
+                  }
+                  m = R
+                  R = a.length
                 }
-                m = R
-                R = a.length
               }
             }
           }
+          r = a.join("")
+          r = Buffer.from(r, "base64").toString("ascii");
+          r = r.substring(r.length - (r.length - 16));
+          r = r.substring(0, r.length - 16);
+          
+          if (new URL(r).search.includes("dest=")) {
+            r = decodeURIComponent(r.split("dest=")[1]);
+          }
+  
+          return r;
         }
-        r = a.join("")
-        r = Buffer.from(r, "base64").toString("ascii");
-        r = r.substring(r.length - (r.length - 16));
-        r = r.substring(0, r.length - 16);
-        
-        if (new URL(r).search.includes("dest=")) {
-          r = decodeURIComponent(r.split("dest=")[1]);
-        }
-
-        return r;
       }
+      
 
       // generic HTML redirect
       if (lib.config().debug == true) console.log("[generic] Done. Checking for HTML redirects..."); 
