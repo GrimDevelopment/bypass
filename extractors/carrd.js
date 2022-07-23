@@ -8,7 +8,7 @@ module.exports = {
   get: async function(url, opt) {
     if (lib.config().debug == true) console.log("[carrd] Requesting page...");
 
-    let h = (lib.config().defaults?.got.headers || lib.config().defaults?.axios.headers);
+    let h = (lib.config().defaults.got.headers || lib.config().defaults.axios.headers || {});
     if (opt.referer) {
       h.Referer = opt.referer;
     }

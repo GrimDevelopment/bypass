@@ -11,7 +11,7 @@ module.exports = {
       if (!u.pathname.startsWith("/download") || !u.searchParams.get("key") || !u.searchParams.get("id")) throw "Invalid olamovies link.";
 
       if (lib.config().debug == true) console.log("[ola] Requesting page...");
-      let h = (lib.config().defaults?.got.headers || lib.config().defaults?.axios.headers);
+      let h = (lib.config().defaults.got.headers || lib.config().defaults.axios.headers || {});
       if (opt.referer) {
         h.Referer = opt.referer;
       }

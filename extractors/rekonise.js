@@ -10,7 +10,7 @@ module.exports = {
       if (lib.config().debug == true) console.log("[rekonise] Requesting API...");
 
 
-      let h = (lib.config().defaults?.got.headers || lib.config().defaults?.axios.headers);
+      let h = (lib.config().defaults.got.headers || lib.config().defaults.axios.headers || {});
       if (opt.referer) {
         h.Referer = opt.referer;
       }

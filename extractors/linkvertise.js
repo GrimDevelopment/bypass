@@ -17,7 +17,7 @@ module.exports = {
   requiresCaptcha: true,
   get: async function(url, opt) {
     try {
-      let header = (lib.config().defaults?.got.headers || lib.config().defaults?.axios.headers);
+      let header = (lib.config().defaults.got.headers || lib.config().defaults.axios.headers || {});
 
       let proxy;
       if (lib.config().defaults?.got.proxy) {

@@ -7,7 +7,7 @@ module.exports = {
   get: async function(url, opt) {
     try {
       if (lib.config().debug == true) console.log(`[linktree] Requesting page...`);
-      let h = (lib.config().defaults?.got.headers || lib.config().defaults?.axios.headers);
+      let h = (lib.config().defaults.got.headers || lib.config().defaults.axios.headers || {});
       if (opt.referer) {
         h.Referer = opt.referer;
       }
