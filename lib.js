@@ -442,7 +442,7 @@ async function solveCaptcha(sitekey, type, opt) {
         if (config.debug == true) console.log(`[captcha] Solved ${type} for "${ref}".`);
         return a;
       case "image": 
-        a = (await(tc.imageCaptcha(sitekey))).data;
+        a = (await(tc.imageCaptcha(sitekey, (opt || {})))).data;
         if (config.debug == true) console.log("[captcha] Solved image captcha.", a);
         return a;
       default:

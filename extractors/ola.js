@@ -3,7 +3,7 @@ const cheerio = require("cheerio");
 const lib = require("../lib");
 
 module.exports = {
-  hostnames: ["olamovies.cfd", "olamovies.top"],
+  hostnames: ["olamovies.cfd", "olamovies.top", "olamovies.click"],
   requiresCaptcha: false,
   get: async function(url, opt) {
     try {
@@ -14,6 +14,8 @@ module.exports = {
       let h = (lib.config.defaults?.got?.headers || lib.config.defaults?.axios?.headers || {});
       if (opt.referer) {
         h.Referer = opt.referer;
+      } else {
+        h.Referer = `https://${new URL(url).hostname}/`;
       }
 
       let proxy;

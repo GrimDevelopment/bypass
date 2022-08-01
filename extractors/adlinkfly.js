@@ -21,8 +21,7 @@ module.exports = {
       }
 
       let hn = new URL(url).hostname;
-      let blocker;
-      blocker = await PlaywrightBlocker.fromPrebuiltFull();
+      let blocker = await PlaywrightBlocker.fromPrebuiltFull();
 
       if (lib.config.captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."
@@ -87,15 +86,15 @@ async function cont(p, url) {
     
       hn = await new URL(url).hostname;
       if (antiAd(hn) == true) {
-        await p.waitForLoadState("domcontentloaded");
+        await p.waitForNavigation({waitUntil: "domcontentloaded"})
       } else {
-        await p.waitForLoadState("networkidle");
+        await p.waitForNavigation({waitUntil: "networkidle"});
       }
       return (await cont(p, url));
     } else {
       let cf = await p.$("#cf-challenge-running");
       if (cf) {
-        await p.waitForLoadState("networkidle");
+        await p.waitForNavigation({waitUntil: "networkidle"});
         return (await cont(p, url));
       } else {
         return (await p.url());
@@ -107,6 +106,7 @@ async function cont(p, url) {
 function antiAd(hn) {
   switch(hn) {
     case "median.uno":
+    case "techydino.net":
     return true;
 
     default:
