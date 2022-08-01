@@ -32,7 +32,7 @@
             <details>
               <summary>Options</summary>
               <p class="extra nm"><i class="nm">hover on each option for more information.</i></p>
-              <% if (lib.config.db.active == true) { %>
+              <% if (config.db.active == true) { %>
                 <div class="option" title="Checking this box means your result will not be cached to this instance.">
                   <label for="allowCache">Disallow caching of your result?</label>
                   <input type="checkbox" id="allowCache" name="allowCache"> 
@@ -42,7 +42,7 @@
                   <input type="checkbox" id="ignoreCache" name="ignoreCache">
                 </div>
               <% } %>
-              <% if (lib.config.fastforward == true) { %>
+              <% if (config.fastforward == true) { %>
                 <div class="option" title="Checking this box means that, even if your URL is compatible, it will not be sent to FastForward's Crowd Bypass server.">
                   <label for="allowFF">Disallow sending FastForward's Crowd Bypass server your result?</label>
                   <input type="checkbox" id="allowFF" name="allowFF"> 
