@@ -8,10 +8,12 @@ RUN npm ci && mkdir /angular && mv ./node_modules ./angular
 WORKDIR /angular
 RUN npm install -g @angular/cli
 
+RUN npm i 
+
 COPY . .
 ADD okteto-stack.yaml okteto-stack.yaml
 COPY . .
 
 EXPOSE 32333
 
-CMD ["bash", "run.sh"] 
+CMD ["npm", "start"] 

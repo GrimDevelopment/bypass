@@ -59,430 +59,443 @@ let client, db, links;
 
 
 module.exports = {
-  get: async function(url, opt) {
-    try {
-      if (new URL(url).host.substring(new URL(url).host.length - 8) == "carrd.co") url = url.split("#")[0];
-
-      let extractor = await ext.fromUrl(url);
-      extractor = require(`./extractors/${extractor}`);
-
-      if (opt.ignoreCache) opt.ignoreCache = parseBool(opt.ignoreCache);
-      if (opt.allowCache) opt.allowCache = parseBool(opt.allowCache);
-      if (opt.ignoreFF) opt.ignoreFF = parseBool(opt.ignoreFF);
-      if (opt.allowFF) opt.allowFF = parseBool(opt.allowFF);
-
-      if (config.debug == true) console.log(`[extract] Starting "${url}"`, opt)
-
-      if (config.db.active == true) {
-        await waitUntilDbConnected();
-        if (opt.ignoreCache !== true) {
-          if (config.debug == true) console.log("[db] Checking DB for desination...");
-          let f = await this.db.get(url);
-          if (f !== null) {
-            if (config.debug == true) console.log("[db] Found, sending solution...");
-            f.fromCache = true;
-            f.fromFastforward = false;
-            return f;
-          } else {
-            if (config.debug == true) console.log("[db] Not found, continuing...");
-          }
-        }
-      }
-
-      if (config.fastforward == true && opt.ignoreFF !== true) {
-        let r = await this.fastforward.get(url);
-        if (r !== null) {
-          f = {
-            dateSolved: "unknown",
-            originalUrl: url,
-            destination: r,
-            fromCache: false,
-            fromFastforward: true,
-            isURL: true
-          };
-          return f;
-        }
-      } 
-      
-      f = await extractor.get(this.fixSubdomain(url), opt);
-
-      if (config.debug == true) console.log(`[extract] Finished "${url}", ${JSON.stringify(opt)} [Solution: ${(JSON.stringify(f) || f)}]`);
-
-      if (typeof f == "string" || typeof f == "object" && !f.destinations) {
-        if (!this.isUrl((f.destination || f)) || (f.destination || f) == url) {
-          console.log((f.destination || f));
-          if (typeof (f.destination || f) == "string" && !extractor.hostnames.includes("linkvertise.com")) {
-            if (config.debug == true) console.log("[extract] URL was invalid.", (f.destination||f), url);
-            throw "Invalid URL from backend.";
-          } else {
-            if (config.debug == true) console.log("[extract] URL was invalid, but it was ignored because it was a Linkvertise link.", url);
-          }
-        } 
-
-        if (config.debug == true) console.log("[extract] Got one link, proceeding...");
-
-        let iu = this.isUrl((f.destination || f));
-
-        let d = {
-          destination: (f.destination || f),
-          originalUrl: url,
-          dateSolved: (new Date() * 1),
-          isURL: iu
-        };
-
-        if (f.fastforward == true) {
-          if (config.debug == true) console.log(`[extract] Detected FastForward response, correcting and sending...`);
-          if (config.db.active == true) {
-            if (opt.allowCache !== false) {
-              if (config.debug == true) console.log("[db] Checking if data on this link already exists on the DB...");
-              let f = await links.findOne({"originalUrl": url});
-              if (f == null) f = await links.findOne({"original-url": url}); // older version compatibility
-              if (f == null) {
-                if (config.debug == true) console.log(`[db] Nothing found. Adding FastForward solution to DB...`)
-                await links.insertOne(d);
-                if (config.debug == true) console.log(`[db] Added.`);
-              } else {
-                if (config.debug == true) console.log(`[db] Data already exists. Continuing correcting and sending...`);
-              }
-            }
-          }
-
-          d.dateSolved = "unknown";
-          d.fromCache = false;
-          d.fromFastforward = true;
-          return d;
-        }
-
-        if (config.fastforward == true && opt?.allowFF !== false) {
-          await this.fastforward.send(url, (f.destination || f));
-        }
-
-        if (config.db.active == true) {
-          if (opt.allowCache !== false) {
-            if (opt.ignoreCache == true) {
-              if (config.debug == true) console.log(`[db] Replacing old version of "${url}" in DB.`)
-              await links.findOneAndReplace({"originalUrl": url}, d);
-              if (config.debug == true) console.log(`[db] Replaced.`)
-            } else {
-              if (config.debug == true) console.log(`[db] Adding to DB...`)
-              await links.insertOne(d);
-              if (config.debug == true) console.log(`[db] Added.`)
-            }
-          }
-        }
-
-        delete d._id;
-        d.fromCache = false;
-        d.fromFastforward = false;
-
-        return d;
-      } else if (typeof f == "object" && f.destinations) {
-        let d = {
-          destinations: (f.destinations),
-          originalUrl: url,
-          dateSolved: (new Date() * 1)
-        };
-
-        for (let a in d.destinations) {
-          if (!this.isUrl(d.destinations[a])) delete d.destinations[a]; // removes non-urls
-        }
-
-        d.destinations = [...new Set(d.destinations)]; // removes duplicates
-
-        if (f.destinations.length == 0) {
-          if (config.debug == true) console.log("[lib] Destination array size is 0, throwing error...");
-          throw "Invalid response from backend.";
-        } 
-
-        if (config.db.active == true) {
-          if (opt.allowCache !== false) {
-            d.destinations = JSON.stringify(d.destinations);
-            if (opt.ignoreCache == true) {
-              if (config.debug == true) console.log(`[db] Replacing old version of "${url}" in DB.`)
-              await links.findOneAndReplace({"originalUrl": url}, d);
-              if (config.debug == true) console.log(`[db] Replaced.`)
-            } else {
-              if (config.debug == true) console.log(`[db] Adding to DB...`)
-              await links.insertOne(d);
-              if (config.debug == true) console.log(`[db] Added.`)
-            }
-            d.destinations = JSON.parse(d.destinations);
-          }
-        }
-
-        delete d._id;
-        d.fromCache = false;
-        d.fromFastforward = false;
-
-        return d;
-      } else {
-        throw "Invalid response from backend.";
-      }
-    } catch(err) {
-      throw err;
-    }
-  }, 
-  solve: async function(sitekey, type, opt) {
-    // opt value must be like:
-    // {
-    //    "referer": "https://google.com"
-    // }
-    if (config.captcha.active == false) return null;
-    if (config.captcha.service == "2captcha") {
-      const tc = new two.Solver(config["captcha"]["key"]);
-      let ref = (opt?.referer || "unknown location");
-      
-      if (config.debug == true) console.log(`[captcha] Requesting CAPTCHA solve for a ${type} @ "${ref}"...`);
-      let a;
-      
-      switch(type) {
-        case "recaptcha":
-          a = (await tc.recaptcha(sitekey, ref)).data;
-          if (config.debug == true) console.log(`[captcha] Solved ${type} for "${ref}".`);
-          return a; 
-        case "hcaptcha":
-          a = (await tc.hcaptcha(sitekey, ref)).data;
-          if (config.debug == true) console.log(`[captcha] Solved ${type} for "${ref}".`);
-          return a;
-        case "image": 
-          a = (await(tc.imageCaptcha(sitekey))).data;
-          if (config.debug == true) console.log("[captcha] Solved image captcha.", a);
-          return a;
-        default:
-          console.log(`[captcha] Invalid parameters were given to CAPTCHA solver.`)
-          throw "Parameters for CAPTCHA solver are incorrect.";
-      }
-    }
-  },
-  solveThroughPage: async function(p) {
-    try {
-      let type = await p.evaluate(function() {
-        if (document.querySelector("iframe[title='recaptcha challenge expires in two minutes']") || document.querySelector(".g-recaptcha")) return "recaptcha";
-        else if (document.querySelector(".h-captcha")) return "hcaptcha";
-        else return null;
-      });
-  
-      if (type == null) throw "Could not find CAPTCHA type.";
-      if (config.debug == true) console.log("[captcha] Got CAPTCHA type:", type);
-  
-      let sk = await p.evaluate(function() {
-        return (
-          document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")?.src.split("k=")[1].split("&")[0] ||
-          document.querySelector(".g-recaptcha")?.getAttribute("data-sitekey") ||
-          document.querySelector(".h-captcha")?.getAttribute("data-sitekey")
-        );
-      });
-      
-      if (config.debug == true) console.log("[captcha] Got sitekey:", sk);
-  
-      if (config.debug == true) console.log("[captcha] Retrieved. Solving CAPTCHA...");
-      let c = await this.solve(sk, type, {referer: (await p.url())});
-  
-      if (config.debug == true) console.log("[captcha] Solved CAPTCHA. Enterring solution and submitting form...");
-      await p.evaluate(`document.querySelector("[name='g-recaptcha-response']").value = "${c}";`);
-      if (type == "hcaptcha") await p.evaluate(`document.querySelector("[name='h-captcha-response']").value = "${c}";`);
-    } catch(err) {
-      throw err;
-    }
-  },
-  cookieString: function(co) {
-    let s = ``;
-    for (let c in co) {
-      if (co[c].value == "deleted") continue;
-      s = `${s} ${co[c].name}=${encodeURIComponent(co[c].value)};`;
-    }
-    s = s.substring(0, s.length - 1);
-    return s.substring(1);
-  },
+  get: get, 
+  solve: solveCaptcha,
+  solveThroughPage: solveThroughPage,
+  cookieString: cookieString,
   fastforward: {
-    get: async function(url, igcb) {
-      try {
-        if ((isCrowdBypass(new URL(url).hostname) || igcb == true)) {
-          let b = `domain=${new URL(url).hostname}&path=${new URL(url).pathname.substring(1)}${new URL(url).search}`;
-          if (config.debug == true) console.log(`[fastforward] Made body content: `, b);
-          if (config.debug == true) console.log("[fastforward] Checking FastForward crowd bypass...");
-          let d = await got({
-            method: "POST",
-            url: "https://crowd.fastforward.team/crowd/query_v1",
-            body: b,
-            timeout: (5 * 1000),
-            throwHttpErrors: false, // Prevent status errors
-          });
-
-          if (config.debug == true) console.log("[fastforward] Recieved response", d.status, d.data);
-
-          if (d.status == 204) return null;
-          else if (d.status == 200) return d.data;
-          else {
-            console.log(`[silent error] FastForward error:\nInvalid response code: ${d.status}\n${d.data}`);
-            return null;
-          }
-        } else {
-          if (config.debug == true) console.log("[fastforward] Tried to get FastForward URL, not acceptable URL.");
-          return null;
-        }
-      } catch(err) {
-        return null;
-      }
-    },
-    send: async function(url, dest, igcb) {
-      try {
-        if ((isCrowdBypass(new URL(url).hostname) || igcb == true)) {
-          let b = `domain=${new URL(url).hostname}&path=${new URL(url).pathname.substring(1)}${new URL(url).search}&target=${encodeURIComponent(dest)}`;
-          if (config.debug == true) console.log(`[fastforward] Made body content: `, b);
-          if (config.debug == true) console.log("[fastforward] Sending to FastForward crowd bypass...");
-
-          let d = await got({
-            method: "POST",
-            url: "https://crowd.fastforward.team/crowd/contribute_v1",
-            timeout: (7 * 1000),
-            body: b,
-            throwHttpErrors: false // Prevent status errors
-          });
-
-          if (config.debug == true) console.log("[fastforward] Recieved response", d.status, d.data);
-
-          if (d.status == 201) return true;
-          else {
-            console.log(`[silent error] FastForward error:\nInvalid response code: ${d.status}\n${d.data}`);
-            return null;
-          }
-        }
-      } catch(err) {
-        return null;
-      }
-    }
+    get: ffGet,
+    send: ffSend
   },
-  byteCount: function(string) {return encodeURI(string).split(/%..|./).length - 1;},
+  byteCount: byteCount,
   config: config,
-  isUrl: function(url) {
-    try {
-      let u = new URL(url);
-      if (u?.protocol !== null) return true;
-      else return false;
-    } catch(err) {
-      return false;
-    }
-  },
+  isUrl: isUrl,
   db: {
-    get: async function(url) {
-      if (links == undefined) await waitUntilDbConnected();
-      let f = await links.findOne({"originalUrl": url});
-      if (f !== null) {
-        if (f.destinations) f.destinations = JSON.parse(f.destinations);
-        if (f.destination && f.isURL == undefined || f.isURL == null) {
-          f.isURL = require("./lib").isUrl(f.destination);
-        }
-        return f;
-      } else {
-        f = await links.findOne({"original-url": url}); // older version compatibility
-        if (f !== null) {
-          delete f._id;
-          if (f["date-solved"]) {
-            if (config.debug == true) console.log("[db] Updating old solution format from DB...");
-            f = {
-              dateSolved: f["date-solved"],
-              originalUrl: f["original-url"],
-              destination: f["destination"],
-              isURL: require("./lib").isUrl(f["destination"])
-            }
-            delete f._id;
-            await links.findOneAndReplace({"original-url": url}, f);
-          }
-          if (config.debug == true) console.log("[db] Sending DB response...");
-          delete f._id;
-          return f; 
-        } else if (f == null) {
-          f = await links.findOne({"url": url}); // older version compatibility
-          if (f !== null) {
-            if (config.debug == true) console.log("[db] Updating old solution format from DB...");
-            f = {
-              originalUrl: f["url"],
-              destination: f["response"],
-              dateSolved: (new Date(f.date) * 1)
-            }
-            delete f._id;
-            await links.findOneAndReplace({"url": url}, f);
-            delete f._id;
-            return f;
-          } else {
-            return null;
-          }
-        }
-      }
-    }
-  },
-  removeTor: function(args) {
-    for (let b in args?.args) {
-      if (args?.args?.includes("proxy-server")) {
-        let c = new URL(a[b].split("=")[1]);
-        if ((c.hostname == "localhost" || c.hostname == "127.0.0.1") && c.port == "9050") {
-          delete a[b];
-          if (config.debug == true) console.log("[lib] Removed Tor from Puppeteer arguments, due to compatibility issues.");
-        }
-        else continue; 
-      }
-    }
-    return args;
+    get: dbGet
   },
   cloudflare: {
-    email: function(data) {
-      if (!data.includes("/cdn-cgi/l/email-protection#")) data = `/cdn-cgi/l/email-protection#${data}`;
-      let a = data;
-      let s = data.indexOf(`/cdn-cgi/l/email-protection`);
-      let m = data.length;
+    email: cfEmail
+  },
+  cacheCount: cacheCount,
+  fixSubdomain: fixSubdomain
+}
 
-      if (a && s > -1 && m > 28) {
-        var j = 28 + s;
-        s = '';
-        if (j < m) {
-          r = '0x' + a.substr(j, 2) | 0;
-          for (j += 2; j < m && a.charAt(j) != 'X'; j += 2) s += '%' + ('0' + ('0x' + a.substr(j, 2) ^ r).toString(16)).slice(-2);
-          j++;
-          s = decodeURIComponent(s) + a.substr(j, m - j);
+async function get(url, opt) {
+  try {
+    if (new URL(url).host.substring(new URL(url).host.length - 8) == "carrd.co") url = url.split("#")[0];
+
+    let extractor = await ext.fromUrl(url);
+    extractor = require(`./extractors/${extractor}`);
+
+    if (opt.ignoreCache) opt.ignoreCache = parseBool(opt.ignoreCache);
+    if (opt.allowCache) opt.allowCache = parseBool(opt.allowCache);
+    if (opt.ignoreFF) opt.ignoreFF = parseBool(opt.ignoreFF);
+    if (opt.allowFF) opt.allowFF = parseBool(opt.allowFF);
+
+    if (config.debug == true) console.log(`[extract] Starting "${url}"`, opt)
+
+    if (config.db.active == true) {
+      await waitUntilDbConnected();
+      if (opt.ignoreCache !== true) {
+        if (config.debug == true) console.log("[db] Checking DB for desination...");
+        let f = await dbGet(url);
+        if (f !== null) {
+          if (config.debug == true) console.log("[db] Found, sending solution...");
+          f.fromCache = true;
+          f.fromFastforward = false;
+          return f;
+        } else {
+          if (config.debug == true) console.log("[db] Not found, continuing...");
         }
-        return s;
+      }
+    }
+
+    if (config.fastforward == true && opt.ignoreFF !== true) {
+      let r = await ffGet(url);
+      if (r !== null) {
+        f = {
+          dateSolved: "unknown",
+          originalUrl: url,
+          destination: r,
+          fromCache: false,
+          fromFastforward: true,
+          isURL: true
+        };
+        return f;
+      }
+    } 
+    
+    f = await extractor.get(fixSubdomain(url), opt);
+    if (config.debug == true) console.log(`[extract] Finished "${url}", ${JSON.stringify(opt)} [Solution: ${(JSON.stringify(f) || f)}]`);
+
+    if (typeof f == "string" || typeof f == "object" && !f.destinations) {
+      if (!isUrl((f.destination || f)) || (f.destination || f) == url) {
+        if (typeof (f.destination || f) == "string" && !extractor.hostnames.includes("linkvertise.com")) {
+          if (config.debug == true) console.log("[extract] URL was invalid.", (f.destination||f), url);
+          throw "Invalid URL from backend.";
+        } else {
+          if (config.debug == true) console.log("[extract] URL was invalid, but it was ignored because it was a Linkvertise link.", url);
+        }
+      } 
+
+      if (config.debug == true) console.log("[extract] Got one link, proceeding...");
+
+      let iu = isUrl((f.destination || f));
+
+      let d = {
+        destination: (f.destination || f),
+        originalUrl: url,
+        dateSolved: (new Date() * 1),
+        isURL: iu
+      };
+
+      if (f.fastforward == true) {
+        if (config.debug == true) console.log(`[extract] Detected FastForward response, correcting and sending...`);
+        if (config.db.active == true) {
+          if (opt.allowCache !== false) {
+            if (config.debug == true) console.log("[db] Checking if data on this link already exists on the DB...");
+            let f = await links.findOne({"originalUrl": url});
+            if (f == null) f = await links.findOne({"original-url": url}); // older version compatibility
+            if (f == null) {
+              if (config.debug == true) console.log(`[db] Nothing found. Adding FastForward solution to DB...`)
+              await links.insertOne(d);
+              if (config.debug == true) console.log(`[db] Added.`);
+            } else {
+              if (config.debug == true) console.log(`[db] Data already exists. Continuing correcting and sending...`);
+            }
+          }
+        }
+
+        d.dateSolved = "unknown";
+        d.fromCache = false;
+        d.fromFastforward = true;
+        return d;
+      }
+
+      if (config.fastforward == true && opt?.allowFF !== false) {
+        await ffSend(url, (f.destination || f));
+      }
+
+      if (config.db.active == true) {
+        if (opt.allowCache !== false) {
+          if (opt.ignoreCache == true) {
+            if (config.debug == true) console.log(`[db] Replacing old version of "${url}" in DB.`)
+            await links.findOneAndReplace({"originalUrl": url}, d);
+            if (config.debug == true) console.log(`[db] Replaced.`)
+          } else {
+            if (config.debug == true) console.log(`[db] Adding to DB...`)
+            await links.insertOne(d);
+            if (config.debug == true) console.log(`[db] Added.`)
+          }
+        }
+      }
+
+      delete d._id;
+      d.fromCache = false;
+      d.fromFastforward = false;
+
+      return d;
+    } else if (typeof f == "object" && f.destinations) {
+      let d = {
+        destinations: (f.destinations),
+        originalUrl: url,
+        dateSolved: (new Date() * 1)
+      };
+
+      for (let a in d.destinations) {
+        if (!isUrl(d.destinations[a])) delete d.destinations[a]; // removes non-urls
+      }
+
+      d.destinations = [...new Set(d.destinations)]; // removes duplicates
+
+      if (f.destinations.length == 0) {
+        if (config.debug == true) console.log("[lib] Destination array size is 0, throwing error...");
+        throw "Invalid response from backend.";
+      } 
+
+      if (config.db.active == true) {
+        if (opt.allowCache !== false) {
+          d.destinations = JSON.stringify(d.destinations);
+          if (opt.ignoreCache == true) {
+            if (config.debug == true) console.log(`[db] Replacing old version of "${url}" in DB.`)
+            await links.findOneAndReplace({"originalUrl": url}, d);
+            if (config.debug == true) console.log(`[db] Replaced.`)
+          } else {
+            if (config.debug == true) console.log(`[db] Adding to DB...`)
+            await links.insertOne(d);
+            if (config.debug == true) console.log(`[db] Added.`)
+          }
+          d.destinations = JSON.parse(d.destinations);
+        }
+      }
+
+      delete d._id;
+      d.fromCache = false;
+      d.fromFastforward = false;
+
+      return d;
+    } else {
+      throw "Invalid response from backend.";
+    }
+  } catch(err) {
+    throw err;
+  }
+}
+
+function isUrl(url) {
+  try {
+    let u = new URL(url);
+    if (u?.protocol !== null) return true;
+    else return false;
+  } catch(err) {
+    return false;
+  }
+}
+
+async function cfEmail(data) {
+  if (!data.includes("/cdn-cgi/l/email-protection#")) data = `/cdn-cgi/l/email-protection#${data}`;
+  let a = data;
+  let s = data.indexOf(`/cdn-cgi/l/email-protection`);
+  let m = data.length;
+
+  if (a && s > -1 && m > 28) {
+    var j = 28 + s;
+    s = '';
+    if (j < m) {
+      r = '0x' + a.substr(j, 2) | 0;
+      for (j += 2; j < m && a.charAt(j) != 'X'; j += 2) s += '%' + ('0' + ('0x' + a.substr(j, 2) ^ r).toString(16)).slice(-2);
+      j++;
+      s = decodeURIComponent(s) + a.substr(j, m - j);
+    }
+    return s;
+  } else {
+    return null;
+  }
+}
+
+async function cacheCount() {
+  if (config.db?.active == false) return 0;
+  if (links == undefined) await waitUntilDbConnected();
+  return (((await (await links.find({})).toArray()).length) || 0);
+}
+
+async function dbGet(url) {
+  if (links == undefined) await waitUntilDbConnected();
+  let f = await links.findOne({"originalUrl": url});
+  if (f !== null) {
+    if (f.destinations) f.destinations = JSON.parse(f.destinations);
+    if (f.destination && f.isURL == undefined || f.isURL == null) {
+      f.isURL = require("./lib").isUrl(f.destination);
+    }
+    return f;
+  } else {
+    f = await links.findOne({"original-url": url}); // older version compatibility
+    if (f !== null) {
+      delete f._id;
+      if (f["date-solved"]) {
+        if (config.debug == true) console.log("[db] Updating old solution format from DB...");
+        f = {
+          dateSolved: f["date-solved"],
+          originalUrl: f["original-url"],
+          destination: f["destination"],
+          isURL: require("./lib").isUrl(f["destination"])
+        }
+        delete f._id;
+        await links.findOneAndReplace({"original-url": url}, f);
+      }
+      if (config.debug == true) console.log("[db] Sending DB response...");
+      delete f._id;
+      return f; 
+    } else if (f == null) {
+      f = await links.findOne({"url": url}); // older version compatibility
+      if (f !== null) {
+        if (config.debug == true) console.log("[db] Updating old solution format from DB...");
+        f = {
+          originalUrl: f["url"],
+          destination: f["response"],
+          dateSolved: (new Date(f.date) * 1)
+        }
+        delete f._id;
+        await links.findOneAndReplace({"url": url}, f);
+        delete f._id;
+        return f;
       } else {
         return null;
       }
     }
-  },
-  cacheCount: async function() {
-    if (config.db?.active == false) return 0;
-    if (links == undefined) await waitUntilDbConnected();
-    return (((await (await links.find({})).toArray()).length) || 0);
-  },
-  fixSubdomain: function(url) {
-    // function meant to be for sites that have you visit multiple different domains
+  }
+}
 
-    let h = new URL(url).hostname;
-    switch(h) {
-      case "go.birdurls.com":
-      case "birdurls.com":
-        return `https://birdurls.com/${url.split("/").slice(3).join("/")}`;
-      
-      case "owllink.net":
-      case "go.owllink.net":
-        return `https://owllink.net/${url.split("/").slice(3).join("/")}`;
 
-      case "crazyblog.in":
-      case "open.crazyblog.in":
-      case "redd.crazyblog.in":
-        url = url.replace("open.crazyblog.in", "redd.crazyblog.in");
-        url = url.replace("//crazyblog.in", "//redd.crazyblog.in");
-      return url;
 
-      case "medipost.org":
-      case "links.medipost.org":
-      case "usalink.io":
-        return `https://links.medipost.org/${url.split("/").slice(3).join("/")}`
+function fixSubdomain(url) {
+  // function meant to be for sites that have you visit multiple different domains
 
-      case "pdiskshortener.in":
-        return `https://1.htlinks.in/${url.split("/").slice(3).join("/")}`;
+  let h = new URL(url).hostname;
+  switch(h) {
+    case "go.birdurls.com":
+    case "birdurls.com":
+      return `https://birdurls.com/${url.split("/").slice(3).join("/")}`;
+    
+    case "owllink.net":
+    case "go.owllink.net":
+      return `https://owllink.net/${url.split("/").slice(3).join("/")}`;
 
-      default: return url;
+    case "crazyblog.in":
+    case "open.crazyblog.in":
+    case "redd.crazyblog.in":
+      url = url.replace("open.crazyblog.in", "redd.crazyblog.in");
+      url = url.replace("//crazyblog.in", "//redd.crazyblog.in");
+    return url;
+
+    case "medipost.org":
+    case "links.medipost.org":
+    case "usalink.io":
+      return `https://links.medipost.org/${url.split("/").slice(3).join("/")}`
+
+    case "pdiskshortener.in":
+      return `https://1.htlinks.in/${url.split("/").slice(3).join("/")}`;
+
+    default: return url;
+  }
+}
+
+async function ffGet(url, igcb) {
+  try {
+    if ((isCrowdBypass(new URL(url).hostname) || igcb == true)) {
+      let b = `domain=${new URL(url).hostname}&path=${new URL(url).pathname.substring(1)}${new URL(url).search}`;
+      if (config.debug == true) console.log(`[fastforward] Made body content: `, b);
+      if (config.debug == true) console.log("[fastforward] Checking FastForward crowd bypass...");
+      let d = await got({
+        method: "POST",
+        url: "https://crowd.fastforward.team/crowd/query_v1",
+        body: b,
+        timeout: (5 * 1000),
+        throwHttpErrors: false, // Prevent status errors
+      });
+
+      if (config.debug == true) console.log("[fastforward] Recieved response", d.status, d.data);
+
+      if (d.status == 204) return null;
+      else if (d.status == 200) return d.data;
+      else {
+        console.log(`[silent error] FastForward error:\nInvalid response code: ${d.status}\n${d.data}`);
+        return null;
+      }
+    } else {
+      if (config.debug == true) console.log("[fastforward] Tried to get FastForward URL, not acceptable URL.");
+      return null;
+    }
+  } catch(err) {
+    return null;
+  }
+}
+
+async function ffSend(url, dest, igcb) {
+  try {
+    if ((isCrowdBypass(new URL(url).hostname) || igcb == true)) {
+      let b = `domain=${new URL(url).hostname}&path=${new URL(url).pathname.substring(1)}${new URL(url).search}&target=${encodeURIComponent(dest)}`;
+      if (config.debug == true) console.log(`[fastforward] Made body content: `, b);
+      if (config.debug == true) console.log("[fastforward] Sending to FastForward crowd bypass...");
+
+      let d = await got({
+        method: "POST",
+        url: "https://crowd.fastforward.team/crowd/contribute_v1",
+        timeout: (7 * 1000),
+        body: b,
+        throwHttpErrors: false // Prevent status errors
+      });
+
+      if (config.debug == true) console.log("[fastforward] Recieved response", d.status, d.data);
+
+      if (d.status == 201) return true;
+      else {
+        console.log(`[silent error] FastForward error:\nInvalid response code: ${d.status}\n${d.data}`);
+        return null;
+      }
+    }
+  } catch(err) {
+    return null;
+  }
+}
+
+async function solveCaptcha(sitekey, type, opt) {
+  // opt value must be like:
+  // {
+  //    "referer": "https://google.com"
+  // }
+  if (config.captcha.active == false) return null;
+  if (config.captcha.service == "2captcha") {
+    const tc = new two.Solver(config["captcha"]["key"]);
+    let ref = (opt?.referer || "unknown location");
+    
+    if (config.debug == true) console.log(`[captcha] Requesting CAPTCHA solve for a ${type} @ "${ref}"...`);
+    let a;
+    
+    switch(type) {
+      case "recaptcha":
+        a = (await tc.recaptcha(sitekey, ref)).data;
+        if (config.debug == true) console.log(`[captcha] Solved ${type} for "${ref}".`);
+        return a; 
+      case "hcaptcha":
+        a = (await tc.hcaptcha(sitekey, ref)).data;
+        if (config.debug == true) console.log(`[captcha] Solved ${type} for "${ref}".`);
+        return a;
+      case "image": 
+        a = (await(tc.imageCaptcha(sitekey))).data;
+        if (config.debug == true) console.log("[captcha] Solved image captcha.", a);
+        return a;
+      default:
+        console.log(`[captcha] Invalid parameters were given to CAPTCHA solver.`)
+        throw "Parameters for CAPTCHA solver are incorrect.";
     }
   }
+}
+
+async function solveThroughPage(p) {
+  try {
+    let type = await p.evaluate(function() {
+      if (document.querySelector("iframe[title='recaptcha challenge expires in two minutes']") || document.querySelector(".g-recaptcha")) return "recaptcha";
+      else if (document.querySelector(".h-captcha")) return "hcaptcha";
+      else return null;
+    });
+
+    if (type == null) throw "Could not find CAPTCHA type.";
+    if (config.debug == true) console.log("[captcha] Got CAPTCHA type:", type);
+
+    let sk = await p.evaluate(function() {
+      return (
+        document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")?.src.split("k=")[1].split("&")[0] ||
+        document.querySelector(".g-recaptcha")?.getAttribute("data-sitekey") ||
+        document.querySelector(".h-captcha")?.getAttribute("data-sitekey")
+      );
+    });
+    
+    if (config.debug == true) console.log("[captcha] Got sitekey:", sk);
+
+    if (config.debug == true) console.log("[captcha] Retrieved. Solving CAPTCHA...");
+    let c = await solveCaptcha(sk, type, {referer: (await p.url())});
+
+    if (config.debug == true) console.log("[captcha] Solved CAPTCHA. Enterring solution and submitting form...");
+    await p.evaluate(`document.querySelector("[name='g-recaptcha-response']").value = "${c}";`);
+    if (type == "hcaptcha") await p.evaluate(`document.querySelector("[name='h-captcha-response']").value = "${c}";`);
+  } catch(err) {
+    throw err;
+  }
+}
+
+function cookieString(co) {
+  let s = ``;
+  for (let c in co) {
+    if (co[c].value == "deleted") continue;
+    s = `${s} ${co[c].name}=${encodeURIComponent(co[c].value)};`;
+  }
+  s = s.substring(0, s.length - 1);
+  return s.substring(1);
+}
+
+function byteCount(string) {
+  return encodeURI(string).split(/%..|./).length - 1;
 }
 
 function isCrowdBypass(host) {
