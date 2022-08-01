@@ -54,7 +54,7 @@ async function solveStackpath(p) {
       switch(title) {
         case "are you human?":
           let img = await p.evaluate(function() {return document.getElementById("captchaImageInline").src;});
-          let captcha = await lib.solve(img, "image", {textInstructions: "Only type the black letters."});
+          let captcha = await lib.solve(img, "image", {textInstructions: "Only type the black letters.", regsense: 0, numeric: 2});
           await p.type("#captchaInput", captcha);
           await p.click("#submitObject");
         return (await solveStackpath(p));
@@ -66,28 +66,32 @@ async function solveStackpath(p) {
 }
 
 async function cont(p) {
-  await solveStackpath(p);
+  try {
+    await solveStackpath(p);
 
-  if ((await p.$(".btn.btn-success.btn-lg"))) {
-    if (lib.config.debug == true) console.log("[link1s] Found possible solution page, extracting link...");
-    return (await p.evaluate(function() {return document.querySelector(".btn.btn-success.btn-lg").href}));
-  } else if ((await p.$(".skip-ad"))) {
-    if (lib.config.debug == true) console.log("[link1s] Found possible solution page, counting down...");
-    await p.waitForSelector(".skip-ad .btn:not([href=''])");
-    return (await p.evaluate(function() {return document.querySelector(".skip-ad .btn:not([href=''])").href}));
-  } else {
-   
-    if ((await p.$("#link1s"))) {
-      if (lib.config.debug == true) console.log("[link1s] Skipping automatically...");
-      await p.evaluate(function() {
-        window.open(document.getElementById("link1s").href, "_self");
-      });
+    if ((await p.$(".btn.btn-success.btn-lg"))) {
+      if (lib.config.debug == true) console.log("[link1s] Found possible solution page, extracting link...");
+      return (await p.evaluate(function() {return document.querySelector(".btn.btn-success.btn-lg").href}));
+    } else if ((await p.$(".skip-ad"))) {
+      if (lib.config.debug == true) console.log("[link1s] Found possible solution page, counting down...");
+      await p.waitForSelector(".skip-ad .btn:not([href=''])");
+      return (await p.evaluate(function() {return document.querySelector(".skip-ad .btn:not([href=''])").href}));
     } else {
-      try {
-        await p.evaluate(function() {link1sgo()});
+    
+      if ((await p.$("#link1s"))) {
         if (lib.config.debug == true) console.log("[link1s] Skipping automatically...");
-      } catch(e) {}
+        await p.evaluate(function() {
+          window.open(document.getElementById("link1s").href, "_self");
+        });
+      } else {
+        try {
+          await p.evaluate(function() {link1sgo()});
+          if (lib.config.debug == true) console.log("[link1s] Skipping automatically...");
+        } catch(e) {}
+      }
+      return (await cont(p));
     }
-    return (await cont(p));
+  } catch(err) {
+    if (!err.message?.includes("Execution content was destroyed")) throw err;
   }
 }
