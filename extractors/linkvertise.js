@@ -17,11 +17,11 @@ module.exports = {
   requiresCaptcha: true,
   get: async function(url, opt) {
     try {
-      let header = (lib.config().defaults?.got?.headers || lib.config().defaults?.axios?.headers || {});
+      let header = (lib.config.defaults?.got?.headers || lib.config.defaults?.axios?.headers || {});
 
       let proxy;
-      if (lib.config().defaults?.got?.proxy) {
-        if (lib.config().defaults?.got?.proxy?.type == "socks5") {
+      if (lib.config.defaults?.got?.proxy) {
+        if (lib.config.defaults?.got?.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
           try { 
             if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(proxy).port == "9050") {
@@ -44,7 +44,7 @@ module.exports = {
         id = new URL(url).pathname.split("/").slice(1, 3).join("/");
       }
   
-      if (lib.config().debug == true) console.log("[linkvertise] Got ID from URL:", id);
+      if (lib.config.debug == true) console.log("[linkvertise] Got ID from URL:", id);
   
       header["User-Agent"] = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1";
       header.Accept = "application/json";
@@ -58,7 +58,7 @@ module.exports = {
       header["Sec-Fetch-Site"] = "same-site";
       header["TE"] = "trailers";
   
-      if (lib.config().debug == true) console.log("[linkvertise] Getting user token...");
+      if (lib.config.debug == true) console.log("[linkvertise] Getting user token...");
   
       let resp = await got({
         method: "GET",
@@ -78,11 +78,11 @@ module.exports = {
   
       let rp = resp.body?.data.link.id;
       let ut = resp.body?.user_token;
-      if (lib.config().debug == true) console.log("[linkvertise] Got user token:", ut);
+      if (lib.config.debug == true) console.log("[linkvertise] Got user token:", ut);
   
       let ck;
   
-      if (lib.config().debug == true) console.log("[linkvertise] Doing CAPTCHA to validate traffic...");
+      if (lib.config.debug == true) console.log("[linkvertise] Doing CAPTCHA to validate traffic...");
   
       header["Content-Type"] = "application/json";
   
@@ -96,7 +96,7 @@ module.exports = {
 
       header["Content-Length"] = lib.byteCount(d);
         
-      if (lib.config().debug == true) console.log("[linkvertise] Sending CAPTCHA result to get CAPTCHA token...");
+      if (lib.config.debug == true) console.log("[linkvertise] Sending CAPTCHA result to get CAPTCHA token...");
       resp = await got({
         body: d,
         method: "POST",
@@ -106,7 +106,7 @@ module.exports = {
 
       resp.body = JSON.parse(resp.body);
       ck = resp.body?.data.tokens.TARGET;
-      if (lib.config().debug == true) console.log("[linkvertise] Got CAPTCHA token: ", ck);
+      if (lib.config.debug == true) console.log("[linkvertise] Got CAPTCHA token: ", ck);
   
       let fb = {};
   
@@ -122,7 +122,7 @@ module.exports = {
       header["Content-Type"] = "application/json";
       header["Content-Length"] = lib.byteCount(fb);
   
-      if (lib.config().debug == true) console.log("[linkvertise] Sending final request...");
+      if (lib.config.debug == true) console.log("[linkvertise] Sending final request...");
       resp = await got({
         body: fb,
         method: "POST",

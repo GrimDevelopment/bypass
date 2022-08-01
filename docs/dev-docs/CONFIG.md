@@ -86,4 +86,4 @@ FASTFORWARD
 ALERT
 ```
 
-Or you can set a variable called `CONFIG_TEXT` with a stringified version of a config.json file compatible with BIFM.
+Or you can set a variable called `CONFIG_TEXT` with a stringified version of a lib.config.json file compatible with BIFM.

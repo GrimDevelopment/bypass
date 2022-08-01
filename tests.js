@@ -1,4 +1,5 @@
 const lib = require("./lib");
+const config = require("./config.json");
 
 // add a new extractor? add it to the test list.
 const examples = [
@@ -14,6 +15,7 @@ const examples = [
   { link: "https://cshort.org/8i8dwPx0" },
   { link: "https://droplink.co/VOpK" },
   { link: "https://exe.io/ZaKsUgDc" }, 
+  { link: "http://gplinks.in/EWu8", expected: "https://youtu.be/EqLPsj_vZDo" },
   { extractor: "hrshort.com", link: "https://open.crazyblog.in/tXDGig"},
   { link: "http://ity.im/1QZh2" }, 
   { link: "http://karung.in/Gyucc", expected: "https://drive.google.com/uc?id=0B263gKU-C09_WW5rbURLeXN5QXc&export=download"},
@@ -31,22 +33,20 @@ const examples = [
   { link: "https://show.co/HQrPtta", expected: "https://universal-bypass.org" },
   { link: "https://social-unlock.com/417pK" },
   { link: "http://srt.am/e8kZ9m", expected: "https://www.google.com/" },
-  { link: "https://tei.ai/HOI4_1_11_11", expected: "https://www.mediafire.com/file/mmxskm3b1uanzfn/OG9134-HOI4FU1.rar/file"},
   { extractor: "thinfi (no password)", link: "https://thinfi.com/088ud" },
   { extractor: "thinfi (passworded)", link: "https://thinfi.com/088uk", password: "bifm"},
   { extractor: "WPSafelink", link: "https://demo-safelink.themeson.com/template1/?f7fbb8af", expected: "https://themeson.com/safelink/" },
-  { extractor: "Longer WPSafelink", link: "https://pdiskshortener.in/svJ1", expected: "https://1.htlinks.in/svJ1" },
   { link: "https://za.gl/JPk6" }
 ];
 
 if (process.argv[2]) {
-  if (lib.config().debug == true) console.log("\n[testing] Detected arguments.");
+  if (lib.config.debug == true) console.log("\n[testing] Detected arguments.");
 
-  if (lib.config().debug == true) console.log("[testing] Parsing arguments...");
+  if (lib.config.debug == true) console.log("[testing] Parsing arguments...");
   let intForm = parseInt(process.argv[2]);
   if (intForm !== process.argv[2] || typeof intForm !== "number") intForm = examples.findIndex(e => (e.extractor || new URL(e.link).hostname) == process.argv[2]);
   
-  if (lib.config().debug == true) console.log(`[testing] Parsed starting interger as: ${intForm}`);
+  if (lib.config.debug == true) console.log(`[testing] Parsed starting interger as: ${intForm}`);
 
   let end;
   if (process.argv[3]) {
@@ -59,7 +59,7 @@ if (process.argv[2]) {
     }
   }
 
-  if (lib.config().debug == true) console.log(`[testing] Parsed ending interger as: ${end}`);
+  if (lib.config.debug == true) console.log(`[testing] Parsed ending interger as: ${end}`);
 
   console.log("\nBeginning extractor tests...\n");
   run(intForm, end);

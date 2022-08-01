@@ -1,7 +1,6 @@
-const pup = require("puppeteer-extra");
+const pw = require("playwright-extra");
 const stl = require("puppeteer-extra-plugin-stealth");
-const adb = require("puppeteer-extra-plugin-adblocker");
-const cap = require("puppeteer-extra-plugin-recaptcha");
+const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
 const lib = require("../lib");
 
 module.exports = {
@@ -10,32 +9,30 @@ module.exports = {
   get: async function(url, opt) {
     let b;
     try {
-      pup.use(adb());
-
       let stlh = stl();
-      stlh.enabledEvasions.delete("iframe.contentWindow");
-      pup.use(stlh);
+      stlh.enabledEvasions.delete("user-agent-override");
+      pw.firefox.use(stlh);
 
-      if (lib.config().debug == true) console.log("[keeplinks] Launching browser...");
-      let args = (lib.config().defaults?.puppeteer || {headless: true});
-      b = await pup.launch(args);
+      if (lib.config.debug == true) console.log("[keeplinks] Launching browser...");
+      let args = (lib.config.defaults?.puppeteer || {headless: true});
+      b = await pw.firefox.launch(args);
       p = await b.newPage();
       if (opt.referer) {
-        if (lib.config().debug == true) console.log("[keeplinks] Going to referer URL first...");
+        if (lib.config.debug == true) console.log("[keeplinks] Going to referer URL first...");
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
       }
       await p.goto(url);
 
-      if (lib.config().debug == true) console.log("[keeplinks] Done. Parsing URL...");
+      if (lib.config.debug == true) console.log("[keeplinks] Done. Parsing URL...");
       let pt = await p.url().split("//")[1].split("/")[1];
       let id = await p.url().split("//")[1].split("/")[2];
 
-      await p.setCookie({name: `flag[${id}]`, path: `/${pt}`, value: `1`});
-      if (lib.config().debug == true) console.log("[keeplinks] Done. Redirecting...");
+      await p.evaluate("document.cookie = `flag[" + id + "]=1`;");
+      if (lib.config.debug == true) console.log("[keeplinks] Done. Redirecting...");
       await p.evaluate(function() {window.location.reload()});
-      await p.waitForNavigation();
+      await p.waitForLoadState("domcontentloaded");
 
-      if (lib.config().debug == true) console.log("[keeplinks] Done. Parsing metadata...");
+      if (lib.config.debug == true) console.log("[keeplinks] Done. Parsing metadata...");
       let r = await p.evaluate(function() {
         let a = [];
 

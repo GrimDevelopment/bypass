@@ -1,6 +1,5 @@
-const pup = require("puppeteer-extra");
+const pw = require("playwright-extra");
 const stl = require("puppeteer-extra-plugin-stealth");
-const adb = require("puppeteer-extra-plugin-adblocker")
 const lib = require("../lib");
 
 module.exports = {
@@ -10,20 +9,20 @@ module.exports = {
     let b;
     try {
       let stlh = stl();
-      stlh.enabledEvasions.delete("iframe.contentWindow");
-      pup.use(stlh);
-      pup.use(adb());
+      stlh.enabledEvasions.delete("user-agent-override");
+      pw.firefox.use(stlh);
+      
 
-      if (lib.config().debug == true) console.log("[zagl] Launching browser...");
-      let args = (lib.config().defaults?.puppeteer || {headless: true});
-      b = await pup.launch(args);
+      if (lib.config.debug == true) console.log("[zagl] Launching browser...");
+      let args = (lib.config.defaults?.puppeteer || {headless: true});
+      b = await pw.firefox.launch(args);
       p = await b.newPage();
       if (opt.referer) {
-        if (lib.config().debug == true) console.log("[zagl] Going to referer URL first...");
+        if (lib.config.debug == true) console.log("[zagl] Going to referer URL first...");
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
       }
       await p.goto(url);
-      if (lib.config().debug == true) console.log(`[zagl] Launched. Listening for "/links/go"...`);
+      if (lib.config.debug == true) console.log(`[zagl] Launched. Listening for "/links/go"...`);
 
       p = await fireWhenFound(p);
       await b.close();
@@ -42,11 +41,11 @@ async function fireWhenFound(p) {
       let a = new URL((await res.url()));
       if (a.pathname == "/links/go" && (await (await(res.request()).method())) == "POST") {
         let a = (await res.json());
-        if (lib.config().debug == true) console.log("[za.gl] Got URL that met requirements, parsing...");
+        if (lib.config.debug == true) console.log("[za.gl] Got URL that met requirements, parsing...");
         if (a.url) resolve(a.url);
         else reject("Redirect not found.");
       } else {
-        if (lib.config().debug == true && a.hostname.includes("za.")) console.log(`[zagl] Ignoring request ${(await (await(res.request()).method()))} "${(await res.url())}" from listener.`);
+        if (lib.config.debug == true && a.hostname.includes("za.")) console.log(`[zagl] Ignoring request ${(await (await(res.request()).method()))} "${(await res.url())}" from listener.`);
       }
     });
   });

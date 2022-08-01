@@ -7,23 +7,23 @@ module.exports = {
   requiresCaptcha: false,
   get: async function(url, opt) {
     try {
-      let h = (lib.config().defaults?.got?.headers || lib.config().defaults?.axios?.headers || {});
+      let h = (lib.config.defaults?.got?.headers || lib.config.defaults?.axios?.headers || {});
       if (opt.referer) {
         h.Referer = opt.referer;
       }
 
       let proxy;
-      if (lib.config().defaults?.got?.proxy) {
-        if (lib.config().defaults?.got?.proxy?.type == "socks5") {
+      if (lib.config.defaults?.got?.proxy) {
+        if (lib.config.defaults?.got?.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
-          let prox = `socks5://${lib.config().defaults?.got?.proxy?.host}:${lib.config().defaults?.got?.proxy?.port}`;
+          let prox = `socks5://${config.defaults?.got?.proxy?.host}:${config.defaults?.got?.proxy?.port}`;
           proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
         } else {
           proxy = {};
         }
       }
         
-      if (lib.config().debug == true) console.log("[mshake] Requesting page...");
+      if (lib.config.debug == true) console.log("[mshake] Requesting page...");
 
       let resp = await got({
         method: "GET",
@@ -33,7 +33,7 @@ module.exports = {
       });
       let urls = [];
 
-      if (lib.config().debug == true) console.log("[mshake] Got page, parsing page...");
+      if (lib.config.debug == true) console.log("[mshake] Got page, parsing page...");
 
       let $ = cheerio.load(resp.body);
       $(".swiper > .swiper-wrapper > .swiper-slide a").each(function(i) {
@@ -53,7 +53,7 @@ module.exports = {
         urls.push(u);
       });
 
-      if (lib.config().debug == true) console.log(`[mshake] Done. Returning ${urls.length} URLs...`);
+      if (lib.config.debug == true) console.log(`[mshake] Done. Returning ${urls.length} URLs...`);
       return {destinations: urls};
     } catch(err) {
       throw err;

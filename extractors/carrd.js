@@ -4,20 +4,20 @@ const lib = require("../lib");
 
 module.exports = {
   hostnames: [],
-  requireCaptcha: false,
+  requiresCaptcha: false,
   get: async function(url, opt) {
-    if (lib.config().debug == true) console.log("[carrd] Requesting page...");
+    if (lib.config.debug == true) console.log("[carrd] Requesting page...");
 
-    let h = (lib.config().defaults?.got?.headers || lib.config().defaults?.axios?.headers || {});
+    let h = (lib.config.defaults?.got?.headers || lib.config.defaults?.axios?.headers || {});
     if (opt.referer) {
       h.Referer = opt.referer;
     }
 
     let proxy;
-    if (lib.config().defaults?.got?.proxy) {
-      if (lib.config().defaults?.got?.proxy?.type == "socks5") {
+    if (lib.config.defaults?.got?.proxy) {
+      if (lib.config.defaults?.got?.proxy?.type == "socks5") {
         const agent = require("socks-proxy-agent");
-        let prox = `socks5://${lib.config().defaults?.got?.proxy?.host}:${lib.config().defaults?.got?.proxy?.port}`;
+        let prox = `socks5://${config.defaults?.got?.proxy?.host}:${config.defaults?.got?.proxy?.port}`;
         proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
       } else {
         proxy = {};
@@ -32,11 +32,11 @@ module.exports = {
       throwHttpErrors: false
     });
 
-    if (lib.config().debug == true) console.log("[carrd] Got page, parsing...");
+    if (lib.config.debug == true) console.log("[carrd] Got page, parsing...");
     let $ = cheerio.load(resp.body);
     let links = [];
 
-    if (lib.config().debug == true) console.log("[carrd] Parsed. Filtering out unviewable links...");
+    if (lib.config.debug == true) console.log("[carrd] Parsed. Filtering out unviewable links...");
     await ($("a").each(function(a) {
       let h = $("a")[a].attribs?.href;
       if (h !== null) {

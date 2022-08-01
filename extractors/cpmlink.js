@@ -8,11 +8,11 @@ module.exports = {
   requiresCaptcha: false,
   get: async function (url, opt) {
     try {
-      if (lib.config().captcha.active == false) {
+      if (lib.config.captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."
       }
 
-      if (lib.config().debug == true) console.log("[cpmlink] Requesting page...");
+      if (lib.config.debug == true) console.log("[cpmlink] Requesting page...");
 
       let header = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
@@ -25,8 +25,8 @@ module.exports = {
       if (opt.referer) header.Referer = opt.referer;
 
       let proxy;
-      if (lib.config().defaults?.got?.proxy) {
-        if (lib.config().defaults?.got?.proxy?.type == "socks5") {
+      if (lib.config.defaults?.got?.proxy) {
+        if (lib.config.defaults?.got?.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
           try { 
             if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(proxy).port == "9050") {
@@ -49,7 +49,7 @@ module.exports = {
         ...proxy
       });
 
-      if (lib.config().debug == true) console.log("[cpmlink] Got page. Parsing page...");
+      if (lib.config.debug == true) console.log("[cpmlink] Got page. Parsing page...");
       let $ = cheerio.load(resp.body);
       let k = $("#skip [name=key]").val();
       let t = $("#skip [name=time]").val();
@@ -59,15 +59,15 @@ module.exports = {
       let s = $("#captcha").attr("data-sitekey");
       let c = lib.cookieString(scp(resp.headers["set-cookie"]));
 
-      if (lib.config().debug == true) console.log("[cpmlink] Parsed. Solving CAPTCHA...");
+      if (lib.config.debug == true) console.log("[cpmlink] Parsed. Solving CAPTCHA...");
       let cap = await lib.solve(s, "recaptcha", {
         referer: url
       });
-      if (lib.config().debug == true) console.log("[cpmlink] Solved CAPTCHA.");
+      if (lib.config.debug == true) console.log("[cpmlink] Solved CAPTCHA.");
 
       let body = `key=${k}&time=${t}&ref=${r}&s_width=${w}&s_height=${h}&g-recaptcha-response=${cap}`;
 
-      if (lib.config().debug == true) console.log("[cpmlink] Requesting solve page...");
+      if (lib.config.debug == true) console.log("[cpmlink] Requesting solve page...");
       resp = await got({
         method: "POST",
         body: body,
@@ -92,7 +92,7 @@ module.exports = {
         },
         ...proxy
       });
-      if (lib.config().debug == true) console.log("[cpmlink] Parsing solve page...");
+      if (lib.config.debug == true) console.log("[cpmlink] Parsing solve page...");
       $ = cheerio.load(resp.body);
       return $("#continue a").attr("href");
     } catch(err) {

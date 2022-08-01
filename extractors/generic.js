@@ -1,6 +1,7 @@
 const got = require("got");
 const cheerio = require("cheerio");
 const lib = require("../lib");
+const config = require("../config.json");
 
 module.exports = {
   hostnames: [],
@@ -9,15 +10,10 @@ module.exports = {
     try {
       let u = new URL(url);
 
-      if (u.host == "href.li" || u.host == "www.href.li") return u.href.split("?").slice(1).join("?");
-
-      if (u.host.substring(u.host.length - 8) == "carrd.co" && u.host !== "carrd.co") {
-        let carrd = require("./carrd");
-        return (await carrd.get(url));
-      }
+      if (u.host == "href.li") return u.href.split("?").slice(1).join("?");
 
       // redirect via url params
-      if (lib.config().debug == true) console.log("[generic] Checking url params..."); 
+      if (lib.config.debug == true) console.log("[generic] Checking url params..."); 
       if (u.searchParams.get("url")) {
         if (lib.isUrl(u.searchParams.get("url"))) {
           return u.searchParams.get("url");
@@ -74,16 +70,16 @@ module.exports = {
         }
       }
 
-      if (lib.config().debug == true) console.log("[generic] Requesting page...");
-      let header = (lib.config().defaults?.got?.headers || lib.config().defaults?.axios?.headers || {});
+      if (lib.config.debug == true) console.log("[generic] Requesting page...");
+      let header = (lib.config.defaults?.got?.headers || lib.config.defaults?.axios?.headers || {});
       if (opt.referer) header.Referer = opt.referer;
 
       let proxy;
-      if (lib.config().defaults?.got?.proxy) {
-        if (lib.config().defaults?.got?.proxy?.type == "socks5") {
+      if (lib.config.defaults?.got?.proxy) {
+        if (lib.config.defaults?.got?.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
-          let prox = `socks5://${lib.config().defaults?.got?.proxy?.host}:${lib.config().defaults?.got?.proxy?.port}`;
-          proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
+          proxy = `socks5://${config.defaults?.got?.proxy?.host}:${config.defaults?.got?.proxy?.port}`;
+          proxy = {httpsAgent: (new agent.SocksProxyAgent(proxy))};
         } else {
           proxy = {};
         }
@@ -100,9 +96,9 @@ module.exports = {
 
       // adf.ly detection
       // i don't remember the origin of this script unfortunately so uh can't credit this
-      if (lib.config().debug == true) console.log("[generic] Got page. Checking for indicators that this is an adf.ly link..."); 
+      if (lib.config.debug == true) console.log("[generic] Got page. Checking for indicators that this is an adf.ly link..."); 
       if (resp.headers?.["set-cookie"]?.[0].startsWith("FLYSESSID")) {
-        if (lib.config().debug == true) console.log("[adfly] Re-requesting and extracting URL...");
+        if (lib.config.debug == true) console.log("[adfly] Re-requesting and extracting URL...");
 
         resp = await got({
           method: "GET",
@@ -154,28 +150,27 @@ module.exports = {
       
 
       // generic HTML redirect
-      if (lib.config().debug == true) console.log("[generic] Done. Checking for HTML redirects..."); 
+      if (lib.config.debug == true) console.log("[generic] Done. Checking for HTML redirects..."); 
       if (resp.body.includes(`content="0;URL=`)) {
         return resp.body.split(`content="0;URL=`)[1].split(`"`)[0];
       }
 
       // generic countdown sites
-      if (lib.config().debug == true) console.log("[generic] Done. Checking for general countdown sites...");
+      if (lib.config.debug == true) console.log("[generic] Done. Checking for general countdown sites...");
       if (resp.body.split("$('.skip-btn').attr('href','").length > 1) {
         return resp.body.split("$('.skip-btn').attr('href','")[1].split("')")[0];
       }
 
       // generic HTTP redirects, put any non-specific (like adlinkfly-type extractors) sites below this
-      if (lib.config().debug == true) console.log("[generic] Done. Checking for HTTP redirects...");
-      if (resp.headers?.location == undefined) {
-        if (lib.isUrl(resp.headers?.location)) {
-          return resp.headers?.location;
-        } else if (resp.headers?.location?.startsWith("/")) {
+      if (lib.config.debug == true) console.log("[generic] Done. Checking for HTTP redirects...");
+      if (resp.headers.location) {
+        if (lib.isUrl(resp.headers.location)) {
+          return resp.headers.location;
+        } else if (resp.headers.location.startsWith("/")) {
           return `${url.split("/").slice(0, 3)}${resp.headers?.location}`;
         }
       }
 
-      // HTTP redirects, volume 2
       if (resp.headers.refresh) {
         if (lib.isUrl(resp.headers.refresh.split("; url=").slice(1).join("; url="))) {
           return resp.headers.refresh.split("; url=").slice(1).join("; url=");
@@ -187,7 +182,7 @@ module.exports = {
       let $ = cheerio.load(resp.body);
 
       // wpsafe-link protectors
-      if (lib.config().debug == true) console.log("[generic] Done. Checking for wpsafelink indicators..."); 
+      if (lib.config.debug == true) console.log("[generic] Done. Checking for wpsafelink indicators..."); 
       if ($("#wpsafe-link").length !== 0) {
         if ($("#wpsafe-link a").attr("href") && $("#wpsafe-link a").attr("href").includes("safelink_redirect")) {
           let o = new URL($("#wpsafe-link a").attr("href"));
@@ -200,24 +195,24 @@ module.exports = {
       }
 
       // adlinkfly sites
-      if (lib.config().debug == true) console.log("[generic] Done. Checking if link is adlinkfly link...");
+      if (lib.config.debug == true) console.log("[generic] Done. Checking if link is adlinkfly link...");
       if ($("form > div[style='display:none;'] > *[name='_method']").length > 0 || $("form[action='https://techydino.net/golink.php']").length > 0) {
-        if (lib.config().debug == true) console.log("[generic] Link is an adlinkfly link, switching to adlinkfly extractor...");
+        if (lib.config.debug == true) console.log("[generic] Link is an adlinkfly link, switching to adlinkfly extractor...");
         const afl = require("./adlinkfly"); 
         return (await afl.get(url, opt));
       }
 
       // daddy's link protector
-      if (lib.config().debug == true) console.log("[generic] Done. Checking if link is DLP link...");
+      if (lib.config.debug == true) console.log("[generic] Done. Checking if link is DLP link...");
       if ($("#wrapper > #footer > center a[target='_blank'][href='http://www.daddyscripts.com']").length > 0) {
-        if (lib.config().debug == true) console.log("[generic] Link is an DLP link, switching to DLP extractor...");
+        if (lib.config.debug == true) console.log("[generic] Link is an DLP link, switching to DLP extractor...");
         const dlp = require("./dlp"); 
         return (await dlp.get(url, opt));
       }
 
-      if (lib.config().debug == true) console.log("[generic] Done. Checking for a long WPSafelink bypass...");
+      if (lib.config.debug == true) console.log("[generic] Done. Checking for a long WPSafelink bypass...");
       if ($("body > form#landing").length == 1) {
-        if (lib.config().debug == true) console.log("[generic] Link is a long WPSafelink, switching to WPSafelink extractor...");
+        if (lib.config.debug == true) console.log("[generic] Link is a long WPSafelink, switching to WPSafelink extractor...");
         const lwps = require("./longwpsafe"); 
         return (await lwps.get(url, opt));
       }

@@ -1,6 +1,5 @@
-const pup = require("puppeteer-extra");
+const pw = require("playwright-extra");
 const lib = require("../lib");
-const cap = require("puppeteer-extra-plugin-recaptcha");
 const stl = require("puppeteer-extra-plugin-stealth");
 
 module.exports = {
@@ -11,35 +10,35 @@ module.exports = {
     try {
       let u = new URL(url);
       if (u.searchParams.get("s")) {
-        if (lib.config().debug == true) console.log("[ouo] Found API information, sending URL...");
+        if (lib.config.debug == true) console.log("[ouo] Found API information, sending URL...");
         return decodeURIComponent(u.searchParams.get("s"));
       }
       
       // setting up plugins
       let stlh = stl();
-      stlh.enabledEvasions.delete("iframe.contentWindow");
-      pup.use(stlh);
+      stlh.enabledEvasions.delete("user-agent-override");
+      pw.firefox.use(stlh);
 
       // opening browser
-      let args = (lib.config().defaults?.puppeteer || {headless: true});
-      b = await pup.launch(lib.removeTor(args));
+      let args = (lib.config.defaults?.puppeteer || {headless: true});
+      b = await pw.firefox.launch(args);
       p = await b.newPage();
       if (opt.referer) {
-        if (lib.config().debug == true) console.log("[ouo] Going to referer URL first...");
+        if (lib.config.debug == true) console.log("[ouo] Going to referer URL first...");
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
       }
       await p.goto(url);
 
-      if (lib.config().debug == true) console.log("[ouo] Launched. Detecting if the site is protected via Cloudflare...");
+      if (lib.config.debug == true) console.log("[ouo] Launched. Detecting if the site is protected via Cloudflare...");
       let cf = await lib.cloudflare.check(p);
       if (cf == true) {
-        if (lib.config().debug == true) console.log("[ouo] ouo is currently protected by Cloudflare, bypassing...");
+        if (lib.config.debug == true) console.log("[ouo] ouo is currently protected by Cloudflare, bypassing...");
         p = await lib.cloudflare.solve(p);
       } 
 
       // 2nd eval code sourced from https://github.com/FastForwardTeam/FastForward/blob/main/src/js/injection_script.js#L1095
 
-      if (lib.config().debug == true) console.log("[ouo] Auto-submitting form to skip CAPTCHA...");
+      if (lib.config.debug == true) console.log("[ouo] Auto-submitting form to skip CAPTCHA...");
       await p.evaluate(function() {
         if (location.pathname.includes("/go") || location.pathname.includes("/fbc")) {
           document.querySelector("form").submit();
@@ -71,7 +70,7 @@ async function fireWhenFound(p) {
         let a = (await res.headers());
         resolve(a?.location)
       } else {
-        if (lib.config().debug == true && a.hostname.includes("ouo")) console.log(`[ouo] Ignoring request ${(await (await(res.request()).method()))} "${(await res.url())}" from listener.`);
+        if (lib.config.debug == true && a.hostname.includes("ouo")) console.log(`[ouo] Ignoring request ${(await (await(res.request()).method()))} "${(await res.url())}" from listener.`);
       }
     });
   });

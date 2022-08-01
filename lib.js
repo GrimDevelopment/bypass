@@ -30,7 +30,7 @@ if (!fs.existsSync("./config.json")) {
 
     fs.writeFileSync("./config.json", d);
   }
-  else throw "Couldn't find proper config.";
+  else throw "Couldn't find proper lib.config.";
 }
 
 const config = require("./config.json");
@@ -63,8 +63,8 @@ module.exports = {
     try {
       if (new URL(url).host.substring(new URL(url).host.length - 8) == "carrd.co") url = url.split("#")[0];
 
-      let ex = await ext.fromUrl(url);
-      let extractor = require(`${__dirname}/extractors/${ex}`);
+      let extractor = await ext.fromUrl(url);
+      extractor = require(`./extractors/${extractor}`);
 
       if (opt.ignoreCache) opt.ignoreCache = parseBool(opt.ignoreCache);
       if (opt.allowCache) opt.allowCache = parseBool(opt.allowCache);
@@ -110,7 +110,8 @@ module.exports = {
 
       if (typeof f == "string" || typeof f == "object" && !f.destinations) {
         if (!this.isUrl((f.destination || f)) || (f.destination || f) == url) {
-          if (ex !== "linkvertise.js" && typeof (f.destination || f) == "string") {
+          console.log((f.destination || f));
+          if (typeof (f.destination || f) == "string" && !extractor.hostnames.includes("linkvertise.com")) {
             if (config.debug == true) console.log("[extract] URL was invalid.", (f.destination||f), url);
             throw "Invalid URL from backend.";
           } else {
@@ -252,7 +253,37 @@ module.exports = {
           throw "Parameters for CAPTCHA solver are incorrect.";
       }
     }
-    
+  },
+  solveThroughPage: async function(p) {
+    try {
+      let type = await p.evaluate(function() {
+        if (document.querySelector("iframe[title='recaptcha challenge expires in two minutes']") || document.querySelector(".g-recaptcha")) return "recaptcha";
+        else if (document.querySelector(".h-captcha")) return "hcaptcha";
+        else return null;
+      });
+  
+      if (type == null) throw "Could not find CAPTCHA type.";
+      if (config.debug == true) console.log("[captcha] Got CAPTCHA type:", type);
+  
+      let sk = await p.evaluate(function() {
+        return (
+          document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")?.src.split("k=")[1].split("&")[0] ||
+          document.querySelector(".g-recaptcha")?.getAttribute("data-sitekey") ||
+          document.querySelector(".h-captcha")?.getAttribute("data-sitekey")
+        );
+      });
+      
+      if (config.debug == true) console.log("[captcha] Got sitekey:", sk);
+  
+      if (config.debug == true) console.log("[captcha] Retrieved. Solving CAPTCHA...");
+      let c = await this.solve(sk, type, {referer: (await p.url())});
+  
+      if (config.debug == true) console.log("[captcha] Solved CAPTCHA. Enterring solution and submitting form...");
+      await p.evaluate(`document.querySelector("[name='g-recaptcha-response']").value = "${c}";`);
+      if (type == "hcaptcha") await p.evaluate(`document.querySelector("[name='h-captcha-response']").value = "${c}";`);
+    } catch(err) {
+      throw err;
+    }
   },
   cookieString: function(co) {
     let s = ``;
@@ -323,7 +354,7 @@ module.exports = {
     }
   },
   byteCount: function(string) {return encodeURI(string).split(/%..|./).length - 1;},
-  config: function() {return config;},
+  config: config,
   isUrl: function(url) {
     try {
       let u = new URL(url);
@@ -395,72 +426,6 @@ module.exports = {
     return args;
   },
   cloudflare: {
-    check: async function(p) {
-      return (await p.evaluate(function() {
-        if (document.title.includes("| Cloudflare")) return true;
-        else return false;
-      }));
-    },
-    solve: async function(p, attempt) {
-      let cfd = await this.check(p);
-      if (cfd !== true) {
-        if (config.debug == true) console.log("[cloudflare] No protection found, sending back current page object.");
-        return p;
-      }
-
-      if (config.debug == true) console.log("[cloudflare] Detected Cloudflare protection, looking for the CAPTCHA...");
-    
-      try {
-        await p.waitForSelector("#cf-hcaptcha-container", {timeout: (1000 * 3)});
-        if (config.debug == true) console.log("[cloudflare] Found regular CAPTCHA, solving...");
-        await p.solveRecaptchas();
-      } catch(e) {
-        try {
-          if (config.debug == true) console.log("[cloudflare] No regular CAPTCHA found, checking for click CAPTCHA...");
-          if ((await p.$("#cf-norobot-container"))) {
-            if (config.debug == true) console.log("[cloudflare] Found click CAPTCHA, clicking button and continuing...");
-            await p.click("#cf-norobot-container");
-          } else {
-            if (config.debug == true) console.log("[cloudflare] No click CAPTCHA found, continuing page...");
-          }
-        } catch(e) {
-          if (e.message !== "Execution context was destroyed, most likely because of a navigation.") {
-            throw e;
-          }
-        }
-      }
-    
-      try {
-        cf = await p.evaluate(function() {
-          if (document.title.includes("| Cloudflare")) return true;
-          else return false;
-        });
-      } catch(e) {
-        if (e.message !== "Execution context was destroyed, most likely because of a navigation.") throw e;
-        return p;
-      }
-      
-    
-      if (cf == true) {
-        if (config.debug == true) console.log("[cloudflare] Solved CAPTCHA. Waiting for page to refresh...");
-        await p.waitForNavigation({waitUntil: "networkidle2"});
-        cc = ((attempt + 1) || 0);
-        if (config.debug == true) console.log("[cloudflare] Cloudflare bypass attempt", cc);
-        if (cc >= 9) {
-          if (config.debug == true) console.log("[cloudflare] Cloudflare bypass attempt has exceeded ten times, quitting...");
-          throw "Could not bypass Cloudflare.";
-        }
-        return (await this.solve(p, cc));
-      } else {
-        try {
-          await p.waitForNavigation({waitUntil: "networkidle2", timeout: (1000 * 5)});
-        } catch(e) {
-          await p.waitForTimeout(1000);
-        }
-        if (config.debug == true) console.log("[cloudflare] Was a normal CF redirect, sending back original page object...");
-        return p;
-      }
-    },
     email: function(data) {
       if (!data.includes("/cdn-cgi/l/email-protection#")) data = `/cdn-cgi/l/email-protection#${data}`;
       let a = data;
@@ -488,7 +453,6 @@ module.exports = {
     return (((await (await links.find({})).toArray()).length) || 0);
   },
   fixSubdomain: function(url) {
-
     // function meant to be for sites that have you visit multiple different domains
 
     let h = new URL(url).hostname;
@@ -512,6 +476,9 @@ module.exports = {
       case "links.medipost.org":
       case "usalink.io":
         return `https://links.medipost.org/${url.split("/").slice(3).join("/")}`
+
+      case "pdiskshortener.in":
+        return `https://1.htlinks.in/${url.split("/").slice(3).join("/")}`;
 
       default: return url;
     }

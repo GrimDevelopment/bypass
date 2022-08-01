@@ -1,82 +1,39 @@
-const pup = require("puppeteer-extra");
-const adb = require("puppeteer-extra-plugin-adblocker");
+const pw = require("playwright-extra");
+const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
 const stl = require("puppeteer-extra-plugin-stealth");
 const lib = require("../lib")
 
 module.exports = {
-  hostnames: ["exe.io", "exey.io", "exe.app", "fc-lc.com", "fc.lc"],
+  hostnames: ["exe.io", "exey.io", "exe.app", "eie.io", "fc-lc.com", "fc.lc"],
   requiresCaptcha: true,
   get: async function(url, opt) {
     let b;
     try {
-      pup.use(adb());
-      pup.use(stl());
+      let blocker = await PlaywrightBlocker.fromPrebuiltFull();
+      let stlh = stl();
+      stlh.enabledEvasions.delete("user-agent-override");
+      pw.firefox.use(stlh);
 
-      if (lib.config().captcha.active == false) {
+      if (lib.config.captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."
       }
 
-      if (lib.config().debug == true) console.log("[exeio] Launching browser...");
-      let args = (lib.config().defaults?.puppeteer || {headless: true});
-      b = await pup.launch(args);
+      if (lib.config.debug == true) console.log("[exeio] Launching browser...");
+      let args = (lib.config.defaults?.puppeteer || {headless: true});
+      b = await pw.firefox.launch(args);
       p = await b.newPage();
+      await blocker.enableBlockingInPage(p);
       if (opt.referer) {
-        if (lib.config().debug == true) console.log("[exeio] Going to referer URL first...");
+        if (lib.config.debug == true) console.log("[exeio] Going to referer URL first...");
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
       }
-      await p.goto(url, {waitUntil: "networkidle0"});
+      await p.goto(url, {waitUntil: "networkidle"});
 
-      if (!(await p.url()).includes("exey.io")) {
-        if (lib.config().debug == true) console.log("[exeio] Launched. Skipping first page...");
-        try {
-          if ((await p.$(".btn.btn-primary"))) {
-            await p.click(".btn.btn-primary");
-            try {
-              await p.waitForNavigation({timeout: 10000});
-            } catch(err) {
-              if (err.message.includes("Navigation timeout of")) {
-                if (lib.config().debug == true) console.log("[exeio] First page has CAPTCHA, attempting to solve...");
-  
-                let type = await p.evaluate(function() {
-                  if (document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")) return "recaptcha";
-                  else if (document.querySelector(".h-captcha")) return "hcaptcha";
-                  else return null;
-                });
-          
-                if (type == null) throw "Could not find CAPTCHA type.";
-                if (lib.config().debug == true) console.log("[exeio] Got CAPTCHA type:", type);
-          
-                let sk = await p.evaluate(function() {
-                  return (
-                    document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")?.src.split("k=")[1].split("&")[0] ||
-                    document.querySelector(".h-captcha")?.getAttribute("data-sitekey")
-                  );
-                });
-                
-                if (lib.config().debug == true) console.log("[exeio] Got sitekey:", sk);
-          
-                if (lib.config().debug == true) console.log("[exeio] Retrieved. Solving CAPTCHA...");
-                let c = await lib.solve(sk, type, {referer: (await p.url())});
-          
-                if (lib.config().debug == true) console.log("[exeio] Solved CAPTCHA. Enterring solution and submitting form...");
-                await p.evaluate(`document.querySelector("[name='g-recaptcha-response']").value = "${c}";`);
-                if (type == "hcaptcha") await p.evaluate(`document.querySelector("[name='h-captcha-response']").value = "${c}";`);        
-                await p.evaluate(function() {
-                  document.querySelector("form").submit();
-                });
-                await p.waitForNavigation();
-              } else {
-                if (err.message !== "Execution context was destroyed, most likely because of a navigation.") throw err;
-              }
-            }
-          } else await p.waitForNavigation();
-        } catch(err) {
-          if (err.message !== "Execution context was destroyed, most likely because of a navigation.") throw err;
-        }
-      }
+      await p.evaluate(function() {
+        document.forms[0].submit();
+      });
+      await p.waitForLoadState("load");
 
-      if (lib.config().debug == true) console.log("[exeio] Starting continous function...");
-      
       p = await cont(p, url, b);
       
       await b.close();
@@ -90,45 +47,20 @@ module.exports = {
 
 async function cont(p, url, b) {
   try {
-    if (lib.config().debug == true) console.log("[exeio] Scanning page information...");
+    if (lib.config.debug == true) console.log("[exeio] Scanning page information...");
 
     if ((await p.$(".box-main > #before-captcha"))) {
-      if (lib.config().debug == true) console.log("[exeio] Skipping non-CAPTCHA page...");
+      if (lib.config.debug == true) console.log("[exeio] Skipping non-CAPTCHA page...");
       await p.evaluate(function() {
         document.querySelector("form").submit();
       });
-      await p.waitForNavigation();
+      await p.waitForLoadState("load");
       return (await cont(p, url, b));
     } else if ((await p.$(".btn-captcha"))) {
-      if (lib.config().debug == true) console.log("[exeio] Retrieving sitekey...");
-
-      let type = await p.evaluate(function() {
-        if (document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")) return "recaptcha";
-        else if (document.querySelector(".h-captcha")) return "hcaptcha";
-        else return null;
-      });
-
-      if (type == null) throw "Could not find CAPTCHA type.";
-      if (lib.config().debug == true) console.log("[exeio] Got CAPTCHA type:", type);
-
-      let sk = await p.evaluate(function() {
-        return (
-          document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")?.src.split("k=")[1].split("&")[0] ||
-          document.querySelector(".h-captcha")?.getAttribute("data-sitekey")
-        );
-      });
-      
-      if (lib.config().debug == true) console.log("[exeio] Got sitekey:", sk);
-
-      if (lib.config().debug == true) console.log("[exeio] Retrieved. Solving CAPTCHA...");
-      let c = await lib.solve(sk, type, {referer: (await p.url())});
-
-      if (lib.config().debug == true) console.log("[exeio] Solved CAPTCHA. Enterring solution and submitting form...");
-      await p.evaluate(`document.querySelector("[name='g-recaptcha-response']").value = "${c}";`);
-      if (type == "hcaptcha") await p.evaluate(`document.querySelector("[name='h-captcha-response']").value = "${c}";`);
+      await lib.solveThroughPage(p);
 
       p.on("dialog", function(d) {
-        if (lib.config().debug == true) console.log("[exeio] Recieved a dialog, auto-accepting.");
+        if (lib.config.debug == true) console.log("[exeio] Recieved a dialog, auto-accepting.");
         d.accept();
       })
 
@@ -136,18 +68,18 @@ async function cont(p, url, b) {
         document.querySelector("form").submit();
       });
 
-      if (lib.config().debug == true) console.log("[exeio] Submitted. Waiting...");
-      await p.waitForNavigation();
+      if (lib.config.debug == true) console.log("[exeio] Submitted. Waiting...");
+      await p.waitForLoadState("load");
       return (await cont(p, url, b));
     } else if ((await p.$(".procced > .btn.get-link.text-white"))) {
-      if (lib.config().debug == true) console.log("[exeio] Counting down...");
+      if (lib.config.debug == true) console.log("[exeio] Counting down...");
       await p.waitForSelector(".procced > .btn.get-link.text-white:not(.disabled)");
       let r = await p.evaluate(function() {
         return document.querySelector(".procced > .btn.get-link.text-white").href
       });
       return r;
     } else if ((await p.$("#content > div[style]"))) {
-      if (lib.config().debug == true) console.log("[exeio] Counting down...");
+      if (lib.config.debug == true) console.log("[exeio] Counting down...");
       await p.waitForSelector("#surl:not(.disabled)");
       let r = await p.evaluate(function() {
         return document.querySelector("#surl").href

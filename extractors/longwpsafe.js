@@ -1,5 +1,5 @@
-const pup = require("puppeteer-extra");
-const adb = require("puppeteer-extra-plugin-adblocker");
+const pw = require("playwright-extra");
+const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
 const stl = require("puppeteer-extra-plugin-stealth");
 const lib = require("../lib");
 
@@ -8,19 +8,19 @@ module.exports = {
   get: async function(url, opt) {
     let b;
     try {
-      pup.use(stl());
-      pup.use(adb());
+      pw.firefox.use(stl());
+      
 
-      let args = (lib.config().defaults?.puppeteer || {headless: true});
+      let args = (lib.config.defaults?.puppeteer || {headless: true});
 
-      if (lib.config().debug == true) console.log("[longwp] Launching browser...");
-      b = await pup.launch(args);
+      if (lib.config.debug == true) console.log("[longwp] Launching browser...");
+      b = await pw.firefox.launch(args);
       let p = await b.newPage();
 
-      if (lib.config().debug == true) console.log("[longwp] Done, opening page...");
-      await p.goto(url, {waitUntil: "networkidle2"});
+      if (lib.config.debug == true) console.log("[longwp] Done, opening page...");
+      await p.goto(url, {waitUntil: "networkidle"});
 
-      if (lib.config().debug == true) console.log("[longwp] Done, starting continous function...");
+      if (lib.config.debug == true) console.log("[longwp] Done, starting continous function...");
       let u = await cont(p);
       await b.close();
       return u;
@@ -33,15 +33,15 @@ module.exports = {
 async function cont(p) {
   try {
     if ((await p.$("#wpsafelink-landing"))) {
-      if (lib.config().debug == true) console.log("[longwpsafe] Handling landing page...");
-      if (lib.config().debug == true) console.log("[longwpsafe] Found landing page, parsing...");
+      if (lib.config.debug == true) console.log("[longwpsafe] Handling landing page...");
+      if (lib.config.debug == true) console.log("[longwpsafe] Found landing page, parsing...");
       await p.evaluate(function() {
         document.querySelector("#wpsafelink-landing").submit(); 
       });
-      await p.waitForNavigation();
+      await p.waitForLoadState("networkidle");
       return (await cont(p));
     } else if ((await p.$("#getlinkbtn a"))) {
-      if (lib.config().debug == true) console.log("[longwpsafe] Found JSON link, parsing...");
+      if (lib.config.debug == true) console.log("[longwpsafe] Found JSON link, parsing...");
       let j = await p.evaluate(function () {
         return atob(document.querySelector("#getlinkbtn a").href.split("safelink_redirect=")[1]);
       });
@@ -49,8 +49,8 @@ async function cont(p) {
       j = (j.safelink || j.second_safelink_url);
       return j;
     } else {
-      if (lib.config().debug == true) console.log("[longwp] Nothing found, waiting...");
-      await p.waitForNavigation();
+      if (lib.config.debug == true) console.log("[longwp] Nothing found, waiting...");
+      await p.waitForLoadState("networkidle");
       return (await cont(p));
     }
   } catch(err) {

@@ -1,4 +1,4 @@
-const pup = require("puppeteer-extra");
+const pw = require("playwright-extra");
 const lib = require("../lib");
 
 module.exports = {
@@ -7,20 +7,20 @@ module.exports = {
   get: async function (url, opt) {
     let b; 
     try {
-      if (lib.config().debug == true) console.log("[droplink] Launching browser...");
-      let args = (lib.config().defaults?.puppeteer || {headless: true});
-      b = await pup.launch(args);
+      if (lib.config.debug == true) console.log("[droplink] Launching browser...");
+      let args = (lib.config.defaults?.puppeteer || {headless: true});
+      b = await pw.firefox.launch(args);
       let p = await b.newPage();
-      if (lib.config().debug == true) console.log("[droplink] Launched. Faking some steps...");
+      if (lib.config.debug == true) console.log("[droplink] Launched. Faking some steps...");
 
       await p.goto("https://yoshare.net", {waitUntil: "domcontentloaded"});
       await p.evaluate(`window.location = "${url}"`);
-      if (lib.config().debug == true) console.log("[droplink] Done. Waiting for countdown page...");
+      if (lib.config.debug == true) console.log("[droplink] Done. Waiting for countdown page...");
+      await p.waitForLoadState("load");
 
-      await p.waitForNavigation();
-      if (lib.config().debug == true) console.log("[droplink] Done. Counting down...");
+      if (lib.config.debug == true) console.log("[droplink] Done. Counting down...");
       await p.waitForSelector(".btn.btn-success.btn-lg:not([disabled]):not([href='javascript: void(0)'])");
-      if (lib.config().debug == true) console.log("[droplink] Done. Extracting link...");
+      if (lib.config.debug == true) console.log("[droplink] Done. Extracting link...");
       let a = await p.evaluate(function() {return document.querySelector(".btn-success.btn-lg").href});
       await b.close();
       return a;

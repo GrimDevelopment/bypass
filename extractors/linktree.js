@@ -6,17 +6,17 @@ module.exports = {
   requiresCaptcha: false,
   get: async function(url, opt) {
     try {
-      if (lib.config().debug == true) console.log(`[linktree] Requesting page...`);
-      let h = (lib.config().defaults?.got?.headers || lib.config().defaults?.axios?.headers || {});
+      if (lib.config.debug == true) console.log(`[linktree] Requesting page...`);
+      let h = (lib.config.defaults?.got?.headers || lib.config.defaults?.axios?.headers || {});
       if (opt.referer) {
         h.Referer = opt.referer;
       }
 
       let proxy;
-      if (lib.config().defaults?.got?.proxy) {
-        if (lib.config().defaults?.got?.proxy?.type == "socks5") {
+      if (lib.config.defaults?.got?.proxy) {
+        if (lib.config.defaults?.got?.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
-          let prox = `socks5://${lib.config().defaults?.got?.proxy?.host}:${lib.config().defaults?.got?.proxy?.port}`;
+          let prox = `socks5://${config.defaults?.got?.proxy?.host}:${config.defaults?.got?.proxy?.port}`;
           proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
         } else {
           proxy = {};
@@ -30,14 +30,14 @@ module.exports = {
         ...proxy
       });
 
-      if (lib.config().debug == true) console.log(`[linktree] Got page. Finding and parsing "__NEXT_DATA__"...`);
+      if (lib.config.debug == true) console.log(`[linktree] Got page. Finding and parsing "__NEXT_DATA__"...`);
       let l = [];
       let j = resp.body.split(`<script id="__NEXT_DATA__" type="application/json" crossorigin="anonymous">`)[1]?.split(`</script>`)[0];
       if (j == null) throw `Couldn't find "__NEXT_DATA__"`;
       j = JSON.parse(j);
       if (j == null) throw `Couldn't parse "__NEXT_DATA__"`;
 
-      if (lib.config().debug == true) console.log(`[linktree] Found and parsed. Filtering and removing gates from first batch of links...`);
+      if (lib.config.debug == true) console.log(`[linktree] Found and parsed. Filtering and removing gates from first batch of links...`);
       for (let a in j.props?.pageProps?.links) {
         if (j.props.pageProps.links[a].url) {
           l.push(j.props.pageProps.links[a].url);
@@ -46,7 +46,7 @@ module.exports = {
         }
       }
 
-      if (lib.config().debug == true) console.log(`[linktree] Done. Filtering and removing gates from second batch of links...`);
+      if (lib.config.debug == true) console.log(`[linktree] Done. Filtering and removing gates from second batch of links...`);
       for (let a in j.props?.pageProps?.socialLinks) {
         if (j.props.pageProps.socialLinks[a].url) {
           l.push(j.props.pageProps.socialLinks[a].url);
@@ -64,7 +64,7 @@ module.exports = {
 }
 
 async function deAge(linkId, accountId, url) {
-  if (lib.config().debug == true) console.log(`[linktree] Requesting link id ${linkId} (was age-gated).`);
+  if (lib.config.debug == true) console.log(`[linktree] Requesting link id ${linkId} (was age-gated).`);
 
   let data = JSON.stringify({
     accountId: accountId,
@@ -95,6 +95,6 @@ async function deAge(linkId, accountId, url) {
     }
   });
 
-  if (lib.config().debug == true) console.log(`[linktree] Parsed link id ${linkId} as "${resp.body.links[0].url}"`);
+  if (lib.config.debug == true) console.log(`[linktree] Parsed link id ${linkId} as "${resp.body.links[0].url}"`);
   return resp.body.links[0].url;
 }

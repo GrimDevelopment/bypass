@@ -8,15 +8,15 @@ module.exports = {
   requiresCaptcha: false,
   get: async function(url, opt) {
     try {
-      if (lib.config().debug == true) console.log("[dlp] Requesting page...");
-      let header = (lib.config().defaults?.got?.headers || lib.config().defaults?.axios?.headers || {});
+      if (lib.config.debug == true) console.log("[dlp] Requesting page...");
+      let header = (lib.config.defaults?.got?.headers || lib.config.defaults?.axios?.headers || {});
       if (opt.referer) header.Referer = opt.referer;
 
       let proxy;
-      if (lib.config().defaults?.got?.proxy) {
-        if (lib.config().defaults?.got?.proxy?.type == "socks5") {
+      if (lib.config.defaults?.got?.proxy) {
+        if (lib.config.defaults?.got?.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
-          let prox = `socks5://${lib.config().defaults?.got?.proxy?.host}:${lib.config().defaults?.got?.proxy?.port}`;
+          let prox = `socks5://${config.defaults?.got?.proxy?.host}:${config.defaults?.got?.proxy?.port}`;
           proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
         } else {
           proxy = {};
@@ -30,19 +30,19 @@ module.exports = {
         ...proxy
       });
 
-      if (lib.config().debug == true) console.log("[dlp] Got page. Parsing page...");
+      if (lib.config.debug == true) console.log("[dlp] Got page. Parsing page...");
       let $ = cheerio.load(resp.body);
 
       let pw = $("#wrapper > #content > p").text().includes("Password");
       let b;
 
-      if (lib.config().debug == true) console.log("[dlp] Parsed. Forming body data...");
+      if (lib.config.debug == true) console.log("[dlp] Parsed. Forming body data...");
       if (pw == true) {
         // passworded
         if (!opt.password) throw "Incorrect password.";
         b = `Pass1=${encodeURIComponent(opt.password)}&Submit0=Submit`;
       } else {
-        if (lib.config().captcha.active == false) {
+        if (lib.config.captcha.active == false) {
           throw "Normally this bypass wouldn't require a CAPTCHA, but it does in it's current state.";
         }
         let c = lib.cookieString(scp(resp.headers["set-cookie"]));
@@ -53,7 +53,7 @@ module.exports = {
         b = `security_code=${cap}&submit1=Submit`;
       }
 
-      if (lib.config().debug == true) console.log("[dlp] Sending body data...");
+      if (lib.config.debug == true) console.log("[dlp] Sending body data...");
       resp = await got({
         method: "POST",
         url: url,
@@ -61,7 +61,7 @@ module.exports = {
         headers: header
       });
 
-      if (lib.config().debug == true) console.log("[dlp] Sent body data. Parsing response...");
+      if (lib.config.debug == true) console.log("[dlp] Sent body data. Parsing response...");
       $ = cheerio.load(resp.body);
       console.log(resp.body)
       let links = [];
@@ -92,7 +92,7 @@ module.exports = {
 
 async function fetchCaptcha(url, ref, h) {
   url = `${new URL(ref).protocol}//${new URL(ref).hostname}/${url}`;
-  if (lib.config().debug == true) console.log("[dlp] Fetching CAPTCHA image...", url);
+  if (lib.config.debug == true) console.log("[dlp] Fetching CAPTCHA image...", url);
   
   h["Accept"] = "image/avif,image/webp,*/*";
   h["Accept-Encoding"] = "gzip, deflate";
@@ -109,7 +109,7 @@ async function fetchCaptcha(url, ref, h) {
     url: url
   });
 
-  if (lib.config().debug == true) console.log(`[dlp] Got CAPTCHA, content type `, resp.headers["content-type"]);
+  if (lib.config.debug == true) console.log(`[dlp] Got CAPTCHA, content type `, resp.headers["content-type"]);
   let img = Buffer.from(resp.rawBody).toString("base64")
   
   return `data:${resp.headers["content-type"]};base64,${img}`;

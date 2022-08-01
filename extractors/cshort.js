@@ -7,7 +7,7 @@ module.exports = {
   requiresCaptcha: false,
   get: async function (url, opt) {
     try {
-      if (lib.config().debug == true) console.log("[cshort] Requesting page...");
+      if (lib.config.debug == true) console.log("[cshort] Requesting page...");
 
       let header =  {
         "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0",
@@ -21,8 +21,8 @@ module.exports = {
       if (opt.referer) header.Referer = opt.referer;
 
       let proxy;
-      if (lib.config().defaults?.got?.proxy) {
-        if (lib.config().defaults?.got?.proxy?.type == "socks5") {
+      if (lib.config.defaults?.got?.proxy) {
+        if (lib.config.defaults?.got?.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
           try { 
             if ((new URL(prox).hostname == "localhost" || new URL(prox).hostname == "127.0.0.1") && new URL(proxy).port == "9050") {
@@ -46,22 +46,22 @@ module.exports = {
         ...proxy
       });
   
-      if (lib.config().debug == true) console.log("[cshort] Getting next page URL (1/2)...");
+      if (lib.config.debug == true) console.log("[cshort] Getting next page URL (1/2)...");
       let r = resp.body.split(`function redirect() {`)[1].split(`}`)[0].split(`\n`);
       let h;
       let c = `${lib.cookieString(scp(resp.headers["set-cookie"]))}; aid=${encodeURIComponent(JSON.stringify([new URL(url).pathname.substring(1)]))}`;
   
-      if (lib.config().debug == true) console.log("[cshort] Getting next page URL (2/2)...");
+      if (lib.config.debug == true) console.log("[cshort] Getting next page URL (2/2)...");
       for (let a in r) {
         if (!r[a].startsWith("  //") && r[a] !== "") h = r[a].split(`?u=`)[1].split(`',`)[0];
       }
   
       if (h == undefined) throw "No redirects found.";
 
-      if (lib.config().debug == true) console.log("[cshort] Counting down...");
+      if (lib.config.debug == true) console.log("[cshort] Counting down...");
       await new Promise(resolve => setTimeout(resolve, 10000)); // can't bypass the wait, unfortunately
   
-      if (lib.config().debug == true) console.log("[cshort] Requesting next page URL...");
+      if (lib.config.debug == true) console.log("[cshort] Requesting next page URL...");
       resp = await got({
         method: "GET",
         throwHttpErrors: false,

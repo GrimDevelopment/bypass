@@ -14,15 +14,15 @@ if (process.argv[2]) {
 
   Object.keys(o).forEach(key => o[key] === undefined ? delete o[key] : {});
   
-  if (lib.config().debug == true) console.log(`[runner] URL: `, process.argv[2]);
-  if (lib.config().debug == true) console.log(`[runner] Options: `, o);
+  if (lib.config.debug == true) console.log(`[runner] URL: `, process.argv[2]);
+  if (lib.config.debug == true) console.log(`[runner] Options: `, o);
 
-  if (lib.config().debug == true) console.log("[runner] Sending solve request to './lib.js'");
+  if (lib.config.debug == true) console.log("[runner] Sending solve request to './lib.js'");
 
   (async function() {
     try {
       let solution = await lib.get(process.argv[2], o);
-      if (lib.config().debug == true) console.log("[runner] Got result, sending into console below:");
+      if (lib.config.debug == true) console.log("[runner] Got result, sending into console below:");
       console.log((solution.destination || solution.destinations));
       process.exit();
     } catch(err) {

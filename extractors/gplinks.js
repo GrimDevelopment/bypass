@@ -1,7 +1,6 @@
-const pup = require("puppeteer-extra");
-const adb = require("puppeteer-extra-plugin-adblocker");
+const pw = require("playwright-extra");
+const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
 const stl = require("puppeteer-extra-plugin-stealth");
-const cap = require("puppeteer-extra-plugin-recaptcha");
 const lib = require("../lib");
 
 module.exports = {
@@ -10,51 +9,65 @@ module.exports = {
   get: async function(url, opt) {
     let b;
     try { 
-      if (lib.config().debug == true) console.log("[gplinks] Launching browser...");
-      pup.use(stl());
-      pup.use(adb());
+      if (lib.config.debug == true) console.log("[gplinks] Launching browser...");
+      let blocker = await PlaywrightBlocker.fromPrebuiltFull();
+      
+      /*
+      let stlh = stl();
+      stlh.enabledEvasions.delete("user-agent-override");
+      pw.firefox.use(stlh);
+      */
 
-      if (lib.config().captcha.active == false) {
+      if (lib.config.captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."
       }
- 
-      pup.use(cap({
-        provider: {
-          id: lib.config().captcha.service,
-          token: lib.config().captcha.key
-        }
-      }));
 
-      let args = (lib.removeTor(lib.config().defaults?.puppeteer) || {headless: true});
+      let args = (lib.config.defaults?.puppeteer || {headless: true});
 
-      b = await pup.launch(args);
+      b = await pw.firefox.launch(args);
       let p = await b.newPage();
       if (opt.referer) {
-        if (lib.config().debug == true) console.log("[gplinks] Going to referer URL first...");
+        if (lib.config.debug == true) console.log("[gplinks] Going to referer URL first...");
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
       }
-      await p.goto(url, {waitUntil: "networkidle0"});
+      await p.goto(url, {waitUntil: "load", timeout: 60000});
 
-      if (lib.config().debug == true) console.log("[gplinks] Launched. Counting down...");
-      await p.waitForTimeout("#btn6");
-      if (lib.config().debug == true) console.log("[gplinks] Done. Going to next page...");
+      if (lib.config.debug == true) console.log("[gplinks] Launched. Counting down...");
+
+      await p.evaluate(function() {
+        setInterval(function() {
+          if (document.getElementById("wpsafe-time")) document.getElementById("wpsafe-time").focus()
+        }, 100);
+      });
+
+      await p.waitForSelector("#btn6", {timeout: (1000 * 45)});
+      if (lib.config.debug == true) console.log("[gplinks] Done. Going to next page...");
+      await p.evaluate(function() {
+        if (document.body.classList.contains("modal-open")) {
+          document.getElementById("download-ad-modal").remove();
+          document.querySelector(".modal-backdrop").remove();
+          document.body.classList.remove("modal-open");
+        }
+      });
       await p.click("#btn6");
       await p.waitForSelector("#captchaShortlink > div > div > iframe");
       await p.waitForTimeout(1000);
 
-      if (lib.config().debug == true) console.log("[gplinks] Done. Solving CAPTCHA...");
-      await p.solveRecaptchas();
-      if (await p.$("#download-ad-modal")) {
-        await p.evaluate(function() {
-          document.querySelector("#download-ad-modal").remove();
-          document.querySelector(".modal-backdrop.show").remove();
-        });
-      }
-      await p.click("#invisibleCaptchaShortlink");
-      if (lib.config().debug == true) console.log("[gplinks] Solved. Going to next page...");
+      await blocker.enableBlockingInPage(p);
+      if (lib.config.debug == true) console.log("[gplinks] Done. Solving CAPTCHA...");
+      await lib.solveThroughPage(p);
+      await p.evaluate(function() {
+        document.forms[0].submit();
+      });
+      if (lib.config.debug == true) console.log("[gplinks] Solved. Going to next page...");
 
       await p.waitForSelector("#timer");
-      if (lib.config().debug == true) console.log("[gplinks] Done, sending request to get solution..");
+      if (lib.config.debug == true) console.log("[gplinks] Done, sending request to get solution..");
+      await p.evaluate(function() {
+        setInterval(function() {
+          if (document.getElementById("timer")) document.getElementById("timer").focus()
+        })
+      })
       await p.evaluate(function() {
         let s = setInterval(function() {
           if (UnlockButton && typeof UnlockButton == "function") {
@@ -77,16 +90,16 @@ module.exports = {
 
 async function fireWhenFound(p) {
   return new Promise(function(resolve, reject) {
-    if (lib.config().debug == true) console.log("[gplinks] Setting up listener to find solution...");
+    if (lib.config.debug == true) console.log("[gplinks] Setting up listener to find solution...");
     p.on("response", async function(res) {
       let a = new URL((await res.url()));
       if (a.pathname == "/links/go" && (await (await(res.request()).method())) == "POST") {
         let a = (await res.json());
-        if (lib.config().debug == true) console.log("[gplinks] Got URL that met requirements, parsing...");
+        if (lib.config.debug == true) console.log("[gplinks] Got URL that met requirements, parsing...");
         if (a.url) resolve(a.url);
         else reject("Redirect not found.");
       } else {
-        if (lib.config().debug == true && a.hostname.includes("za.")) console.log(`[zagl] Ignoring request ${(await (await(res.request()).method()))} "${(await res.url())}" from listener.`);
+        if (lib.config.debug == true && a.hostname.includes("za.")) console.log(`[zagl] Ignoring request ${(await (await(res.request()).method()))} "${(await res.url())}" from listener.`);
       }
     });
   });

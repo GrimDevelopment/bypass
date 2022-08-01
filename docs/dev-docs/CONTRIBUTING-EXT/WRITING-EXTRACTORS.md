@@ -31,7 +31,7 @@ module.exports = {
   hostnames: [],
   requiresCaptcha: false,
   get: async function(url, opt) {
-    if (lib.config().debug == true) console.log("[scraper] Requesting page...");
+    if (lib.config.debug == true) console.log("[scraper] Requesting page...");
     let resp = await got({
       method: "GET",
       url: url,
@@ -41,7 +41,7 @@ module.exports = {
       }
     });
 
-    if (lib.config().debug == true) console.log("[scraper] Got page. Parsing page...");
+    if (lib.config.debug == true) console.log("[scraper] Got page. Parsing page...");
     let $ = cheerio.load(resp.body);
 
     // do stuff with resp.body here
@@ -62,10 +62,10 @@ Obviously mess with headers and other details as needed. Then, you can scrape th
 Copy and paste this template into your extractor.
 
 ```js
-const pup = require("puppeteer-extra");
+const pw = require("playwright-extra");
 //const stl = require("puppeteer-extra-plugin-stealth");
-//const adb = require("puppeteer-extra-plugin-adblocker");
-//const cap = require("puppeteer-extra-plugin-recaptcha");
+//const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
+//const cap = require("@extra/recaptcha");
 const lib = require("../lib");
 
 module.exports = {
@@ -74,38 +74,26 @@ module.exports = {
   get: async function(url) {
     let b;
     try {
-      pup.use(stl());
       /* 
         Delete the portion above and uncomment this if the site 
         
         let stlh = stl();
-        stlh.enabledEvasions.delete("iframe.contentWindow");
-        pup.use(stlh);
-      
+        stlh.enabledEvasions.delete("user-agent-override");
+        pw.firefox.use(stlh);
       */
 
+
+      if (lib.config.debug == true) console.log("[scraper] Launching browser...");
+      b = await pup.launch({headless: true});
+      let p = await b.newPage();
+
       /*
-        pup.use(adb()); 
+        TBA
 
         Uncomment this to enable the adblocker.
       */
 
-      /* 
-        pup.use(cap({
-          provider: {
-            id: lib.config().captcha.service,
-            token: lib.config().captcha.key
-          }
-        }));
-
-        Uncomment the portion above if the site given uses CAPTCHAs.
-      */
-
-
-      if (lib.config().debug == true) console.log("[scraper] Launching browser...");
-      b = await pup.launch({headless: true});
-      let p = await b.newPage();
-      if (lib.config().debug == true) console.log("[scraper] Launched. Going to page...");
+      if (lib.config.debug == true) console.log("[scraper] Launched. Going to page...");
       p.goto(url);
 
       // put your code here :p
@@ -132,13 +120,13 @@ Before pull requesting, add logging to your extractor. This makes it easy to deb
 Logging with BIFM is as simple as below:
 
 ```js
-if (lib.config().debug == true) console.log("[<scraper name>] <infomation of what's happening>");
+if (lib.config.debug == true) console.log("[<scraper name>] <infomation of what's happening>");
 ```
 
 For example, if you're parsing JSON left in the page, do the following:
 
 ```js
-if (lib.config().debug == true) console.log("[scraper] Parsing JSON data...");
+if (lib.config.debug == true) console.log("[scraper] Parsing JSON data...");
 ```
 
 Also, you should also add you scraper to [these docs](../SITES.md), adding all relevant information to there.

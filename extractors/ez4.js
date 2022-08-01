@@ -1,5 +1,5 @@
-const pup = require("puppeteer-extra");
-const adb = require("puppeteer-extra-plugin-adblocker");
+const pw = require("playwright-extra");
+const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
 const stl = require("puppeteer-extra-plugin-stealth");
 const lib = require("../lib");
 
@@ -9,22 +9,21 @@ module.exports = {
   get: async function(url, opt) {
     let b;
     try {
-      if (lib.config().debug == true) console.log("[ez4] Launching browser...");
+      if (lib.config.debug == true) console.log("[ez4] Launching browser...");
 
-      pup.use(stl());
-      pup.use(adb());
+      pw.firefox.use(stl());
 
-      let args = (lib.config().defaults?.puppeteer || {headless: true});
+      let args = (lib.config.defaults?.puppeteer || {headless: true});
 
-      b = await pup.launch(args);
+      b = await pw.firefox.launch(args);
       p = await b.newPage();
       if (opt.referer) {
-        if (lib.config().debug == true) console.log("[ez4] Going to referer URL first...");
+        if (lib.config.debug == true) console.log("[ez4] Going to referer URL first...");
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
       }
 
-      await p.goto(url, {waitUntil: "networkidle2"});
-      if (lib.config().debug == true) console.log("[ez4] Launched. Starting continous function...");
+      await p.goto(url, {waitUntil: "networkidle"});
+      if (lib.config.debug == true) console.log("[ez4] Launched. Starting continous function...");
       let r = await cont(p);
       await b.close();
       return r;
@@ -37,19 +36,19 @@ module.exports = {
 
 async function cont(p) {
   if ((await p.$(".procced"))) {
-    if (lib.config().debug == true) console.log("[ez4] Found final page, counting down...");
+    if (lib.config.debug == true) console.log("[ez4] Found final page, counting down...");
     await p.waitForSelector(".procced > .btn.get-link:not(.disabled)");
-    if (lib.config().debug == true) console.log("[ez4] Done. Retrieving URL...");
+    if (lib.config.debug == true) console.log("[ez4] Done. Retrieving URL...");
     let r = await p.evaluate(function() {
       return document.querySelector(".procced > .btn.get-link").href
     });
     return r;
   } else {
-    if (lib.config().debug == true) console.log("[ez4] Skipping non-final page...");
+    if (lib.config.debug == true) console.log("[ez4] Skipping non-final page...");
     await p.evaluate(function() {
       yuidea1();
     });
-    await p.waitForNavigation();
+    await p.waitForLoadState("load");
     return (await cont(p));
   }
 }

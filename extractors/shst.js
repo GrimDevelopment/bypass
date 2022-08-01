@@ -20,13 +20,13 @@ module.exports = {
   requiresCaptcha: false,
   get: async function (url, opt) {
     try {
-      if (lib.config().debug == true) console.log("[shst] Requesting page...");
+      if (lib.config.debug == true) console.log("[shst] Requesting page...");
 
       let proxy;
-      if (lib.config().defaults?.got?.proxy) {
-        if (lib.config().defaults?.got?.proxy?.type == "socks5") {
+      if (lib.config.defaults?.got?.proxy) {
+        if (lib.config.defaults?.got?.proxy?.type == "socks5") {
           const agent = require("socks-proxy-agent");
-          let prox = `socks5://${lib.config().defaults?.got?.proxy?.host}:${lib.config().defaults?.got?.proxy?.port}`;
+          let prox = `socks5://${config.defaults?.got?.proxy?.host}:${config.defaults?.got?.proxy?.port}`;
           proxy = {httpsAgent: (new agent.SocksProxyAgent(prox))};
         } else {
           proxy = {};
@@ -43,7 +43,7 @@ module.exports = {
         ...proxy
       });
   
-      if (lib.config().debug == true) console.log("[shst] Got page. Parsing got data...");
+      if (lib.config.debug == true) console.log("[shst] Got page. Parsing got data...");
       if (resp.headers?.location !== url) {
         return resp.headers.location;
       } else {

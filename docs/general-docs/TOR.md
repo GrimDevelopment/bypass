@@ -36,7 +36,7 @@ curl --socks5 localhost:9050 --socks5-hostname localhost:9050 -s https://check.t
 
 If the command in your terminal outputs "Congratulations. This browser is configured to use Tor.", you are set to change the setting in the config, allowing Tor to run on Tor-compatible bypasses.
 
-4. Changing the config.
+4. Changing the lib.config.
 
 Open `config.json` in your editor, if you haven't already.
 

@@ -1,4 +1,4 @@
-const pup = require("puppeteer-extra");
+const pw = require("playwright-extra");
 const lib = require("../lib");
 
 module.exports = {
@@ -8,17 +8,17 @@ module.exports = {
     // http://srt.am/e8kZ9m
     let b;
     try {
-      if (lib.config().debug == true) console.log("[srtam] Launching browser...");
+      if (lib.config.debug == true) console.log("[srtam] Launching browser...");
 
-      let args = (lib.config().defaults?.puppeteer || {headless: true});
-      b = await pup.launch(lib.removeTor(args));
+      let args = (lib.config.defaults?.puppeteer || {headless: true});
+      b = await pw.firefox.launch(args);
       p = await b.newPage();
       if (opt.referer) {
-        if (lib.config().debug == true) console.log("[srtam] Going to referer URL first...");
+        if (lib.config.debug == true) console.log("[srtam] Going to referer URL first...");
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
       }
       await p.goto(url, {waitUntil: "domcontentloaded"});
-      if (lib.config().debug == true) console.log("[srtam] Done. Running eval code...");
+      if (lib.config.debug == true) console.log("[srtam] Done. Running eval code...");
 
       await p.evaluate(function() {
         if(document.querySelector(".skip-container")) {
@@ -30,10 +30,10 @@ module.exports = {
         }
       });
 
-      if (lib.config().debug == true) console.log("[srtam] Done. Waiting for navigation...");
+      if (lib.config.debug == true) console.log("[srtam] Done. Waiting for navigation...");
       await p.waitForNavigation({waitUntil: "domcontentloaded"});
 
-      if (lib.config().debug == true) console.log("[srtam] Done, sending solution...");
+      if (lib.config.debug == true) console.log("[srtam] Done, sending solution...");
       let u = await p.url();
       await b.close();
       return u;
