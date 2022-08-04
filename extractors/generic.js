@@ -165,7 +165,11 @@ module.exports = {
       if (lib.config.debug == true) console.log("[generic] Done. Checking for HTTP redirects...");
       if (resp.headers.location) {
         if (lib.isUrl(resp.headers.location)) {
-          return resp.headers.location;
+          if (resp.headers.location.includes("redirect=")) {
+            console.log(`[generic] Detected double redirect, please wait...`)
+            let bypass = await (require("./generic")).get(resp.headers.location, opt);
+            return bypass;
+          } else return resp.headers.location;
         } else if (resp.headers.location.startsWith("/")) {
           return `${url.split("/").slice(0, 3)}${resp.headers?.location}`;
         }
