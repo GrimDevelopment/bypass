@@ -73,8 +73,8 @@ async function cont(p, url) {
   
   if ((await p.$("#countdown"))) {
     if (lib.config.debug == true) console.log("[adlinkfly] Retreiving link...");
-    await p.waitForSelector(".btn-success.btn-lg:not(.disabled):not([disabled]):not([href='javascript: void(0)']):not([href='" + (await p.url()) + "'])");
-    let r = await p.evaluate(function() {return document.querySelector(".btn-success").href});
+    await p.waitForSelector(".get-link:not(.disabled):not([disabled]):not([href='javascript: void(0)']):not([href='" + (await p.url()) + "'])");
+    let r = await p.evaluate(function() {return document.querySelector(".get-link").href});
     
     return r;
   } else {  
@@ -86,9 +86,9 @@ async function cont(p, url) {
     
       hn = await new URL(url).hostname;
       if (antiAd(hn) == true) {
-        await p.waitForNavigation({waitUntil: "domcontentloaded"})
+        await p.waitForLoadState("domcontentloaded");
       } else {
-        await p.waitForNavigation({waitUntil: "networkidle"});
+        await p.waitForLoadState("networkidle");
       }
       return (await cont(p, url));
     } else {
