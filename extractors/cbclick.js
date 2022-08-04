@@ -6,9 +6,8 @@ module.exports = {
   hostnames: ["cb.click", "cb.run"],
   requiresCaptcha: false,
   get: async function(url, opt) {
-    // https://cb.run/HK3g
     try {
-      if (lib.config.debug == true) console.log("[boostme] Requesting page...");
+      if (lib.config.debug == true) console.log("[cbclick] Requesting page...");
       let h = (lib.config.defaults?.got?.headers || lib.config.defaults?.axios?.headers || {});
       if (opt.referer) {
         h.Referer = opt.referer;
@@ -37,6 +36,7 @@ module.exports = {
         ...proxy,
       });
 
+      if (lib.config.debug == true) console.log("[cbclick] Done, parsing page...")
       let $ = cheerio.load(resp.body);
       let redirect = $(".cb-splash__btn > a.redirect")?.attr("href");
       return redirect;
