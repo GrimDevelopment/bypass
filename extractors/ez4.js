@@ -11,7 +11,9 @@ module.exports = {
     try {
       if (lib.config.debug == true) console.log("[ez4] Launching browser...");
 
-      pw.firefox.use(stl());
+      let stlh = stl();
+      stlh.enabledEvasions.delete("user-agent-override");
+      pw.firefox.use(stlh);
 
       let args = (lib.config.defaults?.puppeteer || {headless: true});
 

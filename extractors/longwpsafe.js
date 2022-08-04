@@ -8,8 +8,9 @@ module.exports = {
   get: async function(url, opt) {
     let b;
     try {
-      pw.firefox.use(stl());
-      
+      let stlh = stl();
+      stlh.enabledEvasions.delete("user-agent-override");
+      pw.firefox.use(stlh);
 
       let args = (lib.config.defaults?.puppeteer || {headless: true});
 
