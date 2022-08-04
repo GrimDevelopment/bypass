@@ -71,11 +71,18 @@ async function cont(p, url) {
     if (lib.config.debug == true) console.log("[adlinkfly] No CAPTCHA found. Continuing page...");
   }
   
-  if ((await p.$("#countdown"))) {
+  if ((await p.$("#countdown")) || (await p.$(".interstitial-page"))) {
+    let hostname = new URL(url).hostname;
     if (lib.config.debug == true) console.log("[adlinkfly] Retreiving link...");
-    await p.waitForSelector(".get-link:not(.disabled):not([disabled]):not([href='javascript: void(0)']):not([href='" + (await p.url()) + "'])");
-    let r = await p.evaluate(function() {return document.querySelector(".get-link").href});
     
+    let r;
+    if (hostname == "clik.pw") {
+      await p.waitForSelector(".pull-right > .skip-ad > .btn:not([href=''])");
+      r = await p.evaluate(function() {return document.querySelector(".pull-right > .skip-ad > .btn:not([href=''])").href});
+    } else {
+      await p.waitForSelector(".get-link:not(.disabled):not([disabled]):not([href='javascript: void(0)']):not([href='" + (await p.url()) + "'])");
+      r = await p.evaluate(function() {return document.querySelector(".get-link").href});
+    }
     return r;
   } else {  
     if ((await p.$("form > div[style='display:none;'] > *[name='_method']")) || (await p.$("[name='hidden'][value='hidden']"))) {

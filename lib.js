@@ -456,7 +456,7 @@ async function solveThroughPage(p) {
   try {
     let type = await p.evaluate(function() {
       if (document.querySelector("iframe[title='recaptcha challenge expires in two minutes']") || document.querySelector(".g-recaptcha")) return "recaptcha";
-      else if (document.querySelector(".h-captcha")) return "hcaptcha";
+      else if (document.querySelector(".h-captcha") || document.querySelector("iframe[title='widget containing checkbox for hCaptcha security challenge']")) return "hcaptcha";
       else return null;
     });
 
@@ -467,6 +467,7 @@ async function solveThroughPage(p) {
       return (
         document.querySelector("iframe[title='recaptcha challenge expires in two minutes']")?.src.split("k=")[1].split("&")[0] ||
         document.querySelector(".g-recaptcha")?.getAttribute("data-sitekey") ||
+        document.querySelector("iframe[title='widget containing checkbox for hCaptcha security challenge']").src.split("sitekey=")[1].split("&")[0] || 
         document.querySelector(".h-captcha")?.getAttribute("data-sitekey")
       );
     });
