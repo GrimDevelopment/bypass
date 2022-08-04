@@ -15,6 +15,7 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`bc.vc`**|Puppeteer + Stealth|No|[https://bc.vc/vQesLIh](https://bc.vc/vQesLIh) redirects to `https://universal-bypass.org/`.||
 |**`boost.ink`**|Got|No|[https://boost.ink/c5bba](https://boost.ink/c5bba)|`bst.gg`, `bst.wtf`, `booo.st`||
 |**`boostme.link`**|Got|No|[https://boostme.link/iX9Krf](https://boostme.link/iX9Krf)||
+|**`cb.click`**|Got|No|[https://cb.run/gLDw](https://cb.run/gLDw) redirects to a broken Google Drive link.|`cb.run`||
 |**`cpmlink.net`**|Got|Yes|[https://cpmlink.net/i7FyAQ](https://cpmlink.net/i7FyAQ)||
 |**`cutw.in`**|Puppeteer + Adblocker + Stealth|Yes|[https://cutw.in/8q9wzl](https://cutw.in/8q9wzl)|||
 |**`cshort.org`**|Got|No|[https://cshort.org/8i8dwPx0](https://cshort.org/8i8dwPx0)|
