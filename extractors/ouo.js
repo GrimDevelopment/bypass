@@ -8,6 +8,9 @@ module.exports = {
   requiresCaptcha: false,
   get: async function(url, opt) {
     try {
+      if (url.includes("/go/")) url = url.replace("/go/", "/");
+      if (url.includes("/fbc/")) url = url.replace("/fbc/", "/");
+
       if (lib.config.debug == true) console.log("[ouo] Requesting page...");
       let header = (lib.config.defaults?.got?.headers || lib.config.defaults?.axios?.headers || {});
       if (opt.referer) header.Referer = opt.referer;
