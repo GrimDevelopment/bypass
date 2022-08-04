@@ -10,8 +10,8 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`1bit.space`**|Puppeteer + Adblocker + Stealth|Yes||Need a SFW and legal example |
 |**`1link.club`**|Got|No|[http://1link.club/77679](http://1link.club/77679)|||
 |**`adf.ly`**|Got|No|[http://usheethe.com/T3F5](http://usheethe.com/T3F5)|`usheethe.com`|There is not a complete list of domains under adf.ly's net that I could find, but there is an algorythm for finding adf.ly links and automatically bypassing it.|
-|**`adlinkfly`**|Puppeteer + Stealth|Sometimes, but always required|[https://pdiskshortener.com/6I2CR2](https://pdiskshortener.com/6I2CR2), [https://dz-linkk.com/N2xFP](https://dz-linkk.com/N2xFP), [https://www.shortly.xyz/r/74fee2919710769f09131da1beb8243e](https://www.shortly.xyz/r/74fee2919710769f09131da1beb8243e)|`adlinkfly.mightyscripts.xyz`, `pdiskshortener.com`, `dzlinkk.com`|Like adf.ly, there is not a list of adlinkfly sites, but there is an algorithm to find and bypass them.|
-|**`aylink.co`**|Puppeteer + Stealth|Yes|[https://aylink.co/xay664](https://aylink.co/xay664) redirects to `https://mega.nz/folder/hpIAnRLS#fJZX651qRZdf_DU2Y_k0kA`||
+|**`adlinkfly`**|Puppeteer + Stealth|Sometimes, but always required|[https://pdiskshortener.com/6I2CR2](https://pdiskshortener.com/6I2CR2), [https://dz-linkk.com/N2xFP](https://dz-linkk.com/N2xFP), [https://www.shortly.xyz/r/74fee2919710769f09131da1beb8243e](https://www.shortly.xyz/r/74fee2919710769f09131da1beb8243e)|`adlinkfly.mightyscripts.xyz`, `pdiskshortener.com`, `dzlinkk.com`, `short-fly.com`|Like adf.ly, there is not a list of adlinkfly sites, but there is an algorithm to find and bypass them.|
+|**`aylink.co`**|Puppeteer + Stealth|Yes|[https://ay.live/rfsin1](https://ay.live/rfsin1) redirects to `https://rufus-usb.en.uptodown.com/windows`|`ay.live`|
 |**`bc.vc`**|Puppeteer + Stealth|No|[https://bc.vc/vQesLIh](https://bc.vc/vQesLIh) redirects to `https://universal-bypass.org/`.||
 |**`boost.ink`**|Got|No|[https://boost.ink/c5bba](https://boost.ink/c5bba)|`bst.gg`, `bst.wtf`, `booo.st`||
 |**`boostme.link`**|Got|No|[https://boostme.link/iX9Krf](https://boostme.link/iX9Krf)||

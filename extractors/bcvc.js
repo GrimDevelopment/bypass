@@ -36,8 +36,12 @@ module.exports = {
       let u = await p.url();
       if (lib.config.debug == true) console.log("[bcvc] Done. Decoding URL...");
       u = new URL(u);
-      u = u.searchParams.get("cr");
-      u = Buffer.from(u, "base64").toString("ascii");
+      if (u.searchParams.get("cr")) {
+        u = u.searchParams.get("cr");
+        u = Buffer.from(u, "base64").toString("ascii");
+      } else {
+        u = u.href;
+      }
       
       await b.close();
       return u;
