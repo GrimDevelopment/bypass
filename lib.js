@@ -356,6 +356,10 @@ function fixSubdomain(url) {
     case "pdiskshortener.in":
       return `https://1.htlinks.in/${url.split("/").slice(3).join("/")}`;
 
+    case "safelink.pandaznetwork.com":
+      return `https://short.pandaznetwork.com/${url.split("/").slice(3).join("/")}`;
+
+    
     default: return url;
   }
 }

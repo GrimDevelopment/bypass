@@ -4,7 +4,7 @@ const stl = require("puppeteer-extra-plugin-stealth");
 const lib = require("../lib");
 
 module.exports = {
-  hostnames: [],
+  hostnames: ["xpshort.com"],
   get: async function(url, opt) {
     let b;
     try {
@@ -31,7 +31,7 @@ module.exports = {
   }
 }
 
-async function cont(p) {
+async function cont(p, n) {
   try {
     if ((await p.$("#wpsafelink-landing"))) {
       if (lib.config.debug == true) console.log("[longwpsafe] Handling landing page...");
@@ -52,7 +52,9 @@ async function cont(p) {
     } else {
       if (lib.config.debug == true) console.log("[longwp] Nothing found, waiting...");
       await p.waitForLoadState("networkidle");
-      return (await cont(p));
+      if (!n) n = 0;
+      if (n >= 10) throw "Redirect not found.";
+      return (await cont(p, n));
     }
   } catch(err) {
     if (err.message == "Execution context was destroyed, most likely because of a navigation.") return (await cont(p));
