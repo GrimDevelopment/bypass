@@ -6,7 +6,7 @@ const examples = [
   { link: "http://1link.club/77679" },
   { extractor: "adf.ly", link: "http://usheethe.com/T3F5" },
   { extractor: "adlinkfly", link: "https://pdiskshortener.com/6I2CR2" },
-  { link: "https://aylink.co/xay664", expected: "https://mega.nz/folder/hpIAnRLS#fJZX651qRZdf_DU2Y_k0kA" },
+  { link: "https://ay.live/rfsin1", expected: "https://rufus-usb.en.uptodown.com/windows" },
   { link: "https://bc.vc/vQesLIh", expected: "https://universal-bypass.org/" },
   { link: "https://boost.ink/c5bba" },
   { link: "https://boostme.link/iX9Krf" },

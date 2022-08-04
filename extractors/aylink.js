@@ -3,7 +3,7 @@ const stl = require("puppeteer-extra-plugin-stealth");
 const lib = require("../lib");
 
 module.exports = {
-  hostnames: ["aylink.co"],
+  hostnames: ["aylink.co", "ay.live"],
   requiresCaptcha: true,
   get: async function(url, opt) {
     let b;
