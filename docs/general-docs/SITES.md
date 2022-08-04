@@ -29,6 +29,7 @@ Redirects not directly linking to our site may be NSFW and are not endorsements 
 |**`ity.im`**|Got|No|[http://ity.im/1QZh2](http://ity.im/1QZh2)|||
 |**`karung.in`**|Got|No|[http://karung.in/Gyucc](http://karung.in/Gyucc) redirects to `https://drive.google.com/uc?id=0B263gKU-C09_WW5rbURLeXN5QXc&export=download`.||Passworded links are currently not supported.|
 |**`keeplinks.org`**|Puppeteer + Adblocker + Stealth|No|[https://www.keeplinks.org/p100/62b878489fbc5](https://www.keeplinks.org/p100/62b878489fbc5)||Passworded links don't need a password due to a cookie exploit.|
+|**`letsboost.net`**|Got|No|||Need example link that is SFW and legal.|
 |**`linkvertise.net`**|Got|Yes|[https://linkvertise.com/425581/example1](https://linkvertise.com/425581/example1) for regular redirects, [https://link-target.net/425581/example](https://link-target.net/425581/example) for a paste|`linkvertise.com`, `up-to-down.net`, `link-to.net`, `direct-link.net`, `linkvertise.download`, `file-link.net`, `link-center.net`, `link-target.net`, `link-hub.net`||
 |**`link1s.com`**|Puppeteer + Adblocker + Stealth|No|||Need example link that is SFW and legal.|
 |**`lnk.parts`**|Puppeteer + Stealth|Yes|[https://lnkload.com/2z8aF](https://lnkload.com/2z8aF)|`link.tl`, `lnkload.com`||
