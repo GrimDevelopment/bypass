@@ -1,6 +1,7 @@
 const pw = require("playwright-extra");
 const stl = require("puppeteer-extra-plugin-stealth");
 const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
+const fetch = require("cross-fetch");
 const lib = require("../lib");
 
 module.exports = {

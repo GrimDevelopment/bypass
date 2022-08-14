@@ -30,6 +30,7 @@ module.exports = {
       
       if (lib.config.debug == true) console.log("[bcvc] Launched. Counting down...");
       await p.waitForSelector("#getLink", {visible: true});
+      await p.evaluate(function () {if (document.querySelector(".bvmipp-m-alert")) document.querySelector(".bvmipp-m-alert").remove()})
       await p.click("#getLink");
       await p.waitForNavigation();
 

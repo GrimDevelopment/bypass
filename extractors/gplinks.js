@@ -1,5 +1,6 @@
 const pw = require("playwright-extra");
 const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
+const fetch = require("cross-fetch");
 const stl = require("puppeteer-extra-plugin-stealth");
 const lib = require("../lib");
 
@@ -10,7 +11,7 @@ module.exports = {
     let b;
     try { 
       if (lib.config.debug == true) console.log("[gplinks] Launching browser...");
-      let blocker = await PlaywrightBlocker.fromPrebuiltFull();
+      let blocker = await PlaywrightBlocker.fromPrebuiltFull(fetch);
       
       /*
       let stlh = stl();
@@ -30,8 +31,8 @@ module.exports = {
         if (lib.config.debug == true) console.log("[gplinks] Going to referer URL first...");
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});
       }
-      await p.goto(url, {waitUntil: "load", timeout: 60000});
-
+      await p.goto(url, {waitUntil: "domcontentloaded"});
+      
       if (lib.config.debug == true) console.log("[gplinks] Launched. Counting down...");
 
       await p.evaluate(function() {
@@ -40,7 +41,7 @@ module.exports = {
         }, 100);
       });
 
-      await p.waitForSelector("#btn6", {timeout: (1000 * 45)});
+      await p.waitForSelector("#btn6", {timeout: 999999});
       if (lib.config.debug == true) console.log("[gplinks] Done. Going to next page...");
       await p.evaluate(function() {
         if (document.body.classList.contains("modal-open")) {
@@ -49,13 +50,14 @@ module.exports = {
           document.body.classList.remove("modal-open");
         }
       });
+      await p.waitForTimeout(2000);
       await p.click("#btn6");
       await p.waitForSelector("#captchaShortlink > div > div > iframe");
       await p.waitForTimeout(1000);
 
-      await blocker.enableBlockingInPage(p);
       if (lib.config.debug == true) console.log("[gplinks] Done. Solving CAPTCHA...");
       await lib.solveThroughPage(p);
+      await blocker.enableBlockingInPage(p);
       await p.evaluate(function() {
         document.forms[0].submit();
       });

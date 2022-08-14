@@ -1,5 +1,6 @@
 const pw = require("playwright-extra");
 const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
+const fetch = require("cross-fetch");
 const stl = require("puppeteer-extra-plugin-stealth");
 const lib = require("../lib");
 
@@ -15,7 +16,7 @@ module.exports = {
       stlh.enabledEvasions.delete("user-agent-override");
       pw.firefox.use(stlh);
 
-      let blocker = await PlaywrightBlocker.fromPrebuiltFull();
+      let blocker = await PlaywrightBlocker.fromPrebuiltFull(fetch);
 
       if (lib.config.captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."

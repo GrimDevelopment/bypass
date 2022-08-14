@@ -1,5 +1,6 @@
 const pw = require("playwright-extra");
 const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
+const fetch = require("cross-fetch");
 const stl = require("puppeteer-extra-plugin-stealth");
 const lib = require("../lib");
 
@@ -20,11 +21,16 @@ module.exports = {
       }
 
       if (lib.config.debug == true) console.log("[1bitspace] Launching browser...");
+
+      let blocker = await PlaywrightBlocker.fromPrebuiltFull(fetch);
       
       let a = (lib.config.defaults?.puppeteer || {headless: true});
 
-      b = await pup.launch(a);
+      b = await pw.firefox.launch(a);
       p = await b.newPage();
+
+      await blocker.enableBlockingInPage(p);
+
       if (opt.referer) {
         if (lib.config.debug == true) console.log("[1bitspace] Going to referer URL first...");
         await p.goto(opt.referer, {waitUntil: "domcontentloaded"});

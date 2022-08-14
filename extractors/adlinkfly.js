@@ -1,6 +1,7 @@
 const pw = require("playwright-extra");
 const stl = require("puppeteer-extra-plugin-stealth");
 const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
+const fetch = require("cross-fetch");
 const lib = require("../lib");
 
 module.exports = {
@@ -15,13 +16,11 @@ module.exports = {
 
       if (lib.config.fastforward == true && opt.ignoreFF !== true) {
         let r = await lib.fastforward.get(url, true);
-        if (r !== null) {
-          return {destination: r, fastforward: true};
-        }
+        if (r !== null) return {destination: r, fastforward: true};
       }
 
       let hn = new URL(url).hostname;
-      let blocker = await PlaywrightBlocker.fromPrebuiltFull();
+      let blocker = await PlaywrightBlocker.fromPrebuiltFull(fetch);
 
       if (lib.config.captcha.active == false) {
         throw "Captcha service is required for this link, but this instance doesn't support it."

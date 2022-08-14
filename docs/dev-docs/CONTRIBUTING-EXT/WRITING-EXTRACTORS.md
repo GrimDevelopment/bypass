@@ -65,6 +65,7 @@ Copy and paste this template into your extractor.
 const pw = require("playwright-extra");
 //const stl = require("puppeteer-extra-plugin-stealth");
 //const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
+//const got = require("got");
 //const cap = require("@extra/recaptcha");
 const lib = require("../lib");
 
@@ -84,7 +85,7 @@ module.exports = {
 
 
       if (lib.config.debug == true) console.log("[scraper] Launching browser...");
-      b = await pup.launch({headless: true});
+      b = await pw.firefox.launch({headless: true});
       let p = await b.newPage();
 
       /*

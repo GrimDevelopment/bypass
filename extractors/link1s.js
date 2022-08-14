@@ -1,6 +1,7 @@
 const pw = require("playwright-extra");
 const stl = require("puppeteer-extra-plugin-stealth");
 const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
+const fetch = require("cross-fetch");
 const lib = require("../lib");
 
 module.exports = {
@@ -13,7 +14,7 @@ module.exports = {
       stlh.enabledEvasions.delete("user-agent-override");
       pw.firefox.use(stlh);
 
-      let blocker = await PlaywrightBlocker.fromPrebuiltFull();
+      let blocker = await PlaywrightBlocker.fromPrebuiltFull(fetch);
 
       if (lib.config.debug == true) console.log("[link1s] Launching browser...");
       let args = (lib.config.defaults?.puppeteer || {headless: true});

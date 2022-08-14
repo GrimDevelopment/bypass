@@ -1,5 +1,4 @@
 const pw = require("playwright-extra");
-const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
 const stl = require("puppeteer-extra-plugin-stealth");
 const lib = require("../lib");
 

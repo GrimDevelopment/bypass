@@ -1,5 +1,4 @@
 const pw = require("playwright-extra");
-const { PlaywrightBlocker } = require("@cliqz/adblocker-playwright");
 const lib = require("../lib");
 
 module.exports = {
