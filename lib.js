@@ -481,11 +481,22 @@ async function solveThroughPage(p) {
     if (config.debug == true) console.log("[captcha] Retrieved. Solving CAPTCHA...");
     let c = await solveCaptcha(sk, type, {referer: (await p.url())});
 
+    // callback-based captchas
     if (type == "hcaptcha") {
       let id = await p.evaluate(function() {return document.querySelector("iframe[title='widget containing checkbox for hCaptcha security challenge']").src.split("id=")[1].split("&")[0];});
 
       let json = JSON.stringify({id: id, label: "challenge-closed", source: "hcaptcha", contents: {event: 'challenge-passed', expiration: 120, response: c}});
       await p.evaluate(`window.postMessage('${json}', '*');`);
+    } else {
+      let captchaObject = await p.evaluate(function() {return ___grecaptcha_cfg?.clients?.[0]});
+      for (let index in captchaObject) {
+        for (let index_ in index) {
+          console.log(captchaObject[index][index_]);
+          break;
+        }
+        break;
+      }
+
     }
     
 

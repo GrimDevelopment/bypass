@@ -5,7 +5,7 @@ const app = express();
 app.use(express.static("static/"));
 app.set("view engine", "ejs");
 
-app.listen(lib.config.http.port, function() {
+app.listen(lib.config.http.port, "127.0.0.1", function() {
   console.log(`[http] Listening on HTTP port ${lib.config.http.port}`);
   if (lib.config.debug == true) console.log("[config] Debug is enabled.");
   console.log("[config] Listing current config", lib.config);
