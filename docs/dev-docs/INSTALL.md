@@ -7,6 +7,7 @@ This is how to install a local version of BIFM on your system.
 You need to have [`git`](https://git-scm.com/downloads), [`node`](https://nodejs.org/) and `npm` (usually included with node).
 
 If you're having trouble with Puppeteer-based bypasses, please [check here](https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md) based on what you're running it on.
+If you're having trouble with Puppeteer-based bypasses, please [check here](https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md) based on what you're running it on.
 
 ## Steps
 
